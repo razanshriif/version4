@@ -1,0 +1,109 @@
+// LIST PAGE STYLES
+ion-content {
+    --background: var(--lumiere-light-bg);
+}
+
+// ========== LIST SPECIFIC STYLES ==========
+.demande-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #64748B;
+
+        ion-icon {
+            font-size: 18px;
+            color: var(--lumiere-primary);
+        }
+    }
+}
+
+.card-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    ion-card-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--lumiere-dark);
+    }
+
+    ion-badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 8px;
+
+        &.status-pending {
+            --background: rgba(245, 158, 11, 0.15);
+            --color: #F59E0B;
+        }
+
+        &.status-confirmed {
+            --background: rgba(16, 185, 129, 0.15);
+            --color: var(--lumiere-green);
+        }
+
+        &.status-in-progress {
+            --background: rgba(79, 70, 229, 0.15);
+            --color: var(--lumiere-blue);
+        }
+
+        &.status-delivered {
+            --background: rgba(139, 92, 246, 0.15);
+            --color: var(--lumiere-purple);
+        }
+    }
+}
+
+ion-card {
+    margin: 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+
+    ion-spinner {
+        --color: var(--lumiere-primary);
+        width: 48px;
+        height: 48px;
+    }
+}
+
+// ========== DARK MODE ==========
+@media (prefers-color-scheme: dark) {
+    ion-content {
+        --background: var(--lumiere-dark);
+    }
+
+    ion-card {
+        background: var(--lumiere-dark-card);
+
+        ion-card-title {
+            color: white;
+        }
+    }
+
+    .info-row {
+        color: #94A3B8;
+    }
+}

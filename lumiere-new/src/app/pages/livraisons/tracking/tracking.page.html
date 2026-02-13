@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Suivi des Livraisons</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshData($event)">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="loading" class="ion-text-center ion-padding">
+    <ion-spinner></ion-spinner>
+    <p>Chargement des livraisons...</p>
+  </div>
+
+  <div *ngIf="!loading && livraisons.length === 0" class="ion-text-center ion-padding">
+    <p>Aucune livraison en cours.</p>
+  </div>
+
+  <div *ngIf="!loading && livraisons.length > 0">
+    <ion-card *ngFor="let livraison of livraisons" (click)="selectLivraison(livraison)"
+      [color]="selectedLivraison?.id === livraison.id ? 'light' : ''">
+      <ion-card-header>
+        <div class="ion-justify-content-between ion-align-items-center display-flex">
+          <ion-card-title>Livraison #{{ livraison.id }}</ion-card-title>
+          <ion-badge [class]="getStatusClass(livraison.statut)">{{ getStatusLabel(livraison.statut) }}</ion-badge>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <p>
+          <ion-icon name="calendar-outline"></ion-icon> {{ livraison.dateDepart ? formatDate(livraison.dateDepart) :
+          'Non définie' }}
+        </p>
+        <ion-button expand="block" fill="outline" class="ion-margin-top"
+          (click)="selectLivraison(livraison); viewOnMap(); $event.stopPropagation()">
+          <ion-icon name="map-outline" slot="start"></ion-icon>
+          Voir sur la carte
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

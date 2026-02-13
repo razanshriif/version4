@@ -1,0 +1,131 @@
+// TRACKING PAGE STYLES
+ion-content {
+    --background: var(--lumiere-light-bg);
+}
+
+// ========== TRACKING SPECIFIC STYLES ==========
+.tracking-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .tracking-id {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--lumiere-dark);
+    }
+
+    ion-badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 8px;
+    }
+}
+
+.tracking-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+
+    .timeline-step {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F1F5F9;
+            flex-shrink: 0;
+
+            ion-icon {
+                font-size: 20px;
+                color: #94A3B8;
+            }
+
+            &.active {
+                background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+
+                ion-icon {
+                    color: white;
+                }
+            }
+
+            &.completed {
+                background: linear-gradient(135deg, var(--lumiere-green), #10B981);
+
+                ion-icon {
+                    color: white;
+                }
+            }
+        }
+
+        .step-content {
+            flex: 1;
+
+            .step-title {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--lumiere-dark);
+                margin: 0 0 4px 0;
+            }
+
+            .step-time {
+                font-size: 13px;
+                color: #64748B;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.map-button {
+    margin-top: 24px;
+    --background: linear-gradient(135deg, var(--lumiere-blue), #4338CA);
+    --border-radius: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 700;
+    text-transform: none;
+
+    &::part(native) {
+        box-shadow: 0 8px 24px rgba(55, 48, 163, 0.4);
+    }
+}
+
+// ========== DARK MODE ==========
+@media (prefers-color-scheme: dark) {
+    ion-content {
+        --background: var(--lumiere-dark);
+    }
+
+    .tracking-card {
+        background: var(--lumiere-dark-card);
+    }
+
+    .tracking-id,
+    .step-title {
+        color: white;
+    }
+
+    .timeline-step .step-indicator {
+        background: var(--lumiere-dark);
+    }
+}

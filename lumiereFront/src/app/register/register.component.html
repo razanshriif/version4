@@ -1,0 +1,79 @@
+<div class="register-container">
+    <div class="register-box">
+        <div class="logo">
+            <img src="assets/lum.jpg" alt="Logo Lumière">
+        </div>
+        <h1 class="title">Créer un Compte</h1>
+        <p class="subtitle">Rejoignez Lumière aujourd'hui</p>
+         
+        <!-- Success Message -->
+        <div *ngIf="success" class="success-card">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h3>Inscription réussie !</h3>
+            <p>Votre demande d'inscription a été envoyée avec succès.</p>
+            <p class="info-text">
+                <i class="fas fa-envelope"></i> Un email de confirmation a été envoyé à <strong>{{user.email}}</strong>
+            </p>
+            <p class="info-text">
+                <i class="fas fa-clock"></i> Votre compte sera activé après validation par un administrateur.
+            </p>
+            <p class="redirect-text">Redirection vers la page de connexion...</p>
+        </div>
+
+        <!-- Registration Form -->
+        <form *ngIf="!success" (ngSubmit)="onSubmit()" class="register-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstname">Prénom</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="firstname" [(ngModel)]="user.firstname" name="firstname"
+                            class="form-input" placeholder="Entrez votre prénom" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastname">Nom</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="lastname" [(ngModel)]="user.lastname" name="lastname" class="form-input"
+                            placeholder="Entrez votre nom" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" [(ngModel)]="user.email" name="email" class="form-input"
+                        placeholder="votre.email@exemple.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" [(ngModel)]="user.password" name="password" class="form-input"
+                        placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div *ngIf="error" class="error-alert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{error}}</span>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i>
+                S'inscrire
+            </button>
+
+            <div class="login-link">
+                <span>Vous avez déjà un compte ?</span>
+                <a routerLink="/login">Se connecter</a>
+            </div>
+        </form>
+    </div>
+</div>

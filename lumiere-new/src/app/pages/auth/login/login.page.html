@@ -1,0 +1,72 @@
+<ion-content class="login-content">
+  <div class="login-container">
+
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-circle">
+        <ion-icon name="business"></ion-icon>
+      </div>
+      <h1>LUMIÈRE</h1>
+      <p>LOGISTIQUE</p>
+      <span class="tagline">Leader du transport en Tunisie</span>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" class="form-card">
+      <h2>Connexion</h2>
+
+      <!-- Email -->
+      <ion-item lines="none" class="input-item">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-input
+          type="email"
+          formControlName="email"
+          placeholder="Email">
+        </ion-input>
+      </ion-item>
+
+      <!-- Password -->
+      <ion-item lines="none" class="input-item">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Mot de passe">
+        </ion-input>
+        <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()">
+          <ion-icon
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'">
+          </ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Forgot -->
+      <div class="forgot-link">
+        <ion-text>Mot de passe oublié ?</ion-text>
+      </div>
+
+      <!-- Login -->
+      <ion-button expand="block" class="login-btn" (click)="onLogin()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Se connecter
+      </ion-button>
+
+      <div class="divider"><span>ou</span></div>
+
+      <!-- Register -->
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="register-btn"
+        (click)="goToRegister()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Créer un compte
+      </ion-button>
+    </form>
+
+    <div class="footer">
+      <p>© 2026 Lumière Logistique</p>
+    </div>
+
+  </div>
+</ion-content>

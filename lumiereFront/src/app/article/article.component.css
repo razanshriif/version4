@@ -1,0 +1,243 @@
+:root {
+  --primary-orange: rgb(255, 38, 0);
+  --black: #1c2526;
+  --white: #ffffff;
+  --gray: #f8f9fa;
+  --border-color: #333333;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  --hover-bg: rgba(255, 38, 0, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--gray);
+}
+
+.article-container {
+  padding: 32px;
+  background-color: var(--gray);
+  min-height: calc(100vh - 68px);
+  margin-top: 68px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--black);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title i {
+  font-size: 1.6rem;
+  color: var(--primary-orange);
+}
+
+.create-button {
+  
+  color: white;
+  background-color: black;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.article-card, .form-card {
+  background-color: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+mat-card-header {
+  background: linear-gradient(135deg, var(--primary-orange) 60%, var(--black));
+  color: var(--white);
+  padding: 16px;
+}
+
+mat-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+mat-card-title i {
+  font-size: 1.4rem;
+}
+
+mat-table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  font-weight: 600;
+  color: var(--black);
+  background-color: var(--gray);
+}
+
+td.mat-cell {
+  color: var(--black);
+}
+
+tr.mat-row:hover {
+  background-color: var(--hover-bg);
+  transition: var(--transition);
+}
+
+button[mat-icon-button] {
+  margin: 0 4px;
+  transition: var(--transition);
+}
+
+button[mat-icon-button]:hover {
+  transform: scale(1.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.form-actions button {
+  background: linear-gradient(135deg, var(--black) 60%, var(--primary-orange));
+  color: var(--white);
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.form-actions button[color="warn"] {
+  background: linear-gradient(135deg, #6c757d 60%, #495057);
+}
+
+.form-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.detail-grid p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--black);
+}
+
+.detail-grid p strong {
+  color: var(--primary-orange);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-error {
+  font-size: 0.85rem;
+  color: var(--primary-orange);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .article-container {
+    padding: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .create-button {
+    width: 100%;
+  }
+
+  .form-grid, .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-card, .form-card {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .article-container {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .create-button {
+    font-size: 1rem;
+  }
+
+  th.mat-header-cell,
+  td.mat-cell {
+    font-size: 0.9rem;
+  }
+
+  button[mat-icon-button] {
+    padding: 4px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

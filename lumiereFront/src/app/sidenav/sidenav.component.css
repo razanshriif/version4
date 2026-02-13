@@ -1,0 +1,37 @@
+.sidenav {
+    background-color: black;
+    color: orange;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .sidenav a {
+    text-decoration: none;
+    color: orange;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .sidenav a p {
+    margin: 0;
+    padding: 10px;
+  }
+  
+  .sidenav a.active p,
+  .sidenav a:hover p {
+    color: #ffcc00; /* A lighter shade of orange for hover and active states */
+  }
+  
+  .sidenav .logout {
+    color: red; /* Optional: specific color for logout */
+  }
+  
+  .sidenav .logout:hover {
+    color: #ff6666; /* Lighter red for hover state */
+  }
+  

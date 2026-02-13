@@ -1,0 +1,108 @@
+// src/app/pages/auth/register/register.page.scss
+
+.lumiere-toolbar {
+  --background: linear-gradient(135deg, #FF8C00 0%, #FFB347 100%);
+  --color: white;
+}
+
+ion-content {
+  --background: #f5f7fa;
+}
+
+.register-container {
+  padding: 20px;
+}
+
+.header-section {
+  text-align: center;
+  padding: 20px 0 30px;
+
+  h1 {
+    color: #1e3a5f;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    color: #666;
+    font-size: 15px;
+    margin: 0;
+  }
+}
+
+.form-section {
+  max-width: 500px;
+  margin: 0 auto;
+
+  .input-item {
+    --background: white;
+    --border-radius: 12px;
+    --padding-start: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    ion-label {
+      color: #666;
+      font-weight: 500;
+    }
+
+    ion-input {
+      --color: #1a1a1a;
+    }
+
+    ion-button {
+      --padding-start: 0;
+      --padding-end: 0;
+      margin: 0;
+
+      ion-icon {
+        color: #666;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .checkbox-item {
+    --background: transparent;
+    --padding-start: 0;
+    margin: 20px 0;
+
+    .checkbox-label {
+      font-size: 14px;
+      margin-left: 10px;
+      color: #666;
+
+      a {
+        color: #FF8C00;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .register-btn {
+    --background: linear-gradient(135deg, #FF8C00 0%, #FFB347 100%);
+    --border-radius: 12px;
+    height: 50px;
+    font-weight: 700;
+    margin: 20px 0;
+    text-transform: none;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 20px;
+
+    p {
+      color: #666;
+      font-size: 14px;
+
+      a {
+        color: #FF8C00;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+}

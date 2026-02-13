@@ -1,0 +1,317 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Nouvel Ordre</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content-wrapper">
+    <form #ordreForm="ngForm" (ngSubmit)="onSubmit()">
+
+      <!-- Client Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>
+            <ion-icon name="person-outline" class="section-icon"></ion-icon>
+            Informations Client
+          </h3>
+        </div>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="matricule">Matricule</label>
+              <ion-input id="matricule" [(ngModel)]="ordre.matricule" name="matricule" placeholder="Matricule"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="client">Code Client</label>
+              <ion-input id="client" [(ngModel)]="ordre.client" name="client" placeholder="Code client" fill="outline"
+                required></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nomclient">Nom Client</label>
+              <ion-input id="nomclient" [(ngModel)]="ordre.nomclient" name="nomclient" placeholder="Nom du client"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="siteclient">Site Client</label>
+              <ion-input id="siteclient" [(ngModel)]="ordre.siteclient" name="siteclient" placeholder="Site client"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="idedi">ID EDI</label>
+              <ion-input id="idedi" [(ngModel)]="ordre.idedi" name="idedi" placeholder="ID EDI"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pickup Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>
+            <ion-icon name="arrow-up-circle-outline" class="section-icon"></ion-icon>
+            Informations Chargement
+          </h3>
+        </div>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="codeclientcharg">Code Client Chargement</label>
+              <ion-input id="codeclientcharg" [(ngModel)]="ordre.codeclientcharg" name="codeclientcharg"
+                placeholder="Code client" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="chargementNom">Nom</label>
+              <ion-input id="chargementNom" [(ngModel)]="ordre.chargementNom" name="chargementNom"
+                placeholder="Nom du lieu" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="chargementAdr1">Adresse 1</label>
+              <ion-input id="chargementAdr1" [(ngModel)]="ordre.chargementAdr1" name="chargementAdr1"
+                placeholder="Adresse ligne 1" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="chargementAdr2">Adresse 2</label>
+              <ion-input id="chargementAdr2" [(ngModel)]="ordre.chargementAdr2" name="chargementAdr2"
+                placeholder="Adresse ligne 2" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="chargementVille">Ville</label>
+              <ion-input id="chargementVille" [(ngModel)]="ordre.chargementVille" name="chargementVille"
+                placeholder="Ville" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="chargementDate">Date Chargement</label>
+              <ion-input id="chargementDate" [(ngModel)]="ordre.chargementDate" name="chargementDate" type="date"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>
+            <ion-icon name="arrow-down-circle-outline" class="section-icon"></ion-icon>
+            Informations Livraison
+          </h3>
+        </div>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="codeclientliv">Code Client Livraison</label>
+              <ion-input id="codeclientliv" [(ngModel)]="ordre.codeclientliv" name="codeclientliv"
+                placeholder="Code client" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="livraisonNom">Nom</label>
+              <ion-input id="livraisonNom" [(ngModel)]="ordre.livraisonNom" name="livraisonNom"
+                placeholder="Nom du lieu" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="livraisonAdr1">Adresse 1</label>
+              <ion-input id="livraisonAdr1" [(ngModel)]="ordre.livraisonAdr1" name="livraisonAdr1"
+                placeholder="Adresse ligne 1" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="livraisonAdr2">Adresse 2</label>
+              <ion-input id="livraisonAdr2" [(ngModel)]="ordre.livraisonAdr2" name="livraisonAdr2"
+                placeholder="Adresse ligne 2" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="codepostalliv">Code Postal</label>
+              <ion-input id="codepostalliv" [(ngModel)]="ordre.codepostalliv" name="codepostalliv"
+                placeholder="Code postal" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="livraisonVille">Ville</label>
+              <ion-input id="livraisonVille" [(ngModel)]="ordre.livraisonVille" name="livraisonVille"
+                placeholder="Ville" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="livraisonDate">Date Livraison</label>
+              <ion-input id="livraisonDate" [(ngModel)]="ordre.livraisonDate" name="livraisonDate" type="date"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>
+            <ion-icon name="cube-outline" class="section-icon"></ion-icon>
+            Informations Produit
+          </h3>
+        </div>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="codeArticle">Code Article</label>
+              <ion-input id="codeArticle" [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="Code article"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="designation">Désignation</label>
+              <ion-input id="designation" [(ngModel)]="ordre.designation" name="designation" placeholder="Désignation"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="poids">Poids (kg)</label>
+              <ion-input id="poids" [(ngModel)]="ordre.poids" name="poids" type="number" placeholder="0.0"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="volume">Volume (m³)</label>
+              <ion-input id="volume" [(ngModel)]="ordre.volume" name="volume" type="number" placeholder="0.0"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombrePalettes">Nombre de Palettes</label>
+              <ion-input id="nombrePalettes" [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes" type="number"
+                placeholder="0" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombreColis">Nombre de Colis</label>
+              <ion-input id="nombreColis" [(ngModel)]="ordre.nombreColis" name="nombreColis" type="number"
+                placeholder="0" fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="longueur">Longueur (m)</label>
+              <ion-input id="longueur" [(ngModel)]="ordre.longueur" name="longueur" type="number" placeholder="0.0"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>
+            <ion-icon name="information-circle-outline" class="section-icon"></ion-icon>
+            Informations Complémentaires
+          </h3>
+        </div>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dateSaisie">Date de Saisie</label>
+              <ion-input id="dateSaisie" [(ngModel)]="ordre.dateSaisie" name="dateSaisie" type="date"
+                fill="outline"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="statut">Statut</label>
+              <ion-select id="statut" [(ngModel)]="ordre.statut" name="statut" placeholder="Sélectionner un statut"
+                fill="outline">
+                <ion-select-option value="NON_CONFIRME">NON CONFIRMÉ</ion-select-option>
+                <ion-select-option value="CONFIRME">CONFIRMÉ</ion-select-option>
+                <ion-select-option value="EN_COURS">EN COURS</ion-select-option>
+                <ion-select-option value="LIVRE">LIVRÉ</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <ion-button expand="block" class="cancel-btn" (click)="cancel()" type="button">
+          <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+          Annuler
+        </ion-button>
+        <ion-button expand="block" class="submit-btn" type="submit">
+          <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+          Enregistrer
+        </ion-button>
+      </div>
+
+      <div class="spacer"></div>
+    </form>
+  </div>
+</ion-content>

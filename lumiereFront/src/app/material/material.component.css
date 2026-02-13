@@ -1,0 +1,260 @@
+/* General styles */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 56px;
+  background-color: #1a1a1a; /* Black background */
+  color: #ff6200; /* Orange text */
+}
+
+.logo {
+  height: 40px;
+  margin: 0 10px;
+}
+
+.toolbar-title {
+  flex-grow: 1;
+  font-size: 1.2rem;
+  margin: 0;
+  color: #ff6200; /* Orange title */
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-button {
+  position: relative;
+  color: #ff6200; /* Orange icon */
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #ff6200; /* Orange badge */
+  color: #1a1a1a; /* Black text */
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+}
+
+.new-notifications {
+  color: #ffa500; /* Lighter orange for emphasis */
+}
+
+.notification-panel {
+  position: absolute;
+  top: 56px;
+  right: 16px;
+  width: 90%;
+  max-width: 300px;
+  background-color: #1a1a1a; /* Black background */
+  color: #ff6200; /* Orange text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ff6200; /* Orange border */
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #3c3c3c; /* Dark gray for contrast */
+}
+
+.notification-item.read {
+  background-color: #2a2a2a; /* Darker black for read items */
+}
+
+.notification-item .fa-circle {
+  font-size: 8px;
+  margin-right: 8px;
+  color: #ff6200; /* Orange dot */
+}
+
+.notification-item .read-dot {
+  color: #757575; /* Gray for read dots */
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+}
+
+.notification-type {
+  font-weight: bold;
+  color: #ffa500; /* Lighter orange for type */
+}
+
+.notification-timestamp {
+  font-size: 0.75rem;
+  color: #b0b0b0; /* Light gray for timestamp */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ff6200; /* Orange border */
+}
+
+.user-name {
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #ff6200; /* Orange text */
+}
+
+.sidenav-container {
+  height: calc(100vh - 56px);
+}
+
+.sidenav {
+  width: 240px;
+  background-color: #1a1a1a; /* Black background */
+  color: #ff6200; /* Orange text */
+}
+
+.sidenav.collapsed {
+  width: 64px;
+}
+
+.sidenav-nav {
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.nav-item, .sub-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  color: #ff6200; /* Orange text */
+}
+
+.nav-item i, .sub-nav-item i {
+  margin-right: 12px;
+  width: 24px;
+  text-align: center;
+  color: #ff6200; /* Orange icons */
+}
+
+.nav-text {
+  flex-grow: 1;
+}
+
+.sub-menu {
+  padding-left: 24px;
+  background-color: #2a2a2a; /* Slightly lighter black for sub-menu */
+}
+
+.main-content {
+  padding: 16px;
+  background-color: #f0f0f0; /* Light gray for contrast */
+  overflow-y: auto;
+}
+
+.active {
+  background-color: #ff6200; /* Orange for active item */
+  color: #1a1a1a; /* Black text for contrast */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 600px) {
+  .toolbar {
+    height: 48px;
+    padding: 0 8px;
+    background-color: #1a1a1a; /* Black background */
+  }
+
+  .logo {
+    height: 32px;
+    margin: 0 8px;
+  }
+
+  .toolbar-title {
+    font-size: 1rem;
+    color: #ff6200; /* Orange title */
+  }
+
+  .toolbar-actions {
+    gap: 4px;
+  }
+
+  .notification-panel {
+    width: 100%;
+    right: 0;
+    top: 48px;
+    max-height: 70vh;
+    background-color: #1a1a1a; /* Black background */
+    color: #ff6200; /* Orange text */
+  }
+
+  .user-image {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ff6200; /* Orange border */
+  }
+
+  .user-name {
+    font-size: 0.75rem;
+    color: #ff6200; /* Orange text */
+  }
+
+  .sidenav {
+    width: 200px;
+    background-color: #1a1a1a; /* Black background */
+  }
+
+  .sidenav.collapsed {
+    width: 0;
+  }
+
+  .nav-item, .sub-nav-item {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    color: #ff6200; /* Orange text */
+  }
+
+  .nav-item i, .sub-nav-item i {
+    margin-right: 8px;
+    color: #ff6200; /* Orange icons */
+  }
+
+  .main-content {
+    padding: 8px;
+  }
+
+  .active {
+    background-color: #ff6200; /* Orange for active item */
+    color: #1a1a1a; /* Black text for contrast */
+  }
+}

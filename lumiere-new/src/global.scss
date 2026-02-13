@@ -1,0 +1,222 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+// ========== LUMIERE GLOBAL VARIABLES ==========
+:root {
+    --lumiere-primary: #D97706;
+    --lumiere-primary-light: #EA580C;
+    --lumiere-blue: #3730A3;
+    --lumiere-green: #059669;
+    --lumiere-purple: #7C3AED;
+    --lumiere-dark: #0F172A;
+    --lumiere-dark-card: #1E293B;
+    --lumiere-light-bg: #F8FAFC;
+}
+
+// ========== GLOBAL HERO GRADIENT ==========
+.hero-gradient {
+    position: absolute;
+    top: -100px;
+    left: -20%;
+    right: -20%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--lumiere-primary) 0%, var(--lumiere-primary-light) 50%, var(--lumiere-blue) 100%);
+    border-radius: 0 0 50% 50%;
+    z-index: 0;
+    opacity: 0.98;
+}
+
+// ========== MODERN TOOLBAR ==========
+.modern-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    padding: 16px 20px;
+    position: relative;
+    z-index: 100;
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .logo-circle {
+                width: 56px;
+                height: 56px;
+                background: white;
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+                ion-icon {
+                    font-size: 28px;
+                    color: var(--lumiere-primary);
+                }
+            }
+
+            .brand-info {
+                display: flex;
+                flex-direction: column;
+
+                .brand-name {
+                    font-size: 18px;
+                    font-weight: 900;
+                    color: white;
+                    letter-spacing: 1px;
+                }
+
+                .brand-tag {
+                    font-size: 11px;
+                    color: rgba(255, 255, 255, 0.8);
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+
+            .icon-btn {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s;
+
+                ion-icon {
+                    font-size: 22px;
+                    color: white;
+                }
+
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
+        }
+    }
+}
+
+// ========== CONTENT WRAPPER ==========
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+}
+
+// ========== SECTIONS ==========
+.section {
+    margin-top: 32px;
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--lumiere-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            font-size: 24px;
+            color: var(--lumiere-primary);
+        }
+    }
+}
+
+// ========== SPACER ==========
+.spacer {
+    height: 100px;
+}
+
+// ========== EMPTY STATE ==========
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+
+    ion-icon {
+        font-size: 64px;
+        color: var(--lumiere-primary);
+        margin-bottom: 16px;
+    }
+
+    h2 {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--lumiere-dark);
+        margin: 0 0 8px 0;
+    }
+
+    p {
+        font-size: 14px;
+        color: #64748B;
+        margin: 0 0 24px 0;
+    }
+
+    ion-button {
+        --background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+        --border-radius: 16px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        font-weight: 700;
+        text-transform: none;
+
+        &::part(native) {
+            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.4);
+        }
+    }
+}

@@ -1,0 +1,282 @@
+/* Styles généraux */
+.container {
+  padding: 20px;
+  margin-top: 4%;
+  max-width: 100%;
+}
+
+/* Header */
+.container > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #2C3E50;
+  font-size: 1.8rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+h2 i {
+  color: #FF6B00;
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaire de recherche */
+form.mb-3 {
+  background-color: #F5F7FA;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-control {
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #FF6B00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+}
+
+/* Carte et tableau */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #FF6B00;
+  color: white;
+  padding: 15px 20px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title i {
+  color: white;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 0;
+  color: #2C3E50;
+}
+
+.table th {
+  background-color: #FF6B00;
+  color: white;
+  font-weight: 500;
+  padding: 12px 15px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  position: sticky;
+  top: 0;
+}
+
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #E0E0E0;
+  vertical-align: middle;
+}
+
+.table tr:hover td {
+  background-color: rgba(255, 107, 0, 0.05);
+}
+
+/* Boutons d'action */
+.btn-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-warning {
+  color: #FF6B00;
+  border-color: #FF6B00;
+}
+
+.btn-outline-warning:hover {
+  background-color: #FF6B00;
+  color: white;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-outline-info {
+  color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/* Modal */
+.modal-header {
+  background-color: #FF6B00;
+  color: white;
+  padding: 15px 20px;
+  border-bottom: none;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body .row {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #2C3E50;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .container > div:first-child {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .btn-primary {
+    margin-left: 0 !important;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .table th, .table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    margin-top: 2%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  form.mb-3 .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .modal-body .row {
+    flex-direction: column;
+  }
+
+  .modal-body .col-md-4 {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .card-header {
+    padding: 10px 15px;
+  }
+
+  .table th {
+    font-size: 0.7rem;
+    padding: 6px 8px;
+  }
+
+  .table td {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .btn-sm {
+    width: 100%;
+  }
+}

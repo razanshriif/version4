@@ -1,0 +1,31 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="logo">
+      <img src="assets/lum.jpg" alt="Logo">
+    </div>
+    <h2 style="color: aliceblue;">LOG IN</h2>
+    <form>
+      <div class="input-group">
+        <label for="username">
+          <i class="fas fa-user"></i>
+        </label>
+        <input type="text" id="username" name="username" [(ngModel)]="email" class="custom-input" placeholder="Username"
+          required>
+      </div>
+      <div class="input-group">
+        <label for="password">
+          <i class="fas fa-lock"></i>
+        </label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" class="custom-input"
+          placeholder="Password" required>
+      </div>
+      <div>
+        <p *ngIf="err" class="error-message"><i class="fas fa-exclamation-triangle"></i> {{this.error}}</p>
+      </div>
+      <button type="submit" class="btn" (click)="login()">Connexion</button>
+      <div style="margin-top: 15px; text-align: center;">
+        <a routerLink="/register" style="color: aliceblue;">Create an Account</a>
+      </div>
+    </form>
+  </div>
+</div>

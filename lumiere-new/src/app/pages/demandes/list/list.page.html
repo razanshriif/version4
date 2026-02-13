@@ -1,0 +1,94 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mes Demandes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="createNewDemande()">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Search and Filter Bar -->
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="onSearch($event)" placeholder="Rechercher une demande..."
+      debounce="500">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-select [(ngModel)]="selectedStatut" (ionChange)="onStatutChange($event)" placeholder="Filtrer par statut"
+      interface="popover">
+      <ion-select-option *ngFor="let option of statutOptions" [value]="option.value">
+        {{ option.label }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-button slot="end" fill="clear" (click)="resetFilters()">
+      <ion-icon name="refresh" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- Demandes List -->
+  <div *ngIf="!loading && demandes.length > 0">
+    <ion-card *ngFor="let demande of demandes" (click)="viewDetails(demande)">
+      <ion-card-header>
+        <div class="card-header-content">
+          <ion-card-title>Demande #{{ demande.id }}</ion-card-title>
+          <ion-badge [class]="getStatusClass(demande.statut)">
+            {{ getStatusLabel(demande.statut) }}
+          </ion-badge>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="demande-info">
+          <div class="info-row">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ formatDate(demande.dateCreation) }}</span>
+          </div>
+
+          <div class="info-row">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ demande.adresseEnlevement.ville }} → {{ demande.adresseLivraison.ville }}</span>
+          </div>
+
+          <div class="info-row" *ngIf="demande.priorite">
+            <ion-icon name="flag-outline"></ion-icon>
+            <span>{{ demande.priorite }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && demandes.length === 0" class="empty-state">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h2>Aucune demande trouvée</h2>
+    <p>Créez votre première demande pour commencer</p>
+    <ion-button (click)="createNewDemande()">
+      <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+      Nouvelle demande
+    </ion-button>
+  </div>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll *ngIf="!loading && demandes.length > 0" (ionInfinite)="loadMore($event)" threshold="100px">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Chargement...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

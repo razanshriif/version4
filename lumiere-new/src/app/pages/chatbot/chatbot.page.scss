@@ -1,0 +1,272 @@
+// CHATBOT PAGE STYLES
+ion-header {
+    ion-toolbar {
+        --background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+        --color: white;
+
+        ion-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        ion-button {
+            --color: white;
+        }
+    }
+}
+
+ion-content {
+    --background: #F9FAFB;
+}
+
+.chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+// ========== MESSAGES ==========
+.messages-wrapper {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.message-row {
+    display: flex;
+    margin-bottom: 16px;
+    animation: slideIn 0.3s ease-out;
+
+    &.user-message {
+        justify-content: flex-end;
+
+        .message-bubble {
+            background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+    }
+
+    &.bot-message {
+        justify-content: flex-start;
+
+        .message-bubble {
+            background: white;
+            color: #1F2937;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.message-bubble {
+    max-width: 75%;
+    padding: 12px 16px;
+
+    .message-text {
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .message-time {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 4px;
+        text-align: right;
+    }
+}
+
+// ========== TYPING INDICATOR ==========
+.typing-indicator {
+    padding: 16px 20px;
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+
+        span {
+            width: 8px;
+            height: 8px;
+            background: #9CA3AF;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+
+            &:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+        }
+    }
+}
+
+@keyframes typing {
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ========== QUICK ACTIONS ==========
+.quick-actions {
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    margin: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #374151;
+        margin: 0 0 12px 0;
+    }
+
+    .action-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .chip {
+            background: #F3F4F6;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: var(--lumiere-primary);
+                color: white;
+                border-color: var(--lumiere-primary);
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
+}
+
+// ========== INPUT FOOTER ==========
+ion-footer {
+    background: white;
+    border-top: 1px solid #E5E7EB;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-container {
+    display: flex;
+    align-items: flex-end;
+    padding: 12px 16px;
+    gap: 12px;
+
+    ion-textarea {
+        flex: 1;
+        --background: #F9FAFB;
+        --border-radius: 20px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        --color: #1F2937;
+        --placeholder-color: #9CA3AF;
+        font-size: 14px;
+        border: 1px solid #E5E7EB;
+        border-radius: 20px;
+        max-height: 120px;
+    }
+
+    .send-btn {
+        --background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+        --border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        margin: 0;
+
+        &::part(native) {
+            padding: 0;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+        }
+
+        ion-icon {
+            font-size: 20px;
+        }
+    }
+}
+
+// ========== DARK MODE ==========
+@media (prefers-color-scheme: dark) {
+    ion-content {
+        --background: #111827;
+    }
+
+    .message-row.bot-message .message-bubble {
+        background: #1F2937;
+        color: white;
+    }
+
+    .quick-actions {
+        background: #1F2937;
+
+        h3 {
+            color: white;
+        }
+
+        .action-chips .chip {
+            background: #111827;
+            border-color: #374151;
+            color: #E5E7EB;
+
+            &:hover {
+                background: var(--lumiere-primary);
+                color: white;
+            }
+        }
+    }
+
+    ion-footer {
+        background: #1F2937;
+        border-top-color: #374151;
+    }
+
+    .input-container {
+        ion-textarea {
+            --background: #111827;
+            --color: white;
+            border-color: #374151;
+        }
+    }
+}

@@ -1,0 +1,47 @@
+/* Styles pour la barre de navigation */
+
+
+/* Style pour le logo */
+.navbar-brand img {
+    width: 200px;
+    height: 100px;
+    /* Ajustez les marges ou le positionnement si nécessaire */
+}
+
+/* Style pour le titre dans la barre de navigation */
+.navbar .text-center h1 {
+    color: white; /* Couleur du texte */
+    margin: 0; /* Élimine la marge par défaut du titre */
+    font-size: 1.5rem; /* Taille de la police */
+    line-height: 1.2; /* Hauteur de ligne pour l'espacement du texte */
+}
+
+/* Styles pour le bouton du menu */
+.navbar-toggler {
+    border: none; /* Enlève la bordure par défaut du bouton */
+}
+
+/* Assurez-vous que la barre de navigation est bien positionnée sur les petits écrans */
+@media (max-width: 992px) {
+    .navbar-brand {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .navbar-collapse {
+        text-align: center;
+    }
+}
+
+
+.notification-list ul li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+  }
+  
+  .notification-list ul li:hover {
+    background-color: rgb(217, 255, 0);
+    color: white;
+    font-size: larger;
+  }

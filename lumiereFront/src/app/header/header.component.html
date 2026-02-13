@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg " style="background-color: rgb(255, 123, 0);">
+    <button class="btn btn-outline btn-sm" title="Menu" style="font-size: larger;"  (click)="menuClicked.emit()" >
+        <i class="fa fa-bars"></i>
+      </button>
+      
+    <div class="collapse navbar-collapse" id="navbarContent">
+        <a class="navbar-brand" href="#">
+           
+        </a>
+        <div class="mx-auto text-center" >
+      <img src="assets\lum-removebg-preview.png" style="width: 14%; margin-left: 130%;" alt="">
+        </div>
+
+     <div style="margin-right: 20%;">
+    
+      <i
+      class="fa fa-bell"
+      [ngStyle]="{ color: hasNewNotifications ? 'white' : 'black' }"
+      style="font-size: larger; cursor: pointer;"
+      (click)="toggleNotifications()"
+    ></i>
+    <div
+      *ngIf="showNotifications"
+      class="notification-list"
+      style="
+        position: absolute;
+        right: 14%;
+        top: 60px;
+        background-color: white;
+        border: 1px solid #ccc;
+        width: 400px;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+      "
+    >
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li *ngFor="let notification of clients" style="padding: 10px; border-bottom: 1px solid #eee;"   [ngStyle]="{ color: notification.isRead ? 'red' : 'black' }">
+          {{ notification.type}} |  {{ notification.message}} | {{ notification.timestamp}}
+        </li>
+      </ul>
+    </div>
+     </div>
+
+    </div>
+</nav>
