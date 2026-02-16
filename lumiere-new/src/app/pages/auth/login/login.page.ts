@@ -6,11 +6,10 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import {
   IonContent,
-  IonItem,
   IonInput,
   IonButton,
   IonIcon,
-  IonText,
+  IonSpinner,
   LoadingController,
   ToastController
 } from '@ionic/angular/standalone';
@@ -35,17 +34,17 @@ import {
     CommonModule,
     ReactiveFormsModule,
     IonContent,
-    IonItem,
     IonInput,      // ✅ IMPORTANT : IonInput ajouté ici
     IonButton,
     IonIcon,
-    IonText
+    IonSpinner
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]  // ✅ IMPORTANT : Permet d'utiliser les custom elements Ionic
 })
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
   showPassword = false;
+  isLoading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -81,6 +80,7 @@ export class LoginPage implements OnInit {
   // Login
   async onLogin() {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       const loading = await this.loadingController.create({
         message: 'Connexion en cours...',
         spinner: 'crescent'
@@ -89,11 +89,13 @@ export class LoginPage implements OnInit {
 
       this.authService.login(this.loginForm.value).subscribe({
         next: async (response) => {
+          this.isLoading = false;
           await loading.dismiss();
           await this.showToast('Connexion réussie !', 'success');
           this.router.navigate(['/home']);
         },
         error: async (error) => {
+          this.isLoading = false;
           await loading.dismiss();
           let errorMessage = 'Email ou mot de passe incorrect';
 

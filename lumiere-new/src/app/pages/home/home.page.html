@@ -3,215 +3,132 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- HERO GRADIENT BACKGROUND -->
-  <div class="hero-gradient"></div>
-
-  <!-- MODERN HEADER -->
-  <div class="modern-toolbar">
-    <div class="header-content">
-      <div class="logo-section">
-        <div class="logo-circle">
-          <img src="assets/lum.jpg" alt="Lumière Logo" class="logo-img" />
-        </div>
-        <div class="brand-info">
-          <div class="brand-name">LUMIÈRE</div>
-          <div class="brand-tag">Votre partenaire livraison</div>
+  <!-- Premium Header -->
+  <div class="main-header">
+    <div class="header-top">
+      <div class="brand-box">
+        <img src="assets/lum.jpg" alt="Lumière" class="header-logo" />
+        <div class="brand-text">
+          <span class="name">LUMIÈRE</span>
+          <span class="tag">Logistique Express</span>
         </div>
       </div>
-      <div class="header-actions">
-        <div class="icon-btn" (click)="goToNotifications()">
+      <div class="user-actions">
+        <div class="action-btn" (click)="goToNotifications()">
           <ion-icon name="notifications-outline"></ion-icon>
           <div class="badge" *ngIf="stats.notifications > 0">{{ stats.notifications }}</div>
         </div>
-        <div class="icon-btn" (click)="goToProfile()">
+        <div class="action-btn" (click)="goToProfile()">
           <ion-icon name="person-circle-outline"></ion-icon>
         </div>
-        <div class="icon-btn" (click)="logout()">
-          <ion-icon name="log-out-outline"></ion-icon>
-        </div>
+      </div>
+    </div>
+
+    <div class="welcome-card">
+      <div class="welcome-text">
+        <p class="greeting">Bonjour,</p>
+        <h1 class="user-name">{{ getFullName() }}</h1>
+        <p class="summary">Vous avez <b>{{ stats.mesLivraisonsEnCours }}</b> livraisons en cours aujourd'hui.</p>
+      </div>
+      <div class="quick-add" (click)="createNewDemande()">
+        <ion-icon name="add"></ion-icon>
       </div>
     </div>
   </div>
 
-  <!-- HERO SECTION -->
-  <div class="hero-section">
-    <div class="user-welcome">
-      <div class="avatar-container">
-        <div class="avatar-glow"></div>
-        <div class="avatar">
-          <ion-icon name="person"></ion-icon>
-        </div>
+  <div class="content-container">
+    <!-- Status Overview -->
+    <div class="section-container">
+      <div class="section-title">
+        <h3>Suivi de vos colis</h3>
       </div>
-      <div class="welcome-text">
-        <p class="greeting">Bonjour 👋</p>
-        <h1 class="user-name">{{ getFullName() }}</h1>
-        <p class="subtitle">Bienvenue sur votre espace</p>
-      </div>
-    </div>  ²
-  </div>
-
-  <!-- CONTENT WRAPPER -->
-  <div class="content-wrapper">
-
-    <!-- STATS SECTION -->
-    <div class="stats-section">
-      <div class="stat-card card-primary" (click)="navigateTo('/demandes/list')">
-        <div class="card-bg"></div>
-        <div class="card-content">
-          <div class="stat-icon">
-            <ion-icon name="hourglass-outline"></ion-icon>
+      <div class="status-grid">
+        <div class="status-card pending" (click)="navigateTo('/demandes/list')">
+          <div class="icon-wrap">
+            <ion-icon name="time-outline"></ion-icon>
           </div>
-          <div class="stat-info">
-            <p class="stat-label">En cours</p>
-            <h2 class="stat-value">{{ stats.mesDemandesEnCours }}</h2>
+          <div class="info">
+            <span class="val">{{ stats.mesDemandesEnCours }}</span>
+            <span class="lab">En attente</span>
           </div>
         </div>
-        <div class="card-shine"></div>
-      </div>
-
-      <div class="stat-card card-blue" (click)="navigateTo('/livraisons/tracking')">
-        <div class="card-bg"></div>
-        <div class="card-content">
-          <div class="stat-icon">
+        <div class="status-card active" (click)="navigateTo('/livraisons/tracking')">
+          <div class="icon-wrap">
             <ion-icon name="car-outline"></ion-icon>
           </div>
-          <div class="stat-info">
-            <p class="stat-label">Livraisons actives</p>
-            <h2 class="stat-value">{{ stats.mesLivraisonsEnCours }}</h2>
+          <div class="info">
+            <span class="val">{{ stats.mesLivraisonsEnCours }}</span>
+            <span class="lab">En route</span>
           </div>
         </div>
-        <div class="card-shine"></div>
-      </div>
-
-      <div class="stat-card card-green" (click)="navigateTo('/demandes/list')">
-        <div class="card-bg"></div>
-        <div class="card-content">
-          <div class="stat-icon">
-            <ion-icon name="checkmark-circle-outline"></ion-icon>
+        <div class="status-card done" (click)="navigateTo('/demandes/list')">
+          <div class="icon-wrap">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
           </div>
-          <div class="stat-info">
-            <p class="stat-label">Livrées</p>
-            <h2 class="stat-value">{{ stats.mesDemandesTerminees }}</h2>
+          <div class="info">
+            <span class="val">{{ stats.mesDemandesTerminees }}</span>
+            <span class="lab">Livrées</span>
           </div>
-        </div>
-        <div class="card-shine"></div>
-      </div>
-
-      <div class="stat-card card-purple" (click)="navigateTo('/demandes/list')">
-        <div class="card-bg"></div>
-        <div class="card-content">
-          <div class="stat-icon">
-            <ion-icon name="document-text-outline"></ion-icon>
-          </div>
-          <div class="stat-info">
-            <p class="stat-label">Total commandes</p>
-            <h2 class="stat-value">{{ stats.totalMesDemandes }}</h2>
-          </div>
-        </div>
-        <div class="card-shine"></div>
-      </div>
-    </div>
-
-    <!-- QUICK ACTIONS -->
-    <div class="section">
-      <div class="section-header">
-        <h3>
-          <ion-icon name="flash-outline" class="section-icon"></ion-icon>
-          Actions rapides
-        </h3>
-      </div>
-      <div class="actions-grid">
-        <div class="action-card" *ngFor="let action of quickActions" (click)="navigateTo(action.route)">
-          <div class="action-icon" [ngClass]="action.color">
-            <ion-icon [name]="action.icon"></ion-icon>
-          </div>
-          <span class="action-label" [innerHTML]="action.label"></span>
         </div>
       </div>
     </div>
 
-    <!-- MES COMMANDES RÉCENTES -->
-    <div class="section" *ngIf="mesDemandesRecentes.length > 0">
-      <div class="section-header">
-        <h3>
-          <ion-icon name="time-outline" class="section-icon"></ion-icon>
-          Activité récente
-        </h3>
-        <button class="view-all-btn" (click)="navigateTo('/demandes/list')">
-          Tout voir
-          <ion-icon name="chevron-forward-outline"></ion-icon>
-        </button>
+    <!-- Main Actions -->
+    <div class="section-container">
+      <div class="action-banner" (click)="createNewDemande()">
+        <div class="banner-content">
+          <h3>Nouvelle Demande</h3>
+          <p>Expédiez votre colis en quelques clics</p>
+        </div>
+        <div class="banner-icon">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </div>
       </div>
-      <div class="activity-list">
-        <div class="activity-item" *ngFor="let demande of mesDemandesRecentes" (click)="viewDemandeDetails(demande)">
-          <div class="activity-indicator" [ngClass]="getStatusClass(demande.statut)"></div>
-          <div class="activity-content">
-            <div class="activity-header">
-              <span class="activity-id">Commande #{{ demande.id }}</span>
-              <span class="activity-time">{{ formatTime(demande.dateDemande) }}</span>
+    </div>
+
+    <!-- Recent Activity Simplified -->
+    <div class="section-container" *ngIf="mesDemandesRecentes.length > 0">
+      <div class="section-header">
+        <h3>Activité récente</h3>
+        <a (click)="navigateTo('/demandes/list')">Tout voir</a>
+      </div>
+
+      <div class="modern-list">
+        <div class="list-card" *ngFor="let demande of mesDemandesRecentes" (click)="viewDemandeDetails(demande)">
+          <div class="card-indicator" [ngClass]="getStatusClass(demande.statut)"></div>
+          <div class="card-body">
+            <div class="row">
+              <span class="order-id">#{{ demande.id }}</span>
+              <span class="order-date">{{ formatDate(demande.dateDemande) }}</span>
             </div>
-            <div class="activity-details">
-              <p class="activity-date">{{ formatDate(demande.dateDemande) }}</p>
-              <span class="activity-status" [ngClass]="getStatusClass(demande.statut)">
+            <div class="row">
+              <span class="order-status" [ngClass]="getStatusClass(demande.statut)">
                 {{ getStatusLabel(demande.statut) }}
               </span>
+              <ion-icon name="chevron-forward-outline" class="row-arrow"></ion-icon>
             </div>
           </div>
-          <ion-icon name="chevron-forward-outline" class="activity-arrow"></ion-icon>
         </div>
       </div>
     </div>
 
-    <!-- MES LIVRAISONS ACTIVES -->
-    <div class="section" *ngIf="mesLivraisonsActives.length > 0">
-      <div class="section-header">
-        <h3>
-          <ion-icon name="navigate-circle-outline" class="section-icon"></ion-icon>
-          Livraisons en cours
-        </h3>
-      </div>
-      <div class="activity-list">
-        <div class="activity-item" *ngFor="let livraison of mesLivraisonsActives" (click)="trackLivraison(livraison)">
-          <div class="activity-indicator EN_COURS"></div>
-          <div class="activity-content">
-            <div class="activity-header">
-              <span class="activity-id">Livraison #{{ livraison.id }}</span>
-              <span class="activity-time">{{ formatTime(livraison.dateDebut) }}</span>
-            </div>
-            <div class="activity-details">
-              <p class="activity-date">{{ livraison.chauffeur?.nom || 'Chauffeur assigné' }}</p>
-              <span class="activity-status EN_COURS">
-                {{ getStatusLabel(livraison.statut) }}
-              </span>
-            </div>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="activity-arrow"></ion-icon>
-        </div>
+    <!-- Empty State -->
+    <div class="empty-state-modern" *ngIf="mesDemandesRecentes.length === 0">
+      <div class="empty-box">
+        <ion-icon name="cube-outline"></ion-icon>
+        <h4>Aucun colis pour le moment</h4>
+        <p>Vos dernières expéditions apparaîtront ici.</p>
+        <ion-button fill="clear" (click)="createNewDemande()">Créer ma première demande</ion-button>
       </div>
     </div>
 
-    <!-- EMPTY STATE -->
-    <div class="section" *ngIf="mesDemandesRecentes.length === 0 && mesLivraisonsActives.length === 0">
-      <div class="empty-state">
-        <div class="empty-icon">
-          <ion-icon name="cart-outline"></ion-icon>
-        </div>
-        <h3>Aucune commande récente</h3>
-        <p>Commencez par créer votre première demande</p>
-        <button class="primary-btn" (click)="createNewDemande()">
-          <ion-icon name="add-circle-outline"></ion-icon>
-          Nouvelle demande
-        </button>
-      </div>
-    </div>
-
-    <div class="spacer"></div>
+    <div class="bottom-spacer"></div>
   </div>
 
-  <!-- FLOATING ACTION BUTTON -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button class="modern-fab" (click)="createNewDemande()">
-      <ion-icon name="add"></ion-icon>
+  <!-- Logout FAB -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start">
+    <ion-fab-button size="small" color="light" (click)="logout()">
+      <ion-icon name="log-out-outline" color="danger"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 

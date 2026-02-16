@@ -1,165 +1,302 @@
-// src/app/pages/auth/login/login.page.scss
+@use '../../../../global.scss' as global;
 
 .login-content {
-  --background: linear-gradient(180deg, #FFB347 0%, #FF8C00 50%, #1e3a5f 100%);
+  --background: var(--lumiere-dark);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.15) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+
+/* Background Bubbles */
+.bg-bubble {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: bubble-move 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.b1 {
+  width: 400px;
+  height: 400px;
+  background: var(--lumiere-primary);
+  top: -100px;
+  right: -100px;
+}
+
+.b2 {
+  width: 300px;
+  height: 300px;
+  background: var(--lumiere-blue);
+  bottom: -50px;
+  left: -50px;
+  animation-delay: -5s;
+}
+
+.b3 {
+  width: 250px;
+  height: 250px;
+  background: var(--lumiere-purple);
+  top: 40%;
+  left: -100px;
+  animation-delay: -10s;
 }
 
 .login-container {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 100px 24px 40px;
 }
 
+/* Logo Section */
 .logo-section {
   text-align: center;
-  margin-bottom: 30px;
-  animation: fadeInDown 0.8s;
+  margin-bottom: 40px;
+  animation: fadeInDown 1s ease-out;
 
-  .logo-circle {
-    width: 100px;
-    height: 100px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .logo-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
     margin: 0 auto 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    border: 4px solid #FF8C00;
 
-    ion-icon {
-      font-size: 50px;
-      color: #FF8C00;
+    .main-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(circle, var(--lumiere-primary) 0%, transparent 70%);
+      opacity: 0.3;
+      z-index: 1;
+      filter: blur(20px);
+      pointer-events: none;
     }
   }
 
-  h1 {
+  .brand-title {
+    font-size: 32px;
+    font-weight: 950;
     color: white;
-    font-size: 36px;
-    font-weight: 900;
     margin: 0;
-    letter-spacing: 3px;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  p {
-    color: white;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 5px 0;
     letter-spacing: 4px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
 
-  .tagline {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 13px;
-    font-style: italic;
+  .brand-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 4px 0 0;
+    letter-spacing: 6px;
+    text-transform: uppercase;
   }
 }
 
-.form-card {
+/* Glass Card */
+.glass-card {
   width: 100%;
   max-width: 400px;
-  background: white;
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 0.8s;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  padding: 40px 30px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  animation: fadeInUp 1s ease-out;
 
-  h2 {
-    color: #1e3a5f;
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 20px 0;
+  .card-header {
     text-align: center;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      margin: 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 8px 0 0;
+    }
   }
+}
 
-  .input-item {
-    --background: #f8f9fa;
-    --border-radius: 12px;
-    --padding-start: 15px;
-    margin-bottom: 12px;
+/* Form Elements */
+.login-form {
+  .input-group {
+    position: relative;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 4px 16px;
+    transition: all 0.3s;
 
-    ion-icon {
-      color: #FF8C00;
+    &:focus-within {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--lumiere-primary);
+      box-shadow: 0 0 15px rgba(217, 119, 6, 0.2);
+    }
+
+    .input-icon {
       font-size: 20px;
-      margin-right: 10px;
+      color: var(--lumiere-primary);
+      margin-right: 12px;
+    }
+
+    .custom-input {
+      --padding-start: 0;
+      --color: white;
+      --placeholder-color: rgba(255, 255, 255, 0.4);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .eye-btn {
+      --color: rgba(255, 255, 255, 0.5);
+      margin-right: -10px;
+
+      ion-icon {
+        font-size: 20px;
+      }
     }
   }
 
-  .forgot-link {
+  .forgot-container {
     text-align: right;
-    margin: -5px 0 15px 0;
+    margin: -10px 0 25px;
 
-    ion-text {
-      color: #FF8C00;
+    .forgot-link {
       font-size: 13px;
+      color: var(--lumiere-primary);
       font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
+      &:active {
+        opacity: 0.7;
       }
     }
   }
 
   .login-btn {
-    --background: linear-gradient(135deg, #FF8C00 0%, #FFB347 100%);
-    --border-radius: 12px;
-    height: 50px;
+    margin-top: 10px;
+    --background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
+    --border-radius: 16px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
     font-weight: 700;
-    margin: 15px 0;
+    font-size: 16px;
     text-transform: none;
+    letter-spacing: 0.5px;
+
+    &::part(native) {
+      box-shadow: 0 10px 25px rgba(217, 119, 6, 0.3);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
   }
 
   .divider {
     display: flex;
     align-items: center;
-    margin: 20px 0;
+    margin: 25px 0;
 
     &::before,
     &::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: #e0e0e0;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     span {
       padding: 0 15px;
-      color: #999;
-      font-size: 13px;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 12px;
+      font-weight: 700;
     }
   }
 
   .register-btn {
-    --border-color: #FF8C00;
-    --color: #FF8C00;
-    --border-radius: 12px;
-    height: 50px;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --color: white;
+    --border-radius: 16px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
     font-weight: 600;
+    font-size: 15px;
     text-transform: none;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.05);
+    }
   }
 }
 
-.footer {
-  margin-top: 20px;
+.login-footer {
+  margin-top: 40px;
   text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-weight: 500;
+}
 
-  p {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 12px;
+/* Animations */
+@keyframes bubble-move {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate(50px, 50px) scale(1.1);
   }
 }
 
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -169,8 +306,9 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
