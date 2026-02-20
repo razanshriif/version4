@@ -13,6 +13,7 @@ import {
   IonSelectOption,
   IonButton,
   IonIcon,
+  IonBackButton,
   ToastController
 } from '@ionic/angular/standalone';
 import { DemandeService } from '../../../services/demande.service';
@@ -33,6 +34,7 @@ import { DemandeService } from '../../../services/demande.service';
     IonSelectOption,
     IonButton,
     IonIcon,
+    IonBackButton, // Added
     CommonModule,
     FormsModule
   ]

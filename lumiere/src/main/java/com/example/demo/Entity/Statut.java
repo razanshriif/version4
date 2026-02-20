@@ -9,5 +9,5 @@ public enum Statut {
     EN_COURS_DE_LIVRAISON,
     LIVRE,
     FIN,
-    NON_LIVRE
+    NON_LIVRE, EN_ATTENTE
 }

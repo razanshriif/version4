@@ -1,22 +1,26 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { 
+import {
   add,
   addCircleOutline,
-  bulb, 
+  bulb,
   cartOutline,
   flashOutline,
   logOutOutline,
   navigateOutline,
-  notificationsOutline, 
+  notificationsOutline,
   personOutline,
-  personCircleOutline, 
+  personCircleOutline,
   person,
   hourglassOutline,
   carOutline,
   checkmarkCircleOutline,
-  documentTextOutline
+  documentTextOutline,
+  timeOutline,
+  checkmarkDoneOutline,
+  cubeOutline,
+  arrowForwardOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -31,22 +35,26 @@ export class AppComponent {
      * Registering icons for Standalone mode.
      * This resolves the [Ionicons Warning] in your console.
      */
-    addIcons({ 
+    addIcons({
       'add': add,
       'add-circle-outline': addCircleOutline,
-      'bulb': bulb, 
+      'bulb': bulb,
       'cart-outline': cartOutline,
       'flash-outline': flashOutline,
       'log-out-outline': logOutOutline,
       'navigate-outline': navigateOutline,
-      'notifications-outline': notificationsOutline, 
-      'person-circle-outline': personCircleOutline, 
+      'notifications-outline': notificationsOutline,
+      'person-circle-outline': personCircleOutline,
       'person': person,
       'person-outline': personOutline,
       'hourglass-outline': hourglassOutline,
       'car-outline': carOutline,
       'checkmark-circle-outline': checkmarkCircleOutline,
-      'document-text-outline': documentTextOutline
+      'document-text-outline': documentTextOutline,
+      'time-outline': timeOutline,
+      'checkmark-done-outline': checkmarkDoneOutline,
+      'cube-outline': cubeOutline,
+      'arrow-forward-outline': arrowForwardOutline
     });
   }
 }

@@ -1,5 +1,3 @@
-// src/app/pages/auth/login/login.page.ts
-
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -54,15 +52,7 @@ export class LoginPage implements OnInit {
     private toastController: ToastController
   ) {
     // Enregistrer toutes les icônes
-    addIcons({
-      'mail-outline': mailOutline,
-      'lock-closed-outline': lockClosedOutline,
-      'eye-outline': eyeOutline,
-      'eye-off-outline': eyeOffOutline,
-      'log-in-outline': logInOutline,
-      'person-add-outline': personAddOutline,
-      'business': businessOutline
-    });
+    addIcons({ mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline, logInOutline, personAddOutline, business: businessOutline });
   }
 
   ngOnInit() {
