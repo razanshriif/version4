@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Entity.Tranck;
 import com.example.demo.Repository.TranckRepository;
+import com.example.demo.securityjwt.user.User;
 
 @Service
 public class TranckService {
@@ -15,37 +16,39 @@ public class TranckService {
     @Autowired
     private TranckRepository tranckRepository;
 
-    public List<Tranck> findAll() {
-        return tranckRepository.findAll();
+    public List<Tranck> findAll(User owner) {
+        return tranckRepository.findByOwnerOrderByIdDesc(owner);
     }
 
-    public Optional<Tranck> findById(Long id) {
-        return tranckRepository.findById(id);
+    public Optional<Tranck> findById(Long id, User owner) {
+        return tranckRepository.findByIdAndOwner(id, owner);
     }
 
-    public Tranck save(Tranck tranck) {
+    public Tranck save(Tranck tranck, User owner) {
+        tranck.setOwner(owner);
         return tranckRepository.save(tranck);
     }
 
-    public void deleteById(Long id) {
-        tranckRepository.deleteById(id);
+    public void deleteById(Long id, User owner) {
+        Optional<Tranck> opt = tranckRepository.findByIdAndOwner(id, owner);
+        if (opt.isPresent()) {
+            tranckRepository.delete(opt.get());
+        }
     }
 
-  public Tranck updateTranck(Long id, Tranck tranckDetails) {
-        Optional<Tranck> optionalTranck = tranckRepository.findById(id);
+    public Tranck updateTranck(Long id, Tranck tranckDetails, User owner) {
+        Optional<Tranck> optionalTranck = tranckRepository.findByIdAndOwner(id, owner);
         if (optionalTranck.isPresent()) {
             Tranck tranck = optionalTranck.get();
             tranck.setDepartureDateTime(tranckDetails.getDepartureDateTime());
-        
-            
+
             tranck.setDepart(tranckDetails.getDepart());
             tranck.setChargement(tranckDetails.getChargement());
             tranck.setLivraison(tranckDetails.getLivraison());
-            
-            
+
             return tranckRepository.save(tranck);
         } else {
-            throw new RuntimeException("Tranck not found with id " + id);
+            throw new RuntimeException("Tranck not found with id " + id + " for this owner");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.securityjwt.user;
 
+import com.example.demo.securityjwt.user.Role;
 import jakarta.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +21,17 @@ public class User implements UserDetails {
     private String email;
     private String passwd;
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
+
+    @Column(columnDefinition = "varchar(20) default 'PENDING'")
+    private String status = "PENDING"; // PENDING, ACTIVE, REJECTED
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.status == null) {
+            this.status = "PENDING";
+        }
+    }
 
     public User() {
     }
@@ -32,6 +43,7 @@ public class User implements UserDetails {
         this.email = email;
         this.passwd = passwd;
         this.role = role;
+        this.status = "PENDING";
     }
 
     public Integer getId() {
@@ -82,10 +94,18 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList(role.name());
-        //return List.of(new SimpleGrantedAuthority(role.name()));
+        // return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -115,6 +135,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return "ACTIVE".equals(this.status);
     }
 }

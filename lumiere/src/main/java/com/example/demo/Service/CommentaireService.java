@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Entity.Commentaire;
 import com.example.demo.Repository.CommentaireRepository;
+import com.example.demo.securityjwt.user.User;
 
 @Service
 public class CommentaireService {
@@ -15,31 +16,35 @@ public class CommentaireService {
     @Autowired
     private CommentaireRepository commentaireRepository;
 
-    public List<Commentaire> findAll() {
-        return commentaireRepository.findAll();
+    public List<Commentaire> findAll(User owner) {
+        return commentaireRepository.findByOwnerOrderByIdDesc(owner);
     }
 
-    public Optional<Commentaire> findById(Long id) {
-        return commentaireRepository.findById(id);
+    public Optional<Commentaire> findById(Long id, User owner) {
+        return commentaireRepository.findByIdAndOwner(id, owner);
     }
 
-    public Commentaire save(Commentaire commentaire) {
+    public Commentaire save(Commentaire commentaire, User owner) {
+        commentaire.setOwner(owner);
         return commentaireRepository.save(commentaire);
     }
 
-    public void deleteById(Long id) {
-        commentaireRepository.deleteById(id);
+    public void deleteById(Long id, User owner) {
+        Optional<Commentaire> opt = commentaireRepository.findByIdAndOwner(id, owner);
+        if (opt.isPresent()) {
+            commentaireRepository.delete(opt.get());
+        }
     }
 
-    public Commentaire updateCommentaire(Long id, Commentaire commentaireDetails) {
-        Optional<Commentaire> optionalCommentaire = commentaireRepository.findById(id);
+    public Commentaire updateCommentaire(Long id, Commentaire commentaireDetails, User owner) {
+        Optional<Commentaire> optionalCommentaire = commentaireRepository.findByIdAndOwner(id, owner);
         if (optionalCommentaire.isPresent()) {
             Commentaire commentaire = optionalCommentaire.get();
             commentaire.setContenue(commentaireDetails.getContenue());
             commentaire.setOrdre(commentaireDetails.getOrdre());
             return commentaireRepository.save(commentaire);
         } else {
-            throw new RuntimeException("Commentaire not found with id " + id);
+            throw new RuntimeException("Commentaire not found with id " + id + " for this owner");
         }
     }
 }

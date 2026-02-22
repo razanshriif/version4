@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import com.example.demo.securityjwt.user.User;
 import lombok.Data;
 
 @Data
@@ -15,11 +17,16 @@ public class Commentaire {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-	private String contenue;
-	
+	private Long id;
+
 	@ManyToOne
-	
+	@JoinColumn(name = "owner_id")
+	private User owner;
+
+	private String contenue;
+
+	@ManyToOne
+
 	private Ordre ordre;
 
 	public Long getId() {
@@ -28,6 +35,14 @@ public class Commentaire {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public String getContenue() {
@@ -45,6 +60,5 @@ public class Commentaire {
 	public void setOrdre(Ordre ordre) {
 		this.ordre = ordre;
 	}
-	
-	
+
 }

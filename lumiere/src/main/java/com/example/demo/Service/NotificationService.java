@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Entity.Notification;
 import com.example.demo.Repository.NotificationRepository;
+import com.example.demo.securityjwt.user.User;
 
 @Service
 public class NotificationService {
@@ -15,20 +16,21 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-   public List<Notification> getAllNotifications() {
-        return notificationRepository.findAll();
+    public List<Notification> getAllNotifications(User owner) {
+        return notificationRepository.findByOwnerOrderByTimestampDesc(owner);
     }
 
-    public Optional<Notification> getNotificationById(Long id) {
-        return notificationRepository.findById(id);
+    public Optional<Notification> getNotificationById(Long id, User owner) {
+        return notificationRepository.findByIdAndOwner(id, owner);
     }
 
-    public Notification createNotification(Notification notification) {
+    public Notification createNotification(Notification notification, User owner) {
+        notification.setOwner(owner);
         return notificationRepository.save(notification);
     }
 
-    public Notification updateNotification(Long id, Notification updatedNotification) {
-        Optional<Notification> optionalNotification = notificationRepository.findById(id);
+    public Notification updateNotification(Long id, Notification updatedNotification, User owner) {
+        Optional<Notification> optionalNotification = notificationRepository.findByIdAndOwner(id, owner);
         if (optionalNotification.isPresent()) {
             Notification existingNotification = optionalNotification.get();
             existingNotification.setMessage(updatedNotification.getMessage());
@@ -39,9 +41,10 @@ public class NotificationService {
         return null;
     }
 
-    public boolean deleteNotification(Long id) {
-        if (notificationRepository.existsById(id)) {
-            notificationRepository.deleteById(id);
+    public boolean deleteNotification(Long id, User owner) {
+        Optional<Notification> opt = notificationRepository.findByIdAndOwner(id, owner);
+        if (opt.isPresent()) {
+            notificationRepository.delete(opt.get());
             return true;
         }
         return false;

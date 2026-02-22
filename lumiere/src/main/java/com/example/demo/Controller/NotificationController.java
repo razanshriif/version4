@@ -1,48 +1,55 @@
 package com.example.demo.Controller;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.Entity.Notification;
 import com.example.demo.Service.NotificationService;
+import com.example.demo.securityjwt.user.User;
+import com.example.demo.securityjwt.repo.UserRepository;
 
 @RestController
 @RequestMapping("/api/notifications")
+@CrossOrigin(origins = "*")
 public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    private User getAuthenticatedUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findFirstByEmailOrderByIdAsc(email)
+                .orElseThrow(() -> new RuntimeException("User not found: " + email));
+    }
+
     @GetMapping
     public List<Notification> getAllNotifications() {
-        return notificationService.getAllNotifications();
+        return notificationService.getAllNotifications(getAuthenticatedUser());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Notification> getNotificationById(@PathVariable Long id) {
-        Optional<Notification> notification = notificationService.getNotificationById(id);
-        return notification.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return notificationService.getNotificationById(id, getAuthenticatedUser())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public Notification createNotification(@RequestBody Notification notification) {
-        return notificationService.createNotification(notification);
+        return notificationService.createNotification(notification, getAuthenticatedUser());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Notification> updateNotification(@PathVariable Long id, @RequestBody Notification updatedNotification) {
-        Notification notification = notificationService.updateNotification(id, updatedNotification);
+    public ResponseEntity<Notification> updateNotification(@PathVariable Long id,
+            @RequestBody Notification updatedNotification) {
+        Notification notification = notificationService.updateNotification(id, updatedNotification,
+                getAuthenticatedUser());
         if (notification != null) {
             return ResponseEntity.ok(notification);
         }
@@ -51,7 +58,7 @@ public class NotificationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
-        if (notificationService.deleteNotification(id)) {
+        if (notificationService.deleteNotification(id, getAuthenticatedUser())) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

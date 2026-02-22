@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Article;
-import com.example.demo.Entity.Client;
 import com.example.demo.Service.ArticleService;
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/api/articles")
 public class ArticleController {
 
     @Autowired
@@ -30,8 +29,7 @@ public class ArticleController {
     public List<Article> getAllArticles() {
         return articleService.findAll();
     }
-    
-    
+
     @GetMapping("/search")
     public ResponseEntity<Article> searchByCodeArticle(@RequestParam String codeArticle) {
         Article article = articleService.findByCodeArticle(codeArticle);
@@ -61,7 +59,7 @@ public class ArticleController {
     public void deleteArticle(@PathVariable Long id) {
         articleService.deleteById(id);
     }
-    
+
     @GetMapping("/count")
     public long countOrders() {
         return articleService.countAllarticles();

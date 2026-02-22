@@ -54,8 +54,10 @@ public class SecurityConfiguration {
                                 "/favicon.ico",
                                 "/error",
                                 "/api/auth/register",
-                                "/api/auth/authenticate")
+                                "/api/auth/authenticate",
+                                "/api/v1/admin/status") // public status check for mobile polling
                         .permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session
@@ -75,17 +77,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // ALL possible Ionic origins
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:8100",
-                "http://localhost:8101",
-                "http://localhost:8102",
-                "http://localhost:4200",
-                "http://192.168.1.190:8100", // Your PC
-                "http://192.168.1.151:8100", // Other device
-                "http://192.168.35.88:8100", // New IP
-                "capacitor://localhost",
-                "ionic://localhost",
-                "http://localhost"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

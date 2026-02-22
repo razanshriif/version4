@@ -12,8 +12,8 @@ export class AuthService {
 
 
 
-  private apiUrl = 'http://localhost:8090/api/v1/auth';
-  private demoApiUrl = 'http://localhost:8090/api/v1/demo';
+  private apiUrl = 'http://localhost:8090/api/auth';
+  private adminApiUrl = 'http://localhost:8090/api/v1/admin';
 
   constructor(private http: HttpClient) { }
 
@@ -39,11 +39,11 @@ export class AuthService {
   }
 
   getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:8090/api/v1/admin/users`, { headers: this.getAuthHeaders() });
+    return this.http.get<any[]>(`${this.adminApiUrl}/users`, { headers: this.getAuthHeaders() });
   }
 
   updateUserStatus(id: number, status: string): Observable<any> {
-    return this.http.put<any>(`http://localhost:8090/api/v1/admin/users/${id}/status?status=${status}`, {}, { headers: this.getAuthHeaders() });
+    return this.http.put<any>(`${this.adminApiUrl}/users/${id}/status?status=${status}`, {}, { headers: this.getAuthHeaders() });
   }
 
   logout(): void {
