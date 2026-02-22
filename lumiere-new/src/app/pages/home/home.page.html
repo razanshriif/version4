@@ -1,135 +1,196 @@
-<ion-content [fullscreen]="true">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header-toolbar" (click)="onTestClick('Header')">
+    <div class="header-wrapper header-wrapper--slim">
+      <div class="header-wrapper__lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="logo">
+          <div class="logo__mark">
+            <img src="assets/lum.png" alt="Lumière" />
+          </div>
+          <div class="logo__copy">
+            <span class="logo__name">Lumière</span>
+            <span class="logo__sub">Logistique</span>
+          </div>
+        </div>
+
+        <div class="hdr-actions">
+          <div class="hdr-btn" (click)="goToNotifications()">
+            <ion-icon name="notifications-outline"></ion-icon>
+            <div class="hdr-btn__pip" *ngIf="stats.notifications > 0"></div>
+          </div>
+          <div class="hdr-btn" (click)="goToProfile()">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div class="hdr-btn logout-btn" (click)="logout()">
+            <ion-icon name="log-out-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-outline" refreshingSpinner="dots"></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Premium Header -->
-  <div class="main-header">
-    <div class="header-top">
-      <div class="brand-box">
-        <img src="assets/lum.png" alt="Lumière" class="header-logo" />
-        <div class="brand-text">
-          <span class="name">LUMIÈRE</span>
-          <span class="tag">Logistique Express</span>
-        </div>
+  <div class="body-content" (click)="onTestClick('Content')">
+    <!-- Header Content moved inside scrollable area -->
+    <div class="content-header-card">
+      <div class="greet">
+        <p class="greet__label">Tableau de bord</p>
+        <h1 class="greet__name">{{ getUsername() }}</h1>
       </div>
-      <div class="user-actions">
-        <div class="action-btn" (click)="goToNotifications()">
-          <ion-icon name="notifications-outline"></ion-icon>
-          <div class="badge" *ngIf="stats.notifications > 0">{{ stats.notifications }}</div>
-        </div>
-        <div class="action-btn" (click)="goToProfile()">
-          <ion-icon name="person-circle-outline"></ion-icon>
-        </div>
+
+      <div class="status">
+        <span class="status__dot"></span>
+        Réseau opérationnel
       </div>
     </div>
 
-    <div class="welcome-card">
-      <div class="welcome-text">
-        <p class="greeting">Bonjour,</p>
-        <h1 class="user-name">{{ getFullName() }}</h1>
-        <p class="summary">Vous avez <b>{{ stats.mesLivraisonsEnCours }}</b> livraisons en cours aujourd'hui.</p>
-      </div>
-      <div class="quick-add" (click)="createNewDemande()">
-        <ion-icon name="add"></ion-icon>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-container">
-    <!-- Status Overview -->
-    <div class="section-container">
-      <div class="section-title">
-        <h3>Suivi de vos colis</h3>
-      </div>
-      <div class="status-grid">
-        <div class="status-card pending" (click)="navigateTo('/demandes/list')">
-          <div class="icon-wrap">
-            <ion-icon name="time-outline"></ion-icon>
-          </div>
-          <div class="info">
-            <span class="val">{{ stats.mesDemandesEnCours }}</span>
-            <span class="lab">En attente</span>
-          </div>
-        </div>
-        <div class="status-card active" (click)="navigateTo('/livraisons/tracking')">
-          <div class="icon-wrap">
-            <ion-icon name="car-outline"></ion-icon>
-          </div>
-          <div class="info">
-            <span class="val">{{ stats.mesLivraisonsEnCours }}</span>
-            <span class="lab">En route</span>
-          </div>
-        </div>
-        <div class="status-card done" (click)="navigateTo('/demandes/list')">
-          <div class="icon-wrap">
-            <ion-icon name="checkmark-done-outline"></ion-icon>
-          </div>
-          <div class="info">
-            <span class="val">{{ stats.mesDemandesTerminees }}</span>
-            <span class="lab">Livrées</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Actions -->
-    <div class="section-container">
-      <div class="action-banner" (click)="createNewDemande()">
-        <div class="banner-content">
-          <h3>Nouvelle Demande</h3>
-          <p>Expédiez votre colis en quelques clics</p>
-        </div>
-        <div class="banner-icon">
-          <ion-icon name="arrow-forward-outline"></ion-icon>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Activity Simplified -->
-    <div class="section-container" *ngIf="mesDemandesRecentes.length > 0">
-      <div class="section-header">
-        <h3>Activité récente</h3>
-        <a (click)="navigateTo('/demandes/list')">Tout voir</a>
+    <div class="accent-line accent-line--content"></div>
+    <!-- ══ Section: Actions Rapides ══ -->
+    <section>
+      <div class="sec">
+        <span class="sec__title">Actions rapides</span>
+        <span class="sec__action" (click)="navigateTo('/demandes/create')">+ Nouveau</span>
       </div>
 
-      <div class="modern-list">
-        <div class="list-card" *ngFor="let demande of mesDemandesRecentes" (click)="viewDemandeDetails(demande)">
-          <div class="card-indicator" [ngClass]="getStatusClass(demande.statut)"></div>
-          <div class="card-body">
-            <div class="row">
-              <span class="order-id">#{{ demande.id }}</span>
-              <span class="order-date">{{ formatDate(demande.dateDemande) }}</span>
+      <div class="grid" *ngIf="!isLoading">
+        <!-- Commands (Orange) -->
+        <div class="acard acard--orange" (click)="navigateTo('/demandes/list')">
+          <div class="acard__icon">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="acard__footer">
+            <div class="acard__title">Mes Commandes</div>
+            <div class="acard__desc">Gérer vos expéditions</div>
+            <div class="acard__cta">
+              Voir
+              <ion-icon name="arrow-forward-outline"></ion-icon>
             </div>
-            <div class="row">
-              <span class="order-status" [ngClass]="getStatusClass(demande.statut)">
-                {{ getStatusLabel(demande.statut) }}
-              </span>
-              <ion-icon name="chevron-forward-outline" class="row-arrow"></ion-icon>
+          </div>
+        </div>
+
+        <!-- Clients (Dark) -->
+        <div class="acard acard--dark" (click)="navigateTo('/clients')">
+          <div class="acard__icon">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <div class="acard__footer">
+            <div class="acard__title">Mes Clients</div>
+            <div class="acard__desc">Carnet d'adresses</div>
+            <div class="acard__cta">
+              Gérer
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tracking -->
+        <div class="acard" (click)="navigateTo('/livraisons/tracking')">
+          <div class="acard__icon">
+            <ion-icon name="navigate-outline" style="color:#f5921e;"></ion-icon>
+          </div>
+          <div class="acard__footer">
+            <div class="acard__title">Suivi Colis</div>
+            <div class="acard__desc">Temps réel</div>
+            <div class="acard__cta">
+              Suivre
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Order -->
+        <div class="acard" (click)="navigateTo('/orders/non-planned')">
+          <div class="acard__icon">
+            <ion-icon name="add-circle-outline" style="color:#f5921e;"></ion-icon>
+          </div>
+          <div class="acard__footer">
+            <div class="acard__title">Nouvel Ordre</div>
+            <div class="acard__desc">Saisie directe</div>
+            <div class="acard__cta">
+              Créer
+              <ion-icon name="arrow-forward-outline"></ion-icon>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Empty State -->
-    <div class="empty-state-modern" *ngIf="mesDemandesRecentes.length === 0">
-      <div class="empty-box">
-        <ion-icon name="cube-outline"></ion-icon>
-        <h4>Aucun colis pour le moment</h4>
-        <p>Vos dernières expéditions apparaîtront ici.</p>
-        <ion-button fill="clear" (click)="createNewDemande()">Créer ma première demande</ion-button>
+      <!-- Skeleton Loading -->
+      <div class="grid" *ngIf="isLoading">
+        <div class="acard skeleton" *ngFor="let i of [1,2,3,4]"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="bottom-spacer"></div>
+    <!-- ══ Section: Brouillons ══ -->
+    <section *ngIf="!isLoading && mesDrafts.length > 0">
+      <div class="sec">
+        <span class="sec__title">Brouillons</span>
+      </div>
+      <div class="activity-item" (click)="navigateTo('/demandes/list')">
+        <div class="act-icon">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+        <div class="act-meta">
+          <h4>{{ mesDrafts.length }} brouillon(s)</h4>
+          <p>Ordres non finalisés à reprendre</p>
+        </div>
+        <div class="act-status CONFIRME">
+          Reprendre
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Section: Activité Récente ══ -->
+    <section>
+      <div class="sec">
+        <span class="sec__title">Activité récente</span>
+        <span class="sec__action" (click)="navigateTo('/demandes/list')">Historique</span>
+      </div>
+
+      <div class="activity-list" *ngIf="!isLoading && mesDemandesRecentes.length > 0">
+        <div class="activity-item" *ngFor="let d of mesDemandesRecentes.slice(0, 3)" (click)="viewDemandeDetails(d)">
+          <div class="act-icon">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="act-meta">
+            <h4>Ordre #{{ d.id }}</h4>
+            <p>{{ d.livraisonVille }} · {{ formatDate(d.datecharg) }}</p>
+          </div>
+          <div class="act-status" [ngClass]="getStatusClass(d.statut)">
+            {{ getStatusLabel(d.statut) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty" *ngIf="!isLoading && mesDemandesRecentes.length === 0">
+        <div class="empty__icon">
+          <ion-icon name="information-circle-outline"></ion-icon>
+        </div>
+        <h3 class="empty__title">Aucune activité</h3>
+        <p class="empty__text">Vos ordres récents s'afficheront ici automatiquement.</p>
+        <div class="empty__btn" (click)="navigateTo('/demandes/create')">
+          <ion-icon name="add-outline"></ion-icon>
+          Nouvel ordre
+        </div>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
   </div>
-
-  <!-- Logout FAB -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="start">
-    <ion-fab-button size="small" color="light" (click)="logout()">
-      <ion-icon name="log-out-outline" color="danger"></ion-icon>
+  <!-- FAB -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="home-fab" (click)="navigateTo('/demandes/create')">
+      <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 </ion-content>

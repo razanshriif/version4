@@ -1,0 +1,139 @@
+.pending-content {
+    --background: linear-gradient(160deg, #0a0a0a 0%, #1a1200 50%, #0a0a0a 100%);
+}
+
+.pending-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+}
+
+// Animated Logo Ring
+.logo-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 2.5rem;
+}
+
+.logo-inner {
+    position: absolute;
+    inset: 12px;
+    background: linear-gradient(135deg, #c9a227, #e8c44a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 0 30px rgba(201, 162, 39, 0.4);
+}
+
+.logo-text {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0a0a0a;
+    font-family: 'Georgia', serif;
+}
+
+.pulse-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid rgba(201, 162, 39, 0.6);
+    border-radius: 50%;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.pulse-ring.delay1 {
+    border-color: rgba(201, 162, 39, 0.3);
+    animation-delay: 0.7s;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.25);
+        opacity: 0;
+    }
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #e8c44a;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 300px;
+}
+
+.status-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(201, 162, 39, 0.08);
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e8c44a;
+    animation: blink 1.5s ease-in-out infinite;
+
+    &.checking {
+        background: #4ab3e8;
+        animation: blink 0.7s ease-in-out infinite;
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
+}
+
+.status-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 2.5rem;
+    max-width: 280px;
+    line-height: 1.6;
+}
+
+.back-btn {
+    --color: rgba(255, 255, 255, 0.5);
+    --border-color: rgba(255, 255, 255, 0.2);
+    --border-radius: 2rem;
+    font-size: 0.9rem;
+}

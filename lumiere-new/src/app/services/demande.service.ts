@@ -31,14 +31,14 @@ export interface PagedResponse<T> {
 export class DemandeService {
   private readonly API_URL = `${environment.apiUrl}/ordres`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Obtenir toutes les demandes avec filtres
    */
   getDemandes(filter?: DemandeFilter): Observable<PagedResponse<Demande>> {
     let params = new HttpParams();
-    
+
     if (filter) {
       if (filter.statut) params = params.set('statut', filter.statut);
       if (filter.dateDebut) params = params.set('dateDebut', filter.dateDebut.toISOString());
@@ -49,7 +49,7 @@ export class DemandeService {
       if (filter.sortBy) params = params.set('sortBy', filter.sortBy);
       if (filter.sortOrder) params = params.set('sortOrder', filter.sortOrder);
     }
-    
+
     return this.http.get<PagedResponse<Demande>>(this.API_URL, { params });
   }
 
@@ -110,7 +110,7 @@ export class DemandeService {
   uploadDocument(demandeId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     return this.http.post(`${this.API_URL}/${demandeId}/documents`, formData);
   }
 
@@ -133,5 +133,25 @@ export class DemandeService {
    */
   refuserDevis(id: number, motif: string): Observable<void> {
     return this.http.post<void>(`${this.API_URL}/${id}/devis/refuser`, { motif });
+  }
+  /**
+   * Confirmer une demande
+   */
+  confirmerDemande(id: number): Observable<Demande> {
+    return this.http.put<Demande>(`${this.API_URL}/${id}/confirmer`, {});
+  }
+
+  /**
+   * Dupliquer une demande
+   */
+  dupliquerDemande(id: number): Observable<Demande> {
+    return this.http.post<Demande>(`${this.API_URL}/${id}/dupliquer`, {});
+  }
+
+  /**
+   * Supprimer une demande
+   */
+  deleteDemande(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 }

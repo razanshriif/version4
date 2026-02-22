@@ -1,0 +1,209 @@
+.premium-content {
+    --background: transparent;
+}
+
+.glass-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    z-index: -1;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.03);
+    filter: blur(60px);
+}
+
+.bubble:nth-child(1) {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    right: -100px;
+}
+
+.bubble:nth-child(2) {
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    left: -50px;
+}
+
+.glass-header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    .premium-toolbar {
+        --background: transparent;
+        --color: #0f172a;
+
+        ion-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #1e293b;
+        }
+    }
+}
+
+.form-container {
+    padding: 16px;
+    padding-bottom: 40px;
+}
+
+.glass-card {
+    background: #ffffff;
+    border-radius: 28px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.section-container {
+    padding-bottom: 8px;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: -0.3px;
+
+    &::before {
+        content: '';
+        width: 4px;
+        height: 18px;
+        background: var(--lumiere-primary);
+        border-radius: 10px;
+    }
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.premium-input-item {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+
+    &:focus-within {
+        background: #ffffff;
+        border-color: var(--lumiere-primary);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    ion-label {
+        font-size: 0.8rem !important;
+        font-weight: 800 !important;
+        color: #64748b !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px !important;
+    }
+
+    ion-input,
+    ion-textarea,
+    ion-select {
+        --padding-start: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+    }
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    ion-checkbox {
+        --size: 22px;
+        --border-radius: 8px;
+        --checkbox-background-checked: var(--lumiere-primary);
+    }
+
+    ion-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #475569;
+    }
+}
+
+.premium-button {
+    --border-radius: 18px;
+    --background: #0f172a;
+    --background-activated: #1e293b;
+    --box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+    font-weight: 800;
+    height: 56px;
+    font-size: 1rem;
+    letter-spacing: 0.2px;
+}
+
+.mt-3 {
+    margin-top: 16px;
+}
+
+.mt-4 {
+    margin-top: 32px;
+}
+
+.mt-5 {
+    margin-top: 40px;
+}
+
+// Dark mode refinements
+@media (prefers-color-scheme: dark) {
+    .glass-background {
+        background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+    }
+
+    .glass-header {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-card {
+        background: #1e293b;
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .section-title {
+        color: #f8fafc;
+    }
+
+    .premium-input-item,
+    .checkbox-item {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .premium-input-item ion-input,
+    .premium-input-item ion-textarea,
+    .premium-input-item ion-select {
+        color: #f1f5f9;
+    }
+
+    .checkbox-item ion-label {
+        color: #94a3b8;
+    }
+}

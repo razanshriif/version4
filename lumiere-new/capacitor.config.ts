@@ -4,6 +4,15 @@ const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'lumiere-new',
   webDir: 'www',
+  server: {
+    // Allow the app to make requests to your backend server
+    androidScheme: 'http',
+    cleartext: true,
+    // This allows the app to connect to your PC's IP address
+    allowNavigation: [
+      '*'
+    ]
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 3000,
@@ -22,3 +31,4 @@ const config: CapacitorConfig = {
 };
 
 export default config;
+

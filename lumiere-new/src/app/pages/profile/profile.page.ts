@@ -7,8 +7,10 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonButtons,
+
   IonButton,
+  IonButtons,
+  IonBackButton,
   IonInput,
   IonIcon,
   IonSegment,
@@ -17,6 +19,8 @@ import {
   ToastController,
   AlertController
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, createOutline, keyOutline, logOutOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -30,6 +34,7 @@ import { AuthService } from '../../services/auth.service';
     IonTitle,
     IonToolbar,
     IonButtons,
+    IonBackButton,
     IonButton,
     IonInput,
     IonIcon,
@@ -56,7 +61,9 @@ export class ProfilePage implements OnInit {
     public router: Router,
     private toastController: ToastController,
     private alertController: AlertController
-  ) { }
+  ) {
+    addIcons({ arrowBackOutline, createOutline, keyOutline, logOutOutline });
+  }
 
   ngOnInit() {
     this.initForms();

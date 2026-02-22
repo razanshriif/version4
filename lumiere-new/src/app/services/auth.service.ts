@@ -12,7 +12,7 @@ export class AuthService {
 
   private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // 🔐 LOGIN
   login(data: LoginRequest): Observable<AuthResponse> {
@@ -25,15 +25,9 @@ export class AuthService {
       );
   }
 
-  // 📝 REGISTER
+  // 📝 REGISTER — account starts as PENDING, no token is returned
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(
-        tap(res => {
-          localStorage.setItem('token', res.token);
-        })
-      );
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data);
   }
 
   // 👤 GET PROFILE (JWT required)
@@ -60,6 +54,16 @@ export class AuthService {
   // 🚪 LOGOUT
   logout(): void {
     localStorage.removeItem('token');
+  }
+
+  // 🔍 CHECK ACCOUNT STATUS (public — no token needed)
+  checkAccountStatus(email: string): Observable<{ status: string; email: string }> {
+    // environment.apiUrl = 'http://HOST:PORT/api'
+    // admin status endpoint is at /api/v1/admin/status
+    const base = environment.apiUrl.replace('/api', '');
+    return this.http.get<{ status: string; email: string }>(
+      `${base}/api/v1/admin/status?email=${encodeURIComponent(email)}`
+    );
   }
 
   // 🔑 TOKEN

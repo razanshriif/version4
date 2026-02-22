@@ -1,9 +1,9 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
     </ion-buttons>
-    <ion-title>Suivi des Livraisons</ion-title>
+    <ion-title>Suivi Logistique</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="refreshData($event)">
         <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
@@ -12,40 +12,57 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="premium-content">
   <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-outline" refreshingSpinner="dots"></ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="loading" class="ion-text-center ion-padding">
-    <ion-spinner></ion-spinner>
-    <p>Chargement des livraisons...</p>
+  <div class="glass-background">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
   </div>
 
-  <div *ngIf="!loading && livraisons.length === 0" class="ion-text-center ion-padding">
-    <p>Aucune livraison en cours.</p>
-  </div>
+  <div class="tracking-container">
+    <h1 class="section-title">Mes Livraisons</h1>
 
-  <div *ngIf="!loading && livraisons.length > 0">
-    <ion-card *ngFor="let livraison of livraisons" (click)="selectLivraison(livraison)"
-      [color]="selectedLivraison?.id === livraison.id ? 'light' : ''">
-      <ion-card-header>
-        <div class="ion-justify-content-between ion-align-items-center display-flex">
-          <ion-card-title>Livraison #{{ livraison.id }}</ion-card-title>
-          <ion-badge [class]="getStatusClass(livraison.statut)">{{ getStatusLabel(livraison.statut) }}</ion-badge>
+    <div *ngIf="loading" class="ion-text-center ion-padding mt-5">
+      <ion-spinner name="dots" color="primary"></ion-spinner>
+      <p class="mt-3" style="color: #64748b; font-weight: 600;">Synchronisation des colis...</p>
+    </div>
+
+    <div *ngIf="!loading && livraisons.length === 0" class="empty-state">
+      <ion-icon name="cube-outline"></ion-icon>
+      <p>Aucun colis en transit pour le moment</p>
+    </div>
+
+    <div *ngIf="!loading && livraisons.length > 0">
+      <div class="tracker-card shadow-sm" *ngFor="let livraison of livraisons" (click)="selectLivraison(livraison)"
+        [ngClass]="{'selected': selectedLivraison?.id === livraison.id}">
+
+        <div class="tracker-header">
+          <span class="tracker-id">#{{ livraison.id }}</span>
+          <div class="status-pill" [ngClass]="livraison.statut.toLowerCase() || 'en_attente'">
+            {{ getStatusLabel(livraison.statut) }}
+          </div>
         </div>
-      </ion-card-header>
-      <ion-card-content>
-        <p>
-          <ion-icon name="calendar-outline"></ion-icon> {{ livraison.dateDepart ? formatDate(livraison.dateDepart) :
-          'Non définie' }}
-        </p>
-        <ion-button expand="block" fill="outline" class="ion-margin-top"
-          (click)="selectLivraison(livraison); viewOnMap(); $event.stopPropagation()">
-          <ion-icon name="map-outline" slot="start"></ion-icon>
-          Voir sur la carte
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
+
+        <div class="tracker-info">
+          <div class="info-item">
+            <ion-icon name="calendar-clear-outline"></ion-icon>
+            <span>{{ livraison.dateDepart ? formatDate(livraison.dateDepart) : 'Date à confirmer' }}</span>
+          </div>
+        </div>
+
+        <div class="tracker-action">
+          <ion-button expand="block" class="premium-button secondary"
+            (click)="selectLivraison(livraison); viewOnMap(); $event.stopPropagation()">
+            <ion-icon name="map-outline" slot="start"></ion-icon>
+            Localiser le transporteur
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
   </div>
 </ion-content>

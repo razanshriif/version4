@@ -1,22 +1,24 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="premium-toolbar">
     <ion-buttons slot="start">
-      <ion-button routerLink="/home">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </ion-button>
+      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
     </ion-buttons>
-    <ion-title>Assistant Lumiere</ion-title>
+    <ion-title>IA Lumière</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="clearChat()">
-        <ion-icon name="trash-outline"></ion-icon>
+      <ion-button (click)="clearChat()" color="medium">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glass-background">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
   <div class="chat-container">
-    <!-- Messages -->
     <div class="messages-wrapper">
       <div *ngFor="let message of messages" class="message-row" [class.user-message]="message.isUser"
         [class.bot-message]="!message.isUser">
@@ -26,7 +28,6 @@
         </div>
       </div>
 
-      <!-- Typing indicator -->
       <div *ngIf="isTyping" class="message-row bot-message">
         <div class="message-bubble typing-indicator">
           <div class="typing-dots">
@@ -38,30 +39,29 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="quick-actions" *ngIf="messages.length === 1">
-      <h3>Questions fréquentes :</h3>
+      <h3>Accès rapide</h3>
       <div class="action-chips">
         <button class="chip" (click)="userInput = 'Suivre ma commande'; sendMessage()">
-          📦 Suivre ma commande
+          📦 Mes livraisons
         </button>
         <button class="chip" (click)="userInput = 'Nouvelle demande'; sendMessage()">
-          ➕ Nouvelle demande
+          ➕ Créer ordre
         </button>
         <button class="chip" (click)="userInput = 'Horaires'; sendMessage()">
           🕐 Horaires
         </button>
         <button class="chip" (click)="userInput = 'Contact'; sendMessage()">
-          📞 Contact
+          📞 Aide
         </button>
       </div>
     </div>
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
   <div class="input-container">
-    <ion-textarea [(ngModel)]="userInput" placeholder="Tapez votre message..." rows="1" autoGrow="true"
+    <ion-textarea [(ngModel)]="userInput" placeholder="Écrivez votre message..." rows="1" autoGrow="true"
       (keyup.enter)="sendMessage()"></ion-textarea>
     <ion-button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim()">
       <ion-icon name="send" slot="icon-only"></ion-icon>

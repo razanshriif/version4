@@ -1,7 +1,7 @@
 @use '../../../../global.scss' as global;
 
 .login-content {
-  --background: var(--lumiere-dark);
+  --background: #f8fafc;
   position: relative;
   overflow: hidden;
 
@@ -12,7 +12,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(242, 169, 0, 0.05) 0%, transparent 70%);
     z-index: 1;
     pointer-events: none;
   }
@@ -22,7 +22,8 @@
 .bg-bubble {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  background: rgba(242, 169, 0, 0.05);
+  filter: blur(60px);
   z-index: 0;
   opacity: 0.5;
   pointer-events: none;
@@ -32,7 +33,6 @@
 .b1 {
   width: 400px;
   height: 400px;
-  background: var(--lumiere-primary);
   top: -100px;
   right: -100px;
 }
@@ -40,7 +40,6 @@
 .b2 {
   width: 300px;
   height: 300px;
-  background: var(--lumiere-blue);
   bottom: -50px;
   left: -50px;
   animation-delay: -5s;
@@ -49,7 +48,6 @@
 .b3 {
   width: 250px;
   height: 250px;
-  background: var(--lumiere-purple);
   top: 40%;
   left: -100px;
   animation-delay: -10s;
@@ -63,7 +61,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 100px 24px 40px;
+  padding: 40px 24px;
 }
 
 /* Logo Section */
@@ -76,15 +74,31 @@
     position: relative;
     width: 120px;
     height: 120px;
-    margin: 0 auto 20px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 3px solid #f8fafc;
+    overflow: hidden;
+
+    .avatar-decoration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 140, 0, 0.1);
+      border-radius: 35px;
+      z-index: 1;
+    }
 
     .main-logo {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      border-radius: 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      object-fit: cover;
       position: relative;
       z-index: 2;
     }
@@ -97,7 +111,7 @@
       width: 140%;
       height: 140%;
       background: radial-gradient(circle, var(--lumiere-primary) 0%, transparent 70%);
-      opacity: 0.3;
+      opacity: 0.2;
       z-index: 1;
       filter: blur(20px);
       pointer-events: none;
@@ -105,21 +119,20 @@
   }
 
   .brand-title {
-    font-size: 32px;
-    font-weight: 950;
-    color: white;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #0f172a;
     margin: 0;
-    letter-spacing: 4px;
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
   }
 
   .brand-subtitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
     margin: 4px 0 0;
-    letter-spacing: 6px;
     text-transform: uppercase;
+    letter-spacing: 2px;
   }
 }
 
@@ -127,30 +140,29 @@
 .glass-card {
   width: 100%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
   border-radius: 32px;
-  padding: 40px 30px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   animation: fadeInUp 1s ease-out;
 
   .card-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 
     h2 {
-      font-size: 28px;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: white;
+      color: #0f172a;
       margin: 0;
     }
 
     p {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 8px 0 0;
+      font-size: 0.95rem;
+      color: #64748b;
+      margin: 4px 0 0;
+      font-weight: 500;
     }
   }
 }
@@ -159,13 +171,13 @@
 .login-form {
   .input-group {
     position: relative;
-    margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+    background: #f8fafc;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 16px;
     display: flex;
     align-items: center;
-    padding: 4px 16px;
+    padding: 10px 16px;
     transition: all 0.3s;
 
     &:focus-within {
@@ -176,20 +188,20 @@
 
     .input-icon {
       font-size: 20px;
-      color: var(--lumiere-primary);
+      color: #94a3b8;
       margin-right: 12px;
     }
 
     .custom-input {
       --padding-start: 0;
-      --color: white;
-      --placeholder-color: rgba(255, 255, 255, 0.4);
-      font-weight: 500;
+      --color: #1e293b;
+      --placeholder-color: #94a3b8;
+      font-weight: 600;
       font-size: 15px;
     }
 
     .eye-btn {
-      --color: rgba(255, 255, 255, 0.5);
+      --color: #94a3b8;
       margin-right: -10px;
 
       ion-icon {
@@ -200,12 +212,12 @@
 
   .forgot-container {
     text-align: right;
-    margin: -10px 0 25px;
+    margin-bottom: 24px;
 
     .forgot-link {
-      font-size: 13px;
+      font-size: 0.85rem;
       color: var(--lumiere-primary);
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       cursor: pointer;
 
@@ -215,13 +227,20 @@
     }
   }
 
+  .premium-segment ion-segment-button {
+    --indicator-color: var(--lumiere-primary);
+    --color-checked: white;
+  }
+
   .login-btn {
-    margin-top: 10px;
-    --background: linear-gradient(135deg, var(--lumiere-primary), var(--lumiere-primary-light));
-    --border-radius: 16px;
+    margin-top: 8px;
+    --background: #0f172a;
+    --color: white;
+    --border-radius: 18px;
     --padding-top: 18px;
     --padding-bottom: 18px;
-    font-weight: 700;
+    font-weight: 800;
+    height: 56px;
     font-size: 16px;
     text-transform: none;
     letter-spacing: 0.5px;
@@ -238,31 +257,32 @@
   .divider {
     display: flex;
     align-items: center;
-    margin: 25px 0;
+    margin: 24px 0;
 
     &::before,
     &::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255, 255, 255, 0.1);
+      background: #f1f5f9;
     }
 
     span {
-      padding: 0 15px;
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 12px;
+      padding: 0 12px;
+      color: #cbd5e1;
+      font-size: 0.75rem;
       font-weight: 700;
     }
   }
 
   .register-btn {
-    --border-color: rgba(255, 255, 255, 0.2);
-    --color: white;
-    --border-radius: 16px;
+    --border-color: #0f172a;
+    --color: #0f172a;
+    --border-radius: 18px;
     --padding-top: 18px;
     --padding-bottom: 18px;
-    font-weight: 600;
+    font-weight: 800;
+    height: 56px;
     font-size: 15px;
     text-transform: none;
 
@@ -278,6 +298,12 @@
   color: rgba(255, 255, 255, 0.4);
   font-size: 12px;
   font-weight: 500;
+
+  p {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 600;
+  }
 }
 
 /* Animations */
@@ -312,5 +338,45 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Dark Mode Refinements */
+body.dark {
+  .login-content {
+    --background: #020617;
+  }
+
+  .logo-section .brand-title {
+    color: white;
+  }
+
+  .glass-card {
+    background: #0f172a;
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-card .card-header h2 {
+    color: white;
+  }
+
+  .input-group {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .input-group .custom-input {
+    --color: white;
+  }
+
+  .login-btn {
+    --background: #1e293b;
+    --color: white;
+  }
+
+  .register-btn {
+    --border-color: rgba(255, 255, 255, 0.2);
+    --color: white;
   }
 }

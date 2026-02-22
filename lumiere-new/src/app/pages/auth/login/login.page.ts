@@ -81,7 +81,10 @@ export class LoginPage implements OnInit {
         next: async (response) => {
           this.isLoading = false;
           await loading.dismiss();
-          await this.showToast('Connexion réussie !', 'success');
+
+          // Set flag for home page to show welcome toast
+          sessionStorage.setItem('login_success', 'true');
+
           this.router.navigate(['/home']);
         },
         error: async (error) => {
@@ -91,6 +94,19 @@ export class LoginPage implements OnInit {
 
           if (error.status === 0) {
             errorMessage = 'Erreur de connexion au serveur. Vérifiez que le backend est lancé et accessible.';
+          } else if (error.status === 403) {
+            const msg: string = error?.error || '';
+            if (msg.includes('ACCOUNT_PENDING')) {
+              // Account pending — send to pending page
+              const email = this.loginForm.get('email')?.value;
+              sessionStorage.setItem('pending_email', email);
+              this.router.navigate(['/pending']);
+              return;
+            } else if (msg.includes('ACCOUNT_REJECTED')) {
+              errorMessage = '❌ Votre compte a été rejeté. Contactez l’administrateur.';
+            } else {
+              errorMessage = 'Accès refusé.';
+            }
           } else if (error.status >= 500) {
             errorMessage = 'Erreur interne du serveur. Veuillez réessayer plus tard.';
           }
@@ -99,6 +115,7 @@ export class LoginPage implements OnInit {
           console.error('Login error:', error);
         }
       });
+
     } else {
       await this.showToast('Veuillez remplir tous les champs', 'warning');
     }

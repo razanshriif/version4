@@ -1,110 +1,57 @@
 // src/app/models/demande.model.ts
+// Updated to match backend Ordre entity
 
 export interface Demande {
   id: number;
-  numeroReference: string;
-  clientId: number;
-  dateCreation: Date;
-  dateEnlevement: Date;
-  dateLivraisonSouhaitee: Date;
-  statut: DemandeStatut;
-  priorite: Priorite;
-  
-  // Informations enlèvement
-  adresseEnlevement: Adresse;
-  contactEnlevement: Contact;
-  
-  // Informations livraison
-  adresseLivraison: Adresse;
-  contactLivraison: Contact;
-  
-  // Marchandise
-  marchandise: Marchandise[];
-  
-  // Détails
-  instructions?: string;
-  valeurMarchandise?: number;
-  assurance?: boolean;
-  
-  // Validation
-  validePar?: number;
-  dateValidation?: Date;
-  commentaireValidation?: string;
-  
-  // Camion assigné
-  camionId?: number;
+  orderNumber?: string;
+  client: string;
+  nomclient: string;
+  siteclient: string;
+  idedi: string;
+  codeclientcharg: string;
+  chargementNom: string;
+  chargementAdr1: string;
+  chargementAdr2?: string;
+  chargementVille: string;
+  chargementDate: string | Date;
+  codeclientliv: string;
+  livraisonNom: string;
+  livraisonAdr1: string;
+  livraisonAdr2?: string;
+  codepostalliv: string;
+  livraisonVille: string;
+  livraisonDate: string | Date;
+  codeArticle: string;
+  designation: string;
+  poids: number;
+  volume: number;
+  nombrePalettes: number;
+  nombreColis: number;
+  longueur: number;
+  dateSaisie: string | Date;
+  statut: string;
+  matricule?: string;
+  voycle?: string;
+  chauffeur?: string;
+  telchauffeur?: string;
+  camion?: string;
+  datevoy?: string;
+  commentaires?: string[];
 }
 
 export enum DemandeStatut {
-  BROUILLON = 'BROUILLON',
-  EN_ATTENTE = 'EN_ATTENTE',
-  VALIDEE = 'VALIDEE',
-  REFUSEE = 'REFUSEE',
-  EN_COURS = 'EN_COURS',
-  LIVREE = 'LIVREE',
-  ANNULEE = 'ANNULEE'
+  NON_CONFIRME = 'NON_CONFIRME',
+  NON_PLANIFIE = 'NON_PLANIFIE',
+  PLANIFIE = 'PLANIFIE',
+  EN_COURS_DE_CHARGEMENT = 'EN_COURS_DE_CHARGEMENT',
+  CHARGE = 'CHARGE',
+  EN_COURS_DE_LIVRAISON = 'EN_COURS_DE_LIVRAISON',
+  LIVRE = 'LIVRE',
+  FIN = 'FIN',
+  NON_LIVRE = 'NON_LIVRE',
+  EN_ATTENTE = 'EN_ATTENTE'
 }
 
-export enum Priorite {
-  NORMALE = 'NORMALE',
-  URGENTE = 'URGENTE',
-  TRES_URGENTE = 'TRES_URGENTE'
-}
-
-export interface Adresse {
-  rue: string;
-  codePostal: string;
-  ville: string;
-  pays: string;
-  complement?: string;
-  latitude?: number;
-  longitude?: number;
-}
-
-export interface Contact {
-  nom: string;
-  prenom: string;
-  telephone: string;
-  email?: string;
-}
-
-export interface Marchandise {
-  id?: number;
-  description: string;
-  quantite: number;
-  unite: Unite;
-  poids: number;
-  volume?: number;
-  typeColis: TypeColis;
-  fragile: boolean;
-  dangereux: boolean;
-}
-
-export enum Unite {
-  PIECE = 'PIECE',
-  COLIS = 'COLIS',
-  PALETTE = 'PALETTE',
-  CONTENEUR = 'CONTENEUR'
-}
-
-export enum TypeColis {
-  CARTON = 'CARTON',
-  PALETTE = 'PALETTE',
-  CONTENEUR = 'CONTENEUR',
-  VRAC = 'VRAC',
-  AUTRE = 'AUTRE'
-}
-
-export interface CreateDemandeRequest {
-  dateEnlevement: Date;
-  dateLivraisonSouhaitee: Date;
-  priorite: Priorite;
-  adresseEnlevement: Adresse;
-  contactEnlevement: Contact;
-  adresseLivraison: Adresse;
-  contactLivraison: Contact;
-  marchandise: Marchandise[];
-  instructions?: string;
-  valeurMarchandise?: number;
-  assurance?: boolean;
+export interface CreateDemandeRequest extends Partial<Demande> {
+  // Add any specific fields for creation if different
 }

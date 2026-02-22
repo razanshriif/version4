@@ -24,8 +24,18 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "html2canvas",
+              "raf",
+              "rgbcolor",
+              "core-js"
+            ]
           },
           "configurations": {
             "production": {
