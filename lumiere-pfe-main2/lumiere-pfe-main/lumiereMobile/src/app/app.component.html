@@ -1,0 +1,75 @@
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+
+  <!-- ── Global Brand Identity Lines ── -->
+  <div class="brand-lines">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+
+  <!-- ── Custom Bottom Nav (app-level, never intercepts page content) ── -->
+  <nav class="bottom-nav" *ngIf="showNav">
+
+    <!-- Accueil -->
+    <div class="bnav__item" [class.bnav__item--active]="isActive('home')" (click)="goTo('home')">
+      <div class="bnav__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
+          <polyline points="9 21 9 12 15 12 15 21" />
+        </svg>
+      </div>
+      <span class="bnav__label">Accueil</span>
+    </div>
+
+    <!-- Demandes -->
+    <div class="bnav__item" [class.bnav__item--active]="isActive('demandes')" (click)="goTo('demandes')">
+      <div class="bnav__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          <line x1="12" y1="12" x2="12" y2="17" />
+          <line x1="9" y1="14.5" x2="15" y2="14.5" />
+        </svg>
+      </div>
+      <span class="bnav__label">Demandes</span>
+    </div>
+
+    <!-- FAB centre -->
+    <div class="bnav__fab" (click)="goTo('orders/non-planned?open=true')">
+      <div class="bnav__fab-ring">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </div>
+      <span class="bnav__label" style="margin-top:4px; color:#a0a6b1;">Nouveau</span>
+    </div>
+
+    <!-- Livraisons -->
+    <div class="bnav__item" [class.bnav__item--active]="isActive('livraisons')" (click)="goTo('livraisons')">
+      <div class="bnav__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13" rx="1" />
+          <path d="M16 8h4l3 5v5h-7V8z" />
+          <circle cx="5.5" cy="18.5" r="2.5" />
+          <circle cx="18.5" cy="18.5" r="2.5" />
+        </svg>
+      </div>
+      <span class="bnav__label">Livraisons</span>
+    </div>
+
+    <!-- Profil -->
+    <div class="bnav__item" [class.bnav__item--active]="isActive('profile')" (click)="goTo('profile')">
+      <div class="bnav__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      </div>
+      <span class="bnav__label">Profil</span>
+    </div>
+
+  </nav>
+</ion-app>

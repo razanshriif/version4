@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    // --- Brand Colors ---
+    --orange: #f5921e;
+    --orange-light: #fff4e6;
+    --orange-deep: #d97c10;
+    --charcoal: #1a1c1f;
+    --charcoal-light: #2c2f33;
+
+    // --- UI Context ---
+    --bg-app: #f8f9fa;
+    --fg-app: #ffffff;
+    --text-main: #1a1c1f;
+    --text-muted: #64748b;
+    --border-light: rgba(0, 0, 0, 0.06);
+
+    // --- Ionic Tokens Override ---
+    --ion-color-primary: #f5921e;
+    --ion-color-primary-rgb: 245, 146, 30;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #d97c10;
+    --ion-color-primary-tint: #f69d35;
+
+    --ion-background-color: var(--bg-app);
+    --ion-font-family: 'Outfit', sans-serif;
+}
+
+* {
+    font-family: 'Outfit', sans-serif !important;
+}
+
+body {
+    background-color: var(--bg-app);
+}
+
+// ========== GLOBAL CLEANUP ==========
+
+// Hide specific elements as requested
+.brand-lines,
+.global-assistant-fab,
+.assistant-fab,
+.lumiere-fab,
+.safe-margin {
+    display: none !important;
+}
+
+// ========== PREMIUM UTILITIES ==========
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.premium-card {
+    background: var(--fg-app);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+// ========== ANIMATIONS ==========
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Fix for unclickable pages */
+.ion-page-hidden {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+ion-tab-bar {
+    --background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-light);
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+    height: auto;
+}
+
+ion-tab-button {
+    --color: #94a3b8;
+    --color-selected: var(--orange);
+    font-weight: 600;
+
+    ion-label {
+        font-size: 10px;
+        margin-top: 4px;
+    }
+}

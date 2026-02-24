@@ -1,0 +1,153 @@
+// ─────────────────────────────────────────
+// Lumière Logistique — App-Level Bottom Nav
+// ─────────────────────────────────────────
+
+$orange: #f5921e;
+$charcoal: #f0f0f3;
+$muted: #71717a;
+$border: rgba(0, 0, 0, 0.08);
+$bg: #ffffff;
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid $border;
+    display: flex;
+    align-items: flex-end;
+    padding: 8px 0 calc(18px + env(safe-area-inset-bottom, 0px));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    // Ensure it ONLY captures taps on its own visible areas
+    pointer-events: auto;
+}
+
+.bnav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: transform 0.1s ease;
+
+    &:active {
+        transform: scale(0.92);
+    }
+
+    svg {
+        width: 22px;
+        height: 22px;
+        stroke: $muted;
+        transition: stroke 0.2s, transform 0.2s;
+    }
+
+    &--active {
+        .bnav__icon-wrap {
+            &::before {
+                content: '';
+                position: absolute;
+                width: 38px;
+                height: 38px;
+                background: rgba($orange, 0.1);
+                border-radius: 10px;
+                z-index: -1;
+                transform: scale(1);
+                animation: highlightPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+        }
+
+        svg {
+            stroke: $orange;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 4px rgba($orange, 0.3));
+        }
+
+        .bnav__label {
+            color: $orange;
+            font-weight: 800;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 35%;
+            right: 35%;
+            height: 3px;
+            background: $orange;
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 -2px 10px rgba($orange, 0.5);
+        }
+    }
+}
+
+@keyframes highlightPop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.bnav__icon-wrap {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+}
+
+.bnav__label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #71717a; // Darker grey for contrast
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+// ── Centre FAB ──
+.bnav__fab {
+    flex: 0 0 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -20px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.bnav__fab-ring {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: $charcoal;
+    box-shadow: 0 4px 16px rgba(44, 47, 52, 0.35);
+    display: grid;
+    place-items: center;
+    border: 3px solid $bg;
+    transition: transform 0.14s, background 0.14s;
+
+    svg {
+        width: 22px;
+        height: 22px;
+        stroke: $orange;
+    }
+
+    .bnav__fab:active & {
+        transform: scale(0.91);
+        background: $orange;
+    }
+}

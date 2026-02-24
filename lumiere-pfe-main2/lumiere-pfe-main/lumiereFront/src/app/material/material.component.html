@@ -1,0 +1,90 @@
+<mat-toolbar class="toolbar">
+  <button mat-icon-button aria-label="Toggle menu" (click)="toggleMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+  <img src="assets/lum-removebg-preview.png" alt="Lumière Logistique Logo" class="logo">
+
+  <div class="toolbar-actions">
+    <button mat-icon-button aria-label="Notifications" (click)="toggleNotifications()" class="notification-button">
+      <i class="fas fa-bell" [ngClass]="{'new-notifications': hasNewNotifications}"></i>
+      <span *ngIf="hasNewNotifications" class="notification-badge">{{ clients.length }}</span>
+    </button>
+    <div *ngIf="showNotifications" class="notification-panel">
+      <div class="notification-header">
+        <span>Notifications</span>
+        <button mat-icon-button (click)="toggleNotifications()" aria-label="Close notifications">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <ul class="notification-list">
+        <li *ngFor="let notification of clients" class="notification-item" [ngClass]="{'read': notification.isRead}">
+          <i class="fas fa-circle" [ngClass]="{'read-dot': notification.isRead}"></i>
+          <div class="notification-content">
+            <span class="notification-type">{{ notification.type }}</span>
+            <span class="notification-message">{{ notification.message }}</span>
+            <span class="notification-timestamp">{{ notification.timestamp | date:'short' }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="user-info">
+      <img [src]="userImage" alt="User Profile" class="user-image">
+      <span class="user-name" routerLink="/material/profil" routerLinkActive="active">{{ user.firstname }} {{
+        user.lastname }}</span>
+    </div>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container" [ngClass]="{'collapsed': isCollapsed}">
+  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile && !isCollapsed" class="sidenav">
+    <nav class="sidenav-nav">
+      <a mat-list-item routerLink="/material/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span class="nav-text">DASHBOARD</span>
+      </a>
+      <a mat-list-item *ngIf="user.role === 'CLIENT' || user.role === 'COMMERCIAL' || user.role === 'ADMIN'"
+        (click)="toggleSubMenu('orders')" class="nav-item">
+        <i class="fas fa-clipboard-list"></i>
+        <span class="nav-text">ORDRES</span>
+        <i class="fas" [ngClass]="showOrdersSubMenu ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+      </a>
+      <div *ngIf="showOrdersSubMenu" class="sub-menu">
+        <a mat-list-item routerLink="/material/nonplannifies" routerLinkActive="active" class="sub-nav-item">
+          <i class="fa-solid fa-plus"></i>
+          <span class="nav-text">AJOUTER ORDRES</span>
+        </a>
+        <a mat-list-item routerLink="/material/ajouter" routerLinkActive="active" class="sub-nav-item">
+          <i class="fa-solid fa-list-check"></i>
+          <span class="nav-text">NON_CONFIRMES</span>
+        </a>
+        <a mat-list-item routerLink="/material/ordres" routerLinkActive="active" class="sub-nav-item">
+          <i class="fa-solid fa-truck"></i>
+          <span class="nav-text">SUIVIE DES ORDRES</span>
+        </a>
+      </div>
+      <a mat-list-item *ngIf="user.role === 'CLIENT' || user.role === 'COMMERCIAL' || user.role === 'ADMIN'"
+        routerLink="/material/clients" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-user-friends"></i>
+        <span class="nav-text">CLIENTS</span>
+      </a>
+      <!--
+      <a mat-list-item *ngIf="user.role === 'ADMIN' || user.role === 'SUPERADMIN' || user.role === 'USER'" routerLink="/material/articles" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-box"></i>
+        <span class="nav-text">Articles</span>
+      </a>
+      -->
+      <a mat-list-item *ngIf="user.role === 'ADMIN' || user.role === 'COMMERCIAL'" routerLink="/material/utilisateurs"
+        routerLinkActive="active" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span class="nav-text">USERS</span>
+      </a>
+      <a mat-list-item (click)="logout()" class="nav-item">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="nav-text">LOG OUT</span>
+      </a>
+    </nav>
+  </mat-sidenav>
+  <mat-sidenav-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

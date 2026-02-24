@@ -1,0 +1,69 @@
+<div class="dashboard-container">
+  <!-- Stat Cards -->
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="icon-container">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="content">
+        <h5 class="title">Clients</h5>
+        <p class="stat">{{ clientsCount }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-container">
+        <i class="fas fa-box"></i>
+      </div>
+      <div class="content">
+        <h5 class="title">Articles</h5>
+        <p class="stat">{{ articlesCount }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-container">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="content">
+        <h5 class="title">Ordres</h5>
+        <p class="stat">{{ ordersCount }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-container">
+        <i class="fas fa-user-cog"></i>
+      </div>
+      <div class="content">
+        <h5 class="title">Utilisateurs</h5>
+        <p class="stat">{{ usersCount }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Containers -->
+  <div class="charts-container">
+    <div class="chart-container donut-chart">
+      <h6 class="chart-title">Répartition des Ordres</h6>
+      <apx-chart
+        #donutChart
+        [series]="donutChartOptions.series"
+        [chart]="donutChartOptions.chart"
+        [labels]="donutChartOptions.labels"
+        [responsive]="donutChartOptions.responsive"
+        [colors]="donutChartOptions.colors"
+        [legend]="donutChartOptions.legend">
+      </apx-chart>
+    </div>
+    <div class="chart-container bar-chart">
+      <h6 class="chart-title">Statut des Ordres</h6>
+      <apx-chart
+        #barChart
+        [series]="barChartOptions.series"
+        [chart]="barChartOptions.chart"
+        [plotOptions]="barChartOptions.plotOptions"
+        [dataLabels]="barChartOptions.dataLabels"
+        [xaxis]="barChartOptions.xaxis"
+        [responsive]="barChartOptions.responsive">
+      </apx-chart>
+    </div>
+  </div>
+</div>

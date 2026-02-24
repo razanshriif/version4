@@ -1,0 +1,89 @@
+<ion-header class="ion-no-border">
+    <div class="glass-header">
+        <ion-toolbar class="premium-toolbar">
+            <ion-buttons slot="start">
+                <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
+            </ion-buttons>
+            <ion-title>Répertoire Clients</ion-title>
+            <ion-buttons slot="end">
+                <ion-button (click)="createClient()">
+                    <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar class="search-toolbar">
+            <div class="search-container">
+                <ion-icon name="search-outline"></ion-icon>
+                <ion-input [(ngModel)]="searchTerm" (ionInput)="onSearchChange($event)"
+                    placeholder="Filtrer par nom ou code..."></ion-input>
+            </div>
+        </ion-toolbar>
+    </div>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+    <div class="glass-background"></div>
+
+    <ion-refresher slot="fixed" (ionRefresh)="loadClients($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="list-container">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="ion-text-center ion-padding" style="margin-top: 40px;">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p style="color: rgba(255,255,255,0.4); margin-top: 15px; font-weight: 500;">Chargement de vos contacts...
+            </p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && filteredClients.length === 0" class="empty-state">
+            <div class="empty-icon-circle">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
+            <h3>Aucun client</h3>
+            <p>Votre liste de clients est vide pour le moment.</p>
+            <ion-button fill="clear" (click)="createClient()" class="premium-link">
+                AJOUTER UN CLIENT
+            </ion-button>
+        </div>
+
+        <!-- Client List -->
+        <div class="client-list" *ngIf="!isLoading">
+            <ion-item-sliding *ngFor="let client of filteredClients" class="premium-sliding-item">
+                <ion-item button lines="none" class="transparent-item" (click)="editClient(client)" detail="false"
+                    style="--inner-padding-end: 0;">
+                    <div class="client-card">
+                        <div class="card-edge-accent"></div>
+                        <div class="card-inner">
+                            <div class="avatar-box">
+                                {{ (client.nom || 'C').charAt(0).toUpperCase() }}
+                            </div>
+                            <div class="client-details">
+                                <h2 class="client-name">{{ client.nom }}</h2>
+                                <div class="client-meta">
+                                    <div class="id-tag">REF: {{ client.code }}</div>
+                                    <div class="city-info">
+                                        <ion-icon name="location-outline"></ion-icon>
+                                        {{ client.ville || 'Localisation...' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <ion-icon name="chevron-forward-outline" class="detail-icon"></ion-icon>
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item-options side="end">
+                    <ion-item-option (click)="editClient(client)" class="option-btn edit">
+                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option (click)="deleteClient(client)" class="option-btn delete">
+                        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </div>
+    </div>
+
+</ion-content>

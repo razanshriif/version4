@@ -1,0 +1,241 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <div class="header-logo-container">
+      <img src="assets/lum.png" alt="Logo" class="mini-logo" />
+    </div>
+    <ion-title>Nouvel Ordre</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glass-background">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="form-container">
+    <form #ordreForm="ngForm" (ngSubmit)="onSubmit()">
+
+      <!-- Section: Client -->
+      <div class="premium-card glass-card shadow-lg">
+        <h2 class="section-title">Informations Client</h2>
+
+        <div class="premium-input-item">
+          <ion-label position="stacked">Matricule</ion-label>
+          <ion-input [(ngModel)]="ordre.matricule" name="matricule" placeholder="Ex: MAT-2024"></ion-input>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Code Client *</ion-label>
+          <div class="flex items-center gap-2">
+            <ion-input [(ngModel)]="ordre.client" name="client" placeholder="Votre code client..." required
+              class="flex-1" (ionInput)="filterClients($event, 'main')" (ionFocus)="openPicker('main')"></ion-input>
+            <ion-button (click)="goToCreateClient()" fill="clear" class="add-client-btn">
+              <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+
+          <!-- Client Autocomplete Suggestions -->
+          <div *ngIf="showClientList && filteredClients.length > 0" class="autocomplete-list shadow-lg">
+            <ion-list lines="none">
+              <ion-item *ngFor="let client of filteredClients" button (click)="onClientSelect(client)">
+                <ion-label>
+                  <h2>{{ client.nom }}</h2>
+                  <p>{{ client.codeclient }} - {{ client.siteExploitation }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Nom Client</ion-label>
+          <ion-input [(ngModel)]="ordre.nomclient" name="nomclient" placeholder="Nom complet"></ion-input>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Site Client</ion-label>
+            <ion-input [(ngModel)]="ordre.siteclient" name="siteclient" placeholder="Site"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">ID EDI</ion-label>
+            <ion-input [(ngModel)]="ordre.idedi" name="idedi" placeholder="EDI..."></ion-input>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Chargement -->
+      <div class="premium-card glass-card shadow-lg mt-4">
+        <h2 class="section-title">Informations Chargement</h2>
+
+        <div class="premium-input-item">
+          <ion-label position="stacked">Code Client Chargement</ion-label>
+          <div class="flex items-center gap-2">
+            <ion-input [(ngModel)]="ordre.codeclientcharg" name="codeclientcharg" placeholder="Code" class="flex-1"
+              (ionInput)="filterClients($event, 'chargement')" (ionFocus)="openPicker('chargement')"></ion-input>
+            <ion-button (click)="openPicker('chargement')" fill="clear" class="add-client-btn">
+              <ion-icon name="search-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Nom du Lieu</ion-label>
+          <ion-input [(ngModel)]="ordre.chargementNom" name="chargementNom" placeholder="Nom"></ion-input>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Adresse 1</ion-label>
+            <ion-input [(ngModel)]="ordre.chargementAdr1" name="chargementAdr1" placeholder="Adresse"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Adresse 2</ion-label>
+            <ion-input [(ngModel)]="ordre.chargementAdr2" name="chargementAdr2" placeholder="Suite adresse"></ion-input>
+          </div>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Ville</ion-label>
+            <ion-input [(ngModel)]="ordre.chargementVille" name="chargementVille" placeholder="Ville"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Date et Heure</ion-label>
+            <ion-input [(ngModel)]="ordre.chargementDate" name="chargementDate" type="datetime-local"></ion-input>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Livraison -->
+      <div class="premium-card glass-card shadow-lg mt-4">
+        <h2 class="section-title">Informations Livraison</h2>
+
+        <div class="premium-input-item">
+          <ion-label position="stacked">Code Client Livraison</ion-label>
+          <div class="flex items-center gap-2">
+            <ion-input [(ngModel)]="ordre.codeclientliv" name="codeclientliv" placeholder="Code" class="flex-1"
+              (ionInput)="filterClients($event, 'livraison')" (ionFocus)="openPicker('livraison')"></ion-input>
+            <ion-button (click)="openPicker('livraison')" fill="clear" class="add-client-btn">
+              <ion-icon name="search-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Nom du Lieu</ion-label>
+          <ion-input [(ngModel)]="ordre.livraisonNom" name="livraisonNom" placeholder="Nom"></ion-input>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Adresse 1</ion-label>
+            <ion-input [(ngModel)]="ordre.livraisonAdr1" name="livraisonAdr1" placeholder="Adresse"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Adresse 2</ion-label>
+            <ion-input [(ngModel)]="ordre.livraisonAdr2" name="livraisonAdr2" placeholder="Suite adresse"></ion-input>
+          </div>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Ville</ion-label>
+            <ion-input [(ngModel)]="ordre.livraisonVille" name="livraisonVille" placeholder="Ville"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Date et Heure</ion-label>
+            <ion-input [(ngModel)]="ordre.livraisonDate" name="livraisonDate" type="datetime-local"></ion-input>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Produit & Details -->
+      <div class="premium-card glass-card shadow-lg mt-4">
+        <h2 class="section-title">Informations Produit</h2>
+
+        <div class="input-grid">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Code Article</ion-label>
+            <ion-input [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="ART-123"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Désignation</ion-label>
+            <ion-input [(ngModel)]="ordre.designation" name="designation" placeholder="Description"></ion-input>
+          </div>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Poids (kg)</ion-label>
+            <ion-input [(ngModel)]="ordre.poids" name="poids" type="number" placeholder="0.0"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Volume</ion-label>
+            <ion-input [(ngModel)]="ordre.volume" name="volume" type="number" placeholder="0.0"></ion-input>
+          </div>
+        </div>
+
+        <div class="input-grid mt-3">
+          <div class="premium-input-item">
+            <ion-label position="stacked">Nb Palettes</ion-label>
+            <ion-input [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes" type="number"
+              placeholder="0"></ion-input>
+          </div>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Nombre Colis</ion-label>
+            <ion-input [(ngModel)]="ordre.nombreColis" name="nombreColis" type="number" placeholder="0"></ion-input>
+          </div>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Longueur</ion-label>
+          <ion-input [(ngModel)]="ordre.longueur" name="longueur" type="number" placeholder="0.0"></ion-input>
+        </div>
+
+        <div class="premium-input-item mt-3">
+          <ion-label position="stacked">Statut</ion-label>
+          <ion-select [(ngModel)]="ordre.statut" name="statut" interface="popover" placeholder="Sélectionner">
+            <ion-select-option value="NON_CONFIRME">Brouillon (NON CONFIRMÉ)</ion-select-option>
+            <ion-select-option value="CONFIRME">CONFIRMÉ</ion-select-option>
+            <ion-select-option value="EN_COURS">EN COURS</ion-select-option>
+            <ion-select-option value="LIVRE">LIVRÉ</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <!-- Section: Commentaires -->
+      <div class="premium-card glass-card shadow-lg mt-4">
+        <h2 class="section-title">Commentaires</h2>
+        <div class="premium-input-item">
+          <ion-label position="stacked">Observations particulières</ion-label>
+          <ion-textarea [(ngModel)]="newComment" name="newComment" rows="4"
+            placeholder="Ajouter un commentaire..."></ion-textarea>
+        </div>
+      </div>
+
+      <div class="footer-actions mt-5">
+        <ion-button expand="block" type="submit" class="premium-button shadow-primary">
+          <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+          Enregistrer l'ordre
+        </ion-button>
+        <ion-button expand="block" fill="clear" (click)="cancel()" class="cancel-link mt-2">
+          Annuler
+        </ion-button>
+      </div>
+
+      <div class="spacer"></div>
+    </form>
+  </div>
+</ion-content>

@@ -1,0 +1,152 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mon Profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glass-background"></div>
+
+  <div class="list-container">
+    <!-- Profile Header -->
+    <div class="profile-header-premium">
+      <div class="avatar-wrapper">
+        <div class="avatar-circle-lg">
+          {{ getUserInitials() }}
+        </div>
+        <div class="avatar-decoration"></div>
+      </div>
+      <div class="profile-meta" *ngIf="user">
+        <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+        <p>{{ user.email }}</p>
+      </div>
+    </div>
+
+    <!-- Segment Tabs -->
+    <ion-segment [(ngModel)]="selectedSegment" class="premium-segment shadow-sm">
+      <ion-segment-button value="profile">
+        <ion-label>Mon Compte</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="password">
+        <ion-label>Sécurité</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- Profile Information Tab -->
+    <div *ngIf="selectedSegment === 'profile'" class="tab-content">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+        <div class="premium-card glass-card shadow-lg">
+          <h2 class="section-title">Coordonnées</h2>
+
+          <div class="input-grid">
+            <div class="premium-input-item">
+              <ion-label position="stacked">Prénom</ion-label>
+              <ion-input formControlName="firstname" placeholder="Prénom"></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">Nom</ion-label>
+              <ion-input formControlName="lastname" placeholder="Nom"></ion-input>
+            </div>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input formControlName="email" type="email" placeholder="email@exemple.com"></ion-input>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">Téléphone</ion-label>
+            <ion-input formControlName="telephone" type="tel" placeholder="+216 ..."></ion-input>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">Adresse</ion-label>
+            <ion-input formControlName="adresse" placeholder="Adresse complète"></ion-input>
+          </div>
+
+          <div class="input-grid mt-3">
+            <div class="premium-input-item">
+              <ion-label position="stacked">Ville</ion-label>
+              <ion-input formControlName="ville" placeholder="Ville"></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">Code Postal</ion-label>
+              <ion-input formControlName="codePostal" placeholder="8000"></ion-input>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons mt-4">
+          <ion-button *ngIf="!editMode" expand="block" class="premium-button secondary" (click)="toggleEditMode()"
+            type="button">
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            Modifier le profil
+          </ion-button>
+
+          <ng-container *ngIf="editMode">
+            <div class="flex gap-2">
+              <ion-button expand="block" fill="clear" class="cancel-link flex-1" (click)="toggleEditMode()"
+                type="button">
+                Annuler
+              </ion-button>
+              <ion-button expand="block" class="premium-button flex-1" type="submit"
+                [disabled]="updating || profileForm.invalid">
+                {{ updating ? 'Enregistrement...' : 'Enregistrer' }}
+              </ion-button>
+            </div>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+
+    <!-- Password Change Tab -->
+    <div *ngIf="selectedSegment === 'password'" class="tab-content">
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+        <div class="premium-card glass-card shadow-lg">
+          <h2 class="section-title">Ancien mot de passe</h2>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Mot de passe actuel</ion-label>
+            <ion-input formControlName="currentPassword" type="password" placeholder="••••••••"></ion-input>
+          </div>
+
+          <h2 class="section-title mt-4">Nouveau mot de passe</h2>
+          <div class="premium-input-item">
+            <ion-label position="stacked">Nouveau mot de passe</ion-label>
+            <ion-input formControlName="newPassword" type="password" placeholder="••••••••"></ion-input>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">Confirmer</ion-label>
+            <ion-input formControlName="confirmPassword" type="password" placeholder="••••••••"></ion-input>
+          </div>
+
+          <div class="error-wrapper mt-2"
+            *ngIf="passwordForm.get('confirmPassword')?.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">
+            <p class="error-text">Les mots de passe ne correspondent pas</p>
+          </div>
+        </div>
+
+        <div class="action-buttons mt-4">
+          <ion-button expand="block" class="premium-button" type="submit" [disabled]="updating || passwordForm.invalid">
+            <ion-icon name="key-outline" slot="start"></ion-icon>
+            {{ updating ? 'Modification...' : 'Mettre à jour' }}
+          </ion-button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="logout-section mt-5">
+      <ion-button expand="block" fill="clear" class="logout-link" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Déconnexion
+      </ion-button>
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+</ion-content>

@@ -1,0 +1,265 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Nouvel Ordre</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="submit()" [disabled]="!isFormValid()">
+                Envoyer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+    <div class="form-scroll">
+
+        <!-- Section 1: Client & Site (Auto-filled / Selectable) -->
+        <div class="section-card shadow">
+            <div class="section-header">
+                <ion-icon name="business-outline" color="primary"></ion-icon>
+                <h2>Informations Client</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Code Client</label>
+                    <p>{{ userProfile?.email || 'Chargement...' }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Nom</label>
+                    <p>{{ userProfile?.firstname }} {{ userProfile?.lastname }}</p>
+                </div>
+            </div>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Site d'exploitation</ion-label>
+                <ion-select [(ngModel)]="ordre.siteclient" interface="popover">
+                    <ion-select-option *ngFor="let s of siteOptions" [value]="s">{{ s }}</ion-select-option>
+                </ion-select>
+            </ion-item>
+        </div>
+
+        <!-- Section 2: Chargement -->
+        <div class="section-card shadow">
+            <div class="section-header">
+                <ion-icon name="arrow-up-circle-outline" color="primary"></ion-icon>
+                <h2>Chargement</h2>
+            </div>
+            <ion-item lines="none" class="search-trigger" (click)="openClientPicker('chargement')">
+                <ion-label>
+                    <h3>{{ ordre.chargementNom || 'Sélectionner Chargement' }}</h3>
+                    <p *ngIf="ordre.codeclientcharg">Code: {{ ordre.codeclientcharg }}</p>
+                </ion-label>
+                <ion-icon name="search-outline" slot="end"></ion-icon>
+            </ion-item>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Adresse 1</ion-label>
+                <ion-input [(ngModel)]="ordre.chargementAdr1"></ion-input>
+            </ion-item>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Adresse 2</ion-label>
+                <ion-input [(ngModel)]="ordre.chargementAdr2"></ion-input>
+            </ion-item>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Ville</ion-label>
+                <ion-input [(ngModel)]="ordre.chargementVille"></ion-input>
+            </ion-item>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Code Postal</ion-label>
+                <ion-input [(ngModel)]="ordre.codepostalcharg"></ion-input>
+            </ion-item>
+            <div class="date-item">
+                <ion-label>Date Chargement</ion-label>
+                <ion-datetime-button datetime="chargement-date"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime id="chargement-date" [(ngModel)]="ordre.chargementDate"
+                            presentation="date-time"></ion-datetime>
+                    </ng-template>
+                </ion-modal>
+            </div>
+        </div>
+
+        <!-- Section 3: Destination -->
+        <div class="section-card shadow">
+            <div class="section-header">
+                <ion-icon name="location-outline" color="success"></ion-icon>
+                <h2>Destinataire (Livraison)</h2>
+            </div>
+            <ion-item lines="none" class="search-trigger" (click)="openClientPicker()">
+                <ion-label>
+                    <h3 *ngIf="selectedDestinataire">{{ selectedDestinataire.nom }}</h3>
+                    <p *ngIf="selectedDestinataire">{{ selectedDestinataire.adresse }}, {{ selectedDestinataire.ville }}
+                    </p>
+                    <span *ngIf="!selectedDestinataire" class="placeholder">Sélectionner un destinataire</span>
+                </ion-label>
+                <ion-icon name="search-outline" slot="end"></ion-icon>
+            </ion-item>
+
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Adresse 2</ion-label>
+                <ion-input [(ngModel)]="ordre.livraisonAdr2"></ion-input>
+            </ion-item>
+            <ion-item lines="inset" class="ion-no-padding">
+                <ion-label position="stacked">Code Postal</ion-label>
+                <ion-input [(ngModel)]="ordre.codepostalliv"></ion-input>
+            </ion-item>
+
+            <div class="date-item ion-margin-top">
+                <ion-label>Date Livraison</ion-label>
+                <ion-datetime-button datetime="livraison-date"></ion-datetime-button>
+                <ion-modal [keepContentsMounted]="true">
+                    <ng-template>
+                        <ion-datetime id="livraison-date" [(ngModel)]="ordre.livraisonDate"
+                            presentation="date-time"></ion-datetime>
+                    </ng-template>
+                </ion-modal>
+            </div>
+        </div>
+
+        <!-- Section 4: Marchandise -->
+        <div class="section-card shadow">
+            <div class="section-header">
+                <ion-icon name="cube-outline" color="warning"></ion-icon>
+                <h2>Marchandise</h2>
+            </div>
+            <ion-item lines="none" class="search-trigger" (click)="openArticlePicker()">
+                <ion-label>
+                    <h3 *ngIf="selectedArticle">{{ selectedArticle.label }}</h3>
+                    <p *ngIf="selectedArticle">Code: {{ selectedArticle.codeArticle }}</p>
+                    <span *ngIf="!selectedArticle" class="placeholder">Sélectionner un article</span>
+                </ion-label>
+                <ion-icon name="search-outline" slot="end"></ion-icon>
+            </ion-item>
+
+            <div class="quantity-grid">
+                <ion-item lines="inset" class="ion-no-padding">
+                    <ion-label position="stacked">Palettes</ion-label>
+                    <ion-input type="number" [(ngModel)]="ordre.nombrePalettes" placeholder="0"></ion-input>
+                </ion-item>
+                <ion-item lines="inset" class="ion-no-padding">
+                    <ion-label position="stacked">Poids (kg)</ion-label>
+                    <ion-input type="number" [(ngModel)]="ordre.poids" placeholder="0"></ion-input>
+                </ion-item>
+                <ion-item lines="inset" class="ion-no-padding">
+                    <ion-label position="stacked">Colis</ion-label>
+                    <ion-input type="number" [(ngModel)]="ordre.nombreColis" placeholder="0"></ion-input>
+                </ion-item>
+                <ion-item lines="inset" class="ion-no-padding">
+                    <ion-label position="stacked">Volume (m³)</ion-label>
+                    <ion-input type="number" [(ngModel)]="ordre.volume" placeholder="0"></ion-input>
+                </ion-item>
+            </div>
+        </div>
+
+        <!-- Section 5: Commentaires / Transport -->
+        <div class="section-card shadow">
+            <div class="section-header">
+                <ion-icon name="chatbubble-outline" color="danger"></ion-icon>
+                <h2>Transport & Commentaires</h2>
+            </div>
+
+            <div class="radio-group-modern">
+                <label>Type de Voyage</label>
+                <ion-segment [(ngModel)]="optionsCommentaire.typeVoyage" (ionChange)="updateCommentaire()">
+                    <ion-segment-button value="Retour">Retour</ion-segment-button>
+                    <ion-segment-button value="Dédié">Dédié</ion-segment-button>
+                </ion-segment>
+            </div>
+
+            <div class="select-group ion-margin-top">
+                <label>Type de Camion</label>
+                <ion-select [(ngModel)]="optionsCommentaire.typeCamion" (ionChange)="updateCommentaire()"
+                    interface="popover">
+                    <ion-select-option value="Cargo">Cargo</ion-select-option>
+                    <ion-select-option value="NPR">NPR</ion-select-option>
+                    <ion-select-option value="DMAX">DMAX</ion-select-option>
+                    <ion-select-option value="NKR">NKR</ion-select-option>
+                    <ion-select-option value="Semi">Semi</ion-select-option>
+                </ion-select>
+            </div>
+
+            <div class="radio-group-modern ion-margin-top" *ngIf="optionsCommentaire.typeCamion === 'Semi'">
+                <label>Type de Semi</label>
+                <ion-segment [(ngModel)]="optionsCommentaire.typeSemi" (ionChange)="updateCommentaire()">
+                    <ion-segment-button value="plateau">Plateau</ion-segment-button>
+                    <ion-segment-button value="Frigo">Frigo</ion-segment-button>
+                    <ion-segment-button value="Bache">Bâche</ion-segment-button>
+                </ion-segment>
+            </div>
+
+            <ion-item lines="inset" class="ion-no-padding ion-margin-top">
+                <ion-label position="stacked">Commentaire libre</ion-label>
+                <ion-textarea [(ngModel)]="optionsCommentaire.commentaireLibre" (ionInput)="updateCommentaire()"
+                    rows="2"></ion-textarea>
+            </ion-item>
+
+            <div class="final-comment-preview" *ngIf="commentaireFinal">
+                <small>Aperçu du commentaire :</small>
+                <p>{{ commentaireFinal }}</p>
+            </div>
+        </div>
+        <ion-button expand="block" shape="round" class="submit-btn" (click)="submit()" [disabled]="!isFormValid()">
+            Créer l'Ordre
+            <ion-icon name="send-outline" slot="end"></ion-icon>
+        </ion-button>
+
+    </div>
+
+    <!-- Client Picker Modal -->
+    <ion-modal [isOpen]="isClientPickerOpen" (didDismiss)="isClientPickerOpen = false">
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>{{ pickerTarget === 'livraison' ? 'Sélectionner Destinataire' : 'Sélectionner Chargement'
+                        }}</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="isClientPickerOpen = false">Fermer</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+                <ion-toolbar>
+                    <ion-searchbar (ionInput)="filterClients($event)" placeholder="Rechercher..."></ion-searchbar>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item *ngFor="let c of filteredClients" button (click)="selectClient(c)">
+                        <ion-label>
+                            <h2>{{ c.nom }}</h2>
+                            <p>{{ c.ville }}</p>
+                        </ion-label>
+                        <ion-note slot="end">{{ c.codeclient }}</ion-note>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ng-template>
+    </ion-modal>
+
+    <!-- Article Picker Modal -->
+    <ion-modal [isOpen]="isArticlePickerOpen" (didDismiss)="isArticlePickerOpen = false">
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Sélectionner Article</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="isArticlePickerOpen = false">Fermer</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+                <ion-toolbar>
+                    <ion-searchbar (ionInput)="filterArticles($event)" placeholder="Rechercher..."></ion-searchbar>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item *ngFor="let a of filteredArticles" button (click)="selectArticle(a)">
+                        <ion-label>
+                            <h2>{{ a.label }}</h2>
+                            <p>Code: {{ a.codeArticle }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </ng-template>
+    </ion-modal>
+
+</ion-content>

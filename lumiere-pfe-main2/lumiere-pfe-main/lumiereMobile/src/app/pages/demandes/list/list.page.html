@@ -1,0 +1,175 @@
+<ion-header class="ion-no-border">
+  <div class="glass-header">
+    <ion-toolbar class="premium-toolbar">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Suivi des Ordres</ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar class="search-toolbar">
+      <div class="search-container">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input [ngModel]="searchTerm" (ionInput)="onSearch($event)"
+          placeholder="Rechercher un client, une ville..."></ion-input>
+      </div>
+    </ion-toolbar>
+
+    <div class="filter-actions-container">
+      <div class="segment-pill-container">
+        <ion-segment [(ngModel)]="listMode" (ionChange)="onModeChange()" class="compact-segment">
+          <ion-segment-button value="confirmed">Confirmés</ion-segment-button>
+          <ion-segment-button value="draft">Brouillons</ion-segment-button>
+        </ion-segment>
+      </div>
+      <div class="status-select-container">
+        <ion-select [(ngModel)]="selectedStatut" (ionChange)="onStatutChange($event)" placeholder="Statut"
+          interface="popover" class="compact-select" [disabled]="listMode === 'draft'">
+          <ion-select-option *ngFor="let option of statutOptions" [value]="option.value">
+            {{ option.label }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+      <ion-button fill="clear" (click)="resetFilters()" class="mini-reset-btn">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glass-background"></div>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshData($event)">
+    <ion-refresher-content pullingIcon="chevron-down-outline" refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-container">
+    <!-- Skeleton Loading State -->
+    <div *ngIf="loading" class="skeleton-container">
+      <div *ngFor="let s of skeletonCount" class="skeleton-card">
+        <div class="skele-header">
+          <div class="skele-chip"></div>
+          <div class="skele-pill"></div>
+        </div>
+        <div class="skele-body">
+          <div class="skele-avatar"></div>
+          <div class="skele-lines">
+            <div class="line w-40"></div>
+            <div class="line w-60"></div>
+          </div>
+        </div>
+        <div class="skele-journey">
+          <div class="point"></div>
+          <div class="bar"></div>
+          <div class="point"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && demandes.length === 0" class="pro-empty-state">
+      <div class="empty-media">
+        <div class="icon-ring">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+      </div>
+      <h2>Aucun ordre trouvé</h2>
+      <p>Commencez par créer un nouvel ordre de transport.</p>
+      <ion-button (click)="createNewDemande()" shape="round" class="create-first-btn">
+        Nouveau Ordre
+      </ion-button>
+    </div>
+
+    <!-- Orders Grid -->
+    <div class="orders-timeline" *ngIf="!loading && demandes.length > 0">
+      <div *ngFor="let d of demandes; let i = index" class="pro-order-card animate-fade-in"
+        [style.animation-delay]="(i * 0.05) + 's'" (click)="viewDetails(d)">
+
+        <div class="card-inner">
+          <div class="top-row">
+            <div class="order-ref">
+              <div class="ref-icon">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <div class="ref-content">
+                <span class="prefix">ORDRE</span>
+                <span class="number">#{{ d.id }}</span>
+              </div>
+            </div>
+            <div class="status-badge" [class]="d.statut.toLowerCase()">
+              <span class="dot"></span>
+              {{ getStatusLabel(d.statut) }}
+            </div>
+          </div>
+
+          <div class="content-body mt-3">
+            <div class="client-info">
+              <h3>{{ d.client || 'Client Privé' }}</h3>
+              <div class="sub-label">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ formatDate(d.dateSaisie || d.chargementDate) }}</span>
+              </div>
+            </div>
+
+            <!-- Journey Path Redesign -->
+            <div class="journey-flow mt-3">
+              <div class="flow-stop from">
+                <div class="stop-marker">
+                  <ion-icon name="pin-outline"></ion-icon>
+                </div>
+                <div class="stop-info">
+                  <span class="loc">{{ d.chargementVille }}</span>
+                  <span class="label">Chargement</span>
+                </div>
+              </div>
+
+              <div class="flow-connector">
+                <div class="dots-line"></div>
+                <ion-icon name="chevron-forward"></ion-icon>
+              </div>
+
+              <div class="flow-stop to">
+                <div class="stop-marker">
+                  <ion-icon name="navigate-circle-outline"></ion-icon>
+                </div>
+                <div class="stop-info">
+                  <span class="loc">{{ d.livraisonVille }}</span>
+                  <span class="label">Livraison</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-row mt-3">
+            <div class="metrics">
+              <div class="m-item">
+                <ion-icon name="layers-outline"></ion-icon>
+                <strong>{{ d.nombrePalettes || 0 }}</strong>
+                <span>Pal</span>
+              </div>
+              <div class="m-divider"></div>
+              <div class="m-item">
+                <ion-icon name="cube-outline"></ion-icon>
+                <strong>{{ d.nombreColis || 0 }}</strong>
+                <span>Colis</span>
+              </div>
+            </div>
+
+            <div class="quick-actions">
+              <ion-button fill="clear" (click)="editDemande(d, $event)" class="btn-edit">
+                <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" (click)="deleteDemande(d, $event)" class="btn-delete">
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-infinite-scroll *ngIf="!loading && demandes.length > 0" (ionInfinite)="loadMore($event)" threshold="100px">
+    <ion-infinite-scroll-content loadingSpinner="crescent"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

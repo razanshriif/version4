@@ -1,0 +1,61 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar class="premium-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mes Livraisons</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glass-background"></div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadLivraisons($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="list-container">
+    <div class="loading-state" *ngIf="isLoading && livraisons.length === 0">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement des livraisons...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && livraisons.length === 0">
+      <ion-icon name="car-outline"></ion-icon>
+      <h3>Aucune livraison</h3>
+      <p>Vos livraisons actives apparaîtront ici.</p>
+    </div>
+
+    <ion-list lines="none" *ngIf="livraisons.length > 0" class="transparent-list">
+      <ion-item *ngFor="let liv of livraisons" (click)="viewDetails(liv)" class="delivery-item">
+        <div class="delivery-card">
+          <div class="card-edge-accent"></div>
+          <div class="card-inner">
+            <div class="card-header">
+              <span class="delivery-id">#{{ liv.id || '---' }}</span>
+              <ion-badge [color]="getStatusColor(liv.statut!)">{{ liv.statut || 'Inconnu' }}</ion-badge>
+            </div>
+
+            <div class="card-body">
+              <div class="location">
+                <ion-icon name="location-outline"></ion-icon>
+                <span>{{ liv.destinationVille || 'Destination' }}</span>
+              </div>
+              <div class="date">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>{{ formatDate(liv.dateLivraisonPrevue!) }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <span class="view-details">Suivre l'expédition</span>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  </div>
+</ion-content>

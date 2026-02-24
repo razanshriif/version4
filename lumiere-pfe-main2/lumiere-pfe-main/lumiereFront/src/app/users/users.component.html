@@ -1,0 +1,119 @@
+<!-- Button to Open the Modal -->
+
+<div class="container" style="margin-top: 4%;">
+
+
+  <div style="display: flex;">
+    <h2><i class="fa fa-user"></i> Gestion des Utilisateurs</h2>
+
+
+    <button type="button" class="btn btn-primary" (click)="openModal()"
+      style="float: right; margin-top: 1%;background-color: black; font-size: larger;"><i class="fa fa-plus"></i> Add
+      User</button>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <td>{{ client.id }}</td>
+        <td>{{ client.firstname }} {{ client.lastname }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.role }}</td>
+        <td>
+          <span [ngClass]="{
+                        'badge bg-warning': client.status === 'PENDING',
+                        'badge bg-success': client.status === 'ACTIVE',
+                        'badge bg-danger': client.status === 'REJECTED'
+                    }">{{ client.status }}</span>
+        </td>
+        <td>
+          <!-- Approve/Reject buttons for PENDING users -->
+          <button class="btn btn-success btn-sm"
+            *ngIf="client.status === 'PENDING' && (currentUser.role === 'ADMIN' || currentUser.role === 'COMMERCIAL')"
+            (click)="approve(client.id)" title="Approve">
+            <i class="fas fa-check"></i>
+          </button>
+          <button class="btn btn-danger btn-sm"
+            *ngIf="client.status === 'PENDING' && (currentUser.role === 'ADMIN' || currentUser.role === 'COMMERCIAL')"
+            (click)="reject(client.id)" title="Reject" style="margin-left: 5px;">
+            <i class="fas fa-times"></i>
+          </button>
+
+          <!-- Block/Unblock button for ACTIVE/REJECTED users -->
+          <button class="btn btn-warning btn-sm"
+            *ngIf="client.status === 'ACTIVE' && (currentUser.role === 'ADMIN' || currentUser.role === 'COMMERCIAL')"
+            (click)="blockUser(client.id)" title="Block User" style="margin-left: 5px;">
+            <i class="fas fa-ban"></i>
+          </button>
+          <button class="btn btn-success btn-sm"
+            *ngIf="client.status === 'REJECTED' && (currentUser.role === 'ADMIN' || currentUser.role === 'COMMERCIAL')"
+            (click)="approve(client.id)" title="Unblock/Activate" style="margin-left: 5px;">
+            <i class="fas fa-check-circle"></i>
+          </button>
+
+          <!-- Edit button for ADMIN and COMMERCIAL -->
+          <button class="btn btn-info btn-sm" *ngIf="currentUser.role === 'ADMIN' || currentUser.role === 'COMMERCIAL'"
+            (click)="editUser(client)" title="Edit User" style="margin-left: 5px;">
+            <i class="fas fa-edit"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
+
+
+
+<!-- The Modal -->
+<div id="addUserModal" class="modal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="firstname" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstname" [(ngModel)]="user.firstname" name="firstname"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastname" [(ngModel)]="user.lastname" name="lastname" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="user.email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="user.password" name="password"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-control" id="role" [(ngModel)]="user.role" name="role" required>
+              <option value="CLIENT">CLIENT</option>
+              <option value="COMMERCIAL">COMMERCIAL</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
