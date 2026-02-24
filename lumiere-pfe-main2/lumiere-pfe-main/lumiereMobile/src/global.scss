@@ -1,4 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+/* Core CSS required for @ionic/angular standalone to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
 
 :root {
     // --- Brand Colors ---
@@ -88,12 +102,7 @@ body {
     animation: fadeInUp 0.5s ease forwards;
 }
 
-/* Fix for unclickable pages */
-.ion-page-hidden {
-    display: none !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-}
+
 
 ion-tab-bar {
     --background: rgba(255, 255, 255, 0.9);

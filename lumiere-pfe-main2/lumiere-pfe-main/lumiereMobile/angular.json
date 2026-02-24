@@ -21,8 +21,12 @@
               {
                 "glob": "**/*",
                 "input": "src/assets",
-                "output": "assets",
-                "dot": true
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/.well-known",
+                "output": ".well-known"
               }
             ],
             "styles": [

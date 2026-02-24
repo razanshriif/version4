@@ -7,11 +7,7 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./pages/auth/login/login.page').then(m => m.LoginPage) },
   { path: 'register', loadComponent: () => import('./pages/auth/register/register.page').then(m => m.RegisterPage) },
   { path: 'pending', loadComponent: () => import('./pages/auth/pending/pending.page').then(m => m.PendingPage) },
-  {
-    path: 'orders/non-planned',
-    loadComponent: () => import('./pages/orders/non-planned/non-planned.page').then(m => m.NonPlannedPage),
-    canActivate: [AuthGuard]
-  },
+  { path: 'orders/non-planned', redirectTo: '/demandes/create', pathMatch: 'full' },
 
   {
     path: 'home',
@@ -28,6 +24,11 @@ export const routes: Routes = [
   {
     path: 'demandes/details',
     loadComponent: () => import('./pages/demandes/details/details.page').then(m => m.DetailsPage),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'demandes/create',
+    loadComponent: () => import('./pages/demandes/create/create.page').then(m => m.CreatePage),
     canActivate: [AuthGuard]
   },
 

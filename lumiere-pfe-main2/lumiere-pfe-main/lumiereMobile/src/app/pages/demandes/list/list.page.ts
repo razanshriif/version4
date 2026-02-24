@@ -8,7 +8,7 @@ import {
   IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
   IonContent, IonRefresher, IonRefresherContent,
   IonInfiniteScroll, IonInfiniteScrollContent,
-  IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton
+  IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton, IonInput
 } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { DemandeService, DemandeFilter } from '../../../services/demande.service';
@@ -48,7 +48,7 @@ import {
     IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
     IonContent, IonRefresher, IonRefresherContent,
     IonInfiniteScroll, IonInfiniteScrollContent,
-    IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton
+    IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton, IonInput
   ]
 })
 export class ListPage implements OnInit {
@@ -126,9 +126,9 @@ export class ListPage implements OnInit {
     this.loading = true;
 
     this.demandeService.getDemandes().subscribe({
-      next: (response: Demande[]) => {
-        // Le backend retourne une liste simple (pas paginée)
-        this.allDemandes = response;
+      next: (response: any) => {
+        // Le backend peut retourner une liste simple ou paginée ({content: [...]})
+        this.allDemandes = response.content || response;
         this.applyFilters();
         this.totalElements = this.demandes.length;
         this.totalPages = Math.ceil(this.totalElements / this.pageSize);

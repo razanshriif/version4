@@ -120,7 +120,7 @@ export class HomePage implements OnInit {
       subtitle: 'Saisie rapide',
       icon: 'add-circle-outline',
       color: 'success',
-      route: '/orders/non-planned',
+      route: '/demandes/create',
       count: null
     }
   ];
@@ -334,7 +334,7 @@ export class HomePage implements OnInit {
   }
 
   createNewDemande() {
-    this.navCtrl.navigateForward(['/orders/non-planned'], { queryParams: { open: 'true' } });
+    this.navCtrl.navigateForward(['/demandes/create']);
   }
 
   logout() {

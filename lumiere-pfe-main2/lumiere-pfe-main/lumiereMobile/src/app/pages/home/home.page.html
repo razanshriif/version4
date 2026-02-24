@@ -1,35 +1,26 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="header-toolbar">
-
-    <div class="header-wrapper header-wrapper--slim">
-      <div class="header-wrapper__lines">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="header-wrapper">
+      <div class="logo-flex" (click)="onTestClick('logo')">
+        <div class="brand-img">
+          <img src="assets/lum.png" alt="Lumière Logo" />
+        </div>
+        <div class="brand-text">
+          <span class="brand-text__main">LUMIÈRE</span>
+          <span class="brand-text__sub">LOGISTIQUE</span>
+        </div>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div class="logo">
-          <div class="logo__mark">
-            <img src="assets/lum.png" alt="Lumière" />
-          </div>
-          <div class="logo__copy">
-            <span class="logo__name">Lumière</span>
-            <span class="logo__sub">Logistique</span>
-          </div>
+      <div class="hdr-actions">
+        <div class="hdr-btn" (click)="goToNotifications()">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <div class="hdr-btn__pip" *ngIf="stats.notifications > 0"></div>
         </div>
-
-        <div class="hdr-actions">
-          <div class="hdr-btn" (click)="goToNotifications()">
-            <ion-icon name="notifications-outline"></ion-icon>
-            <div class="hdr-btn__pip" *ngIf="stats.notifications > 0"></div>
-          </div>
-          <div class="hdr-btn" (click)="goToProfile()">
-            <ion-icon name="person-outline"></ion-icon>
-          </div>
-          <div class="hdr-btn logout-btn" (click)="logout()">
-            <ion-icon name="log-out-outline"></ion-icon>
-          </div>
+        <div class="hdr-btn" (click)="goToProfile()">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <div class="hdr-btn logout-btn" (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
         </div>
       </div>
     </div>
@@ -61,7 +52,7 @@
     <section>
       <div class="sec">
         <span class="sec__title">Actions rapides</span>
-        <span class="sec__action" (click)="navigateTo('/orders/non-planned?open=true')">+ Nouveau</span>
+        <span class="sec__action" (click)="navigateTo('/demandes/create')">+ Nouveau</span>
       </div>
 
       <div class="grid" *ngIf="!isLoading">
@@ -108,7 +99,7 @@
         </div>
 
         <!-- Nouvel Ordre (Charcoal Outline) -->
-        <div class="acard acard--dark" (click)="navigateTo('/orders/non-planned?open=true')">
+        <div class="acard acard--dark" (click)="navigateTo('/demandes/create')">
           <div class="acard__icon">
             <ion-icon name="add-circle-outline"></ion-icon>
           </div>
@@ -177,7 +168,7 @@
         </div>
         <h3 class="empty__title">Aucune activité</h3>
         <p class="empty__text">Vos ordres récents s'afficheront ici automatiquement.</p>
-        <div class="empty__btn" (click)="navigateTo('/orders/non-planned?open=true')">
+        <div class="empty__btn" (click)="navigateTo('/demandes/create')">
           <ion-icon name="add-outline"></ion-icon>
           Nouvel ordre
         </div>

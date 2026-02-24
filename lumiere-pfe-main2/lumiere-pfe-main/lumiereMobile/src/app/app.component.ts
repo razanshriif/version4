@@ -79,7 +79,7 @@ import {
 } from 'ionicons/icons';
 
 // Routes where the bottom nav should be visible
-const TAB_ROUTES = ['/home', '/demandes', '/livraisons', '/clients', '/profile', '/orders/non-planned'];
+const TAB_ROUTES = ['/home', '/demandes', '/livraisons', '/clients', '/profile', '/demandes/create'];
 
 @Component({
   selector: 'app-root',
@@ -190,24 +190,12 @@ export class AppComponent {
 
         // 🛡️ Focus Management: Resolve "aria-hidden focus" blocker
         setTimeout(() => {
-          const activePage = document.querySelector('ion-router-outlet > .ion-page:not(.ion-page-hidden)');
+          const activePage = document.querySelector('ion-router-outlet > .ion-page');
           if (activePage) {
-            // Forcefully remove aria-hidden from the active page if Ionic left it there
             activePage.removeAttribute('aria-hidden');
-
-            // Find any hidden pages that might still have aria-hidden=false or focus
-            document.querySelectorAll('.ion-page-hidden').forEach(p => {
-              p.setAttribute('aria-hidden', 'true');
-              p.setAttribute('tabindex', '-1');
-            });
-
             (activePage as HTMLElement).focus();
-            if (activePage.getAttribute('tabindex') === null) {
-              activePage.setAttribute('tabindex', '-1');
-              (activePage as HTMLElement).focus();
-            }
           }
-        }, 150);
+        }, 300);
       });
 
     this.loadingService.hide();
