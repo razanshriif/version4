@@ -99,10 +99,9 @@
     .main-logo {
       width: 100%;
       height: 100%;
-      object-fit: contain; // Changed from cover to contain to prevent cropping and overflow
+      object-fit: cover; // Changed from contain to cover to ensure it fills the circle nicely
       position: relative;
       z-index: 2;
-      padding: 10px; // Add some breathing room inside the circle
     }
 
     .logo-glow {

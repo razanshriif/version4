@@ -27,7 +27,7 @@ import { saveOutline, arrowBackOutline } from 'ionicons/icons';
 })
 export class ClientForm implements OnInit {
   isEditMode: boolean = false;
-  clientId: number | null = null;
+  clientCode: number | null = null;
   client: any = {
     code: 0,
     codeclient: '',
@@ -63,8 +63,8 @@ export class ClientForm implements OnInit {
     this.route.paramMap.subscribe((params: any) => {
       if (params.has('id')) {
         this.isEditMode = true;
-        this.clientId = +params.get('id')!;
-        this.loadClient(this.clientId);
+        this.clientCode = +params.get('id')!;
+        this.loadClient(this.clientCode);
       } else {
         // Initialize with next available code logic if needed, or leave for manual input
       }
@@ -84,8 +84,8 @@ export class ClientForm implements OnInit {
       return;
     }
 
-    if (this.isEditMode && this.clientId) {
-      this.clientService.update(this.clientId, this.client).subscribe({
+    if (this.isEditMode && this.clientCode) {
+      this.clientService.update(this.clientCode, this.client).subscribe({
         next: () => {
           this.showToast('Client mis à jour avec succès', 'success');
           this.navCtrl.back();

@@ -82,16 +82,16 @@ public class UserStatusMigration implements CommandLineRunner {
             System.out.println("DEBUG: Could not describe table _user: " + e.getMessage());
         }
 
-        var usersWithNullStatus = userRepository.findAll().stream()
-                .filter(u -> u.getStatus() == null)
+        var usersToActivate = userRepository.findAll().stream()
+                .filter(u -> u.getStatus() == null || u.getStatus() == Status.PENDING)
                 .toList();
 
-        if (!usersWithNullStatus.isEmpty()) {
-            usersWithNullStatus.forEach(u -> u.setStatus(Status.ACTIVE));
-            userRepository.saveAll(usersWithNullStatus);
-            log.info("✅ Migrated {} existing user(s) to ACTIVE status", usersWithNullStatus.size());
+        if (!usersToActivate.isEmpty()) {
+            usersToActivate.forEach(u -> u.setStatus(Status.ACTIVE));
+            userRepository.saveAll(usersToActivate);
+            log.info("✅ Migrated {} user(s) to ACTIVE status (was NULL or PENDING)", usersToActivate.size());
         } else {
-            log.info("✅ No user status migration needed");
+            log.info("✅ No user status migration needed (all users ACTIVE)");
         }
 
         // Ensure the main admin user exists and has SUPERADMIN role

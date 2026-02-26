@@ -6,14 +6,15 @@ $orange-deep: #d97c10;
 $charcoal: #1a1c1f;
 $charcoal-light: #2c2f33;
 $white: #ffffff;
-$bg: #f8f9fa;
-$card: #ffffff;
+$blanc-sale: #f5f2ed;
+$bg: $blanc-sale; // Blanc sale background
+$card: #ffffff; // White components
 $text: #1a1c1f;
 $sub: #64748b;
 $muted: #94a3b8;
 $border: rgba(0, 0, 0, 0.06);
 $green: #10b981;
-$radius: 20px;
+$radius: 24px;
 
 // ── Mixins ─────────────────────────────
 @mixin tap {
@@ -45,17 +46,108 @@ $radius: 20px;
   }
 }
 
+@keyframes floatButton {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-20px, 30px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes floatReverse {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(20px, -30px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
 :host {
   display: block;
   height: 100%;
 }
 
 .header-toolbar {
-  --background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  --background: hsl(0, 0%, 100%);
   --border-width: 0 0 1px;
   --border-color: #{$border};
+}
+
+.premium-content {
+  --background: transparent;
+}
+
+.glass-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $blanc-sale;
+  z-index: -1;
+  overflow: hidden;
+
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba($orange, 0.05);
+    filter: blur(60px);
+    animation: float 15s infinite ease-in-out;
+
+    &:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      right: -50px;
+    }
+
+    &:nth-child(2) {
+      width: 250px;
+      height: 250px;
+      bottom: -40px;
+      left: -30px;
+      animation-name: floatReverse;
+      background: rgba($charcoal, 0.03);
+    }
+  }
 }
 
 .header-wrapper {
@@ -148,13 +240,20 @@ $radius: 20px;
 }
 
 .content-header-card {
-  background: #fdfdfd;
-  padding: 24px 20px 32px;
+  background: transparent;
+  padding: 16px 20px 10px;
   margin: 0 -16px;
-  border-radius: 0 0 32px 32px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
+
+  .greet__date {
+    font-size: 12px;
+    font-weight: 600;
+    color: $orange;
+    margin-bottom: 2px;
+    text-transform: capitalize;
+  }
 
   .greet__label {
     font-size: 11px;
@@ -162,6 +261,7 @@ $radius: 20px;
     color: $sub;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 4px;
   }
 
   .greet__name {
@@ -169,6 +269,33 @@ $radius: 20px;
     font-weight: 800;
     color: $charcoal;
     margin: 0;
+    line-height: 1.1;
+  }
+
+  .rappel-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba($orange, 0.1);
+    color: $orange;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    max-width: fit-content;
+    margin-top: 6px;
+    @include tap;
+    border: 1px solid rgba($orange, 0.15);
+    animation: fadeUp 0.8s ease-out both;
+    animation-delay: 0.1s;
+
+    ion-icon {
+      font-size: 14px;
+    }
+
+    &:active {
+      background: rgba($orange, 0.2);
+    }
   }
 }
 
@@ -196,15 +323,15 @@ $radius: 20px;
   background: $orange;
   width: 60px;
   border-radius: 2px;
-  margin-top: -12px;
+  margin-top: -6px;
 }
 
 .sec {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 24px;
-  margin-bottom: 12px;
+  margin-top: 16px;
+  margin-bottom: 10px;
 
   &__title {
     font-size: 11px;
@@ -228,38 +355,50 @@ $radius: 20px;
 }
 
 .acard {
-  @include card-base;
-  @include tap;
+  background: #ffffff;
+  border-radius: $radius;
   padding: 20px;
-  height: 156px;
+  min-height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  // stagger animation applied via inline style animation-delay
+  animation: slideInCard 0.45s ease-out both;
+
+  &:active {
+    transform: scale(0.96);
+    box-shadow: 0 4px 8px rgba(233, 77, 33, 0.04);
+  }
 
   &__icon {
     width: 44px;
     height: 44px;
     border-radius: 14px;
-    background: #f1f5f9;
+    background: rgba($orange, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
 
     ion-icon {
       font-size: 24px;
-      color: $charcoal;
+      color: $orange;
     }
   }
 
   &__title {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     color: $charcoal;
     margin-top: 12px;
   }
 
   &__desc {
-    font-size: 10px;
+    font-size: 11px;
     color: $sub;
     font-weight: 500;
   }
@@ -274,69 +413,31 @@ $radius: 20px;
     gap: 4px;
 
     ion-icon {
-      font-size: 12px;
+      font-size: 14px;
     }
   }
 
-  // --- Card Variants ---
+  // --- Variations Unified to White ---
+  &--primary,
+  &--charcoal,
+  &--accent,
+  &--dark {
+    background: #ffffff !important;
+    color: inherit !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+
+    .acard__icon {
+      background: rgba($charcoal, 0.05);
+
+      ion-icon {
+        color: $charcoal;
+      }
+    }
+  }
 
   &--primary {
-    // Solid Orange
-    background: $orange;
-    border: none;
-
     .acard__icon {
-      background: rgba(255, 255, 255, 0.2);
-
-      ion-icon {
-        color: white;
-      }
-    }
-
-    .acard__title {
-      color: white;
-    }
-
-    .acard__desc {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .acard__cta {
-      color: white;
-    }
-  }
-
-  &--charcoal {
-    // Solid Charcoal
-    background: $charcoal;
-    border: none;
-
-    .acard__icon {
-      background: rgba(255, 255, 255, 0.1);
-
-      ion-icon {
-        color: white;
-      }
-    }
-
-    .acard__title {
-      color: white;
-    }
-
-    .acard__desc {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .acard__cta {
-      color: $orange;
-    }
-  }
-
-  &--accent {
-
-    // White with Orange Accents
-    .acard__icon {
-      background: rgba($orange, 0.08);
+      background: rgba($orange, 0.1);
 
       ion-icon {
         color: $orange;
@@ -344,14 +445,40 @@ $radius: 20px;
     }
   }
 
-  &--dark {
+  // Rappels — full-width warm accent card
+  &--rappel {
+    background: linear-gradient(135deg, #1a1c1f 0%, #2c2f33 100%) !important;
+    color: white !important;
+    flex-direction: row;
+    align-items: center;
+    min-height: 80px;
+    gap: 16px;
+    padding: 16px 20px;
 
-    // White with Charcoal Accents
     .acard__icon {
-      background: rgba($charcoal, 0.05);
+      background: rgba($orange, 0.2);
+      flex-shrink: 0;
 
       ion-icon {
-        color: $charcoal;
+        color: $orange;
+      }
+    }
+
+    .acard__footer {
+      flex: 1;
+
+      .acard__title {
+        color: white;
+        font-size: 16px;
+      }
+
+      .acard__desc {
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .acard__cta {
+        color: $orange;
+        margin-top: 6px;
       }
     }
   }
@@ -460,3 +587,67 @@ $radius: 20px;
 .spacer {
   height: 80px;
 }
+
+// ── Main Action FAB (+) ────────────────
+.main-action-fab {
+  margin-bottom: 24px;
+  margin-left: 16px;
+  z-index: 10001;
+
+  .premium-add-btn {
+    --background: #{$charcoal};
+    --color: #{$white};
+    --border-radius: 18px;
+    --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    width: 62px;
+    height: 62px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    ion-icon {
+      font-size: 30px;
+    }
+  }
+
+  // List buttons styling
+  ion-fab-list {
+    ion-fab-button {
+      --background: #{$white};
+      --color: #{$charcoal};
+      --border-radius: 14px;
+      --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      margin: 8px 0;
+      width: 50px;
+      height: 50px;
+      position: relative;
+
+      ion-icon {
+        font-size: 22px;
+      }
+
+      ion-label {
+        position: absolute;
+        left: 60px;
+        background: $charcoal;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.2s ease;
+        pointer-events: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    // Show label when list is open (Ionic handles fab-list-active)
+    &.fab-list-active ion-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+// ── Chatbot FAB removed (moved to app-level)

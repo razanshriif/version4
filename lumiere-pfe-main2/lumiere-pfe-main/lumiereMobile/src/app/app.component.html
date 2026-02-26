@@ -9,6 +9,28 @@
   </div>
 
 
+  <!-- Floating Add Menu Overlay -->
+  <div class="bnav__menu-overlay" *ngIf="showAddMenu" (click)="toggleAddMenu()"></div>
+
+  <!-- Floating Add Menu -->
+  <div class="bnav__menu" [class.bnav__menu--active]="showAddMenu">
+
+    <div class="bnav__menu-item" (click)="goTo('/demandes/create'); toggleAddMenu()">
+      <div class="bnav__menu-icon">
+        <ion-icon name="cube-outline"></ion-icon>
+      </div>
+      <span class="bnav__menu-label" style="color: #1a1a1a !important;">Ordre</span>
+    </div>
+
+    <div class="bnav__menu-item" (click)="goTo('/clients/create'); toggleAddMenu()">
+      <div class="bnav__menu-icon">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </div>
+      <span class="bnav__menu-label" style="color: #1a1a1a !important;">Client</span>
+    </div>
+
+  </div>
+
   <!-- ── Custom Bottom Nav (app-level, never intercepts page content) ── -->
   <nav class="bottom-nav" *ngIf="showNav">
 
@@ -36,10 +58,10 @@
       <span class="bnav__label">Demandes</span>
     </div>
 
-    <!-- FAB centre -->
-    <div class="bnav__fab" (click)="goTo('/demandes/create')">
+    <div class="bnav__fab" (click)="toggleAddMenu()">
       <div class="bnav__fab-ring">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          style="stroke: #F5921E !important;">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
@@ -72,4 +94,11 @@
     </div>
 
   </nav>
+
+  <!-- Global Chatbot FAB (sitting above nav) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="global-chatbot-fab" *ngIf="isActive('home')">
+    <ion-fab-button (click)="goTo('/chatbot')" class="premium-chatbot-btn">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-app>

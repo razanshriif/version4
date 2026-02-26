@@ -30,6 +30,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'profil', component: ProfileComponent },
       { path: 'clients', component: ClientComponent },
+      { path: 'clients/create', component: ClientComponent },
       { path: 'ordres', component: OrdreComponent },
       { path: 'ordredetail', component: OrdredetailComponent },
       { path: 'nonplannifies', component: OrdrenonconformComponent },

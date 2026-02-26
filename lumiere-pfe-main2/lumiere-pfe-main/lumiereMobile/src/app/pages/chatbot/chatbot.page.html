@@ -39,23 +39,7 @@
       </div>
     </div>
 
-    <div class="quick-actions" *ngIf="messages.length === 1">
-      <h3>Accès rapide</h3>
-      <div class="action-chips">
-        <button class="chip" (click)="userInput = 'Suivre ma commande'; sendMessage()">
-          📦 Mes livraisons
-        </button>
-        <button class="chip" (click)="userInput = 'Nouvelle demande'; sendMessage()">
-          ➕ Créer ordre
-        </button>
-        <button class="chip" (click)="userInput = 'Horaires'; sendMessage()">
-          🕐 Horaires
-        </button>
-        <button class="chip" (click)="userInput = 'Contact'; sendMessage()">
-          📞 Aide
-        </button>
-      </div>
-    </div>
+
   </div>
 </ion-content>
 

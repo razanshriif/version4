@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IonHeader, IonToolbar, IonIcon, IonContent, IonRefresher, IonRefresherContent, NavController } from '@ionic/angular/standalone';
+import {
+  IonHeader, IonToolbar, IonIcon, IonContent, IonRefresher, IonRefresherContent,
+  IonFab, IonFabButton, NavController, IonLabel, IonFabList
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   cubeOutline,
@@ -35,7 +38,10 @@ import {
   sparkles,
   sparklesOutline,
   refresh,
-  refreshOutline
+  refreshOutline,
+  alarmOutline,
+  chatbubbleOutline,
+  personAddOutline
 } from 'ionicons/icons';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
@@ -56,7 +62,11 @@ import { Observable } from 'rxjs';
     IonIcon,
     IonContent,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonFab,
+    IonFabButton,
+    IonLabel,
+    IonFabList
   ]
 })
 export class HomePage implements OnInit {
@@ -84,6 +94,7 @@ export class HomePage implements OnInit {
   // Dashboard state
   isLoading = true;
   darkMode$: Observable<boolean>;
+  pendingRappelsCount = 0;
 
   // Dashboard sections
   mainSections = [
@@ -166,7 +177,10 @@ export class HomePage implements OnInit {
       sparkles,
       sparklesOutline,
       refresh,
-      refreshOutline
+      refreshOutline,
+      alarmOutline,
+      chatbubbleOutline,
+      personAddOutline
     });
   }
 
@@ -190,6 +204,17 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     this.loadAllData();
+    this.loadPendingRappels();
+  }
+
+  loadPendingRappels() {
+    const raw = localStorage.getItem('rappels');
+    if (raw) {
+      const all = JSON.parse(raw);
+      this.pendingRappelsCount = all.filter((r: any) => !r.fait).length;
+    } else {
+      this.pendingRappelsCount = 0;
+    }
   }
 
   toggleTheme() {
@@ -348,6 +373,15 @@ export class HomePage implements OnInit {
     return d.toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  getCurrentDate(): string {
+    return new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
       year: 'numeric'
     });
   }

@@ -118,41 +118,7 @@
     }
 }
 
-.quick-actions {
-    padding: 20px;
 
-    h3 {
-        font-size: 0.9rem;
-        font-weight: 800;
-        color: #475569;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .action-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-
-        .chip {
-            background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 100px;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #1e293b;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s;
-
-            &:active {
-                transform: scale(0.95);
-                background: #f1f5f9;
-            }
-        }
-    }
-}
 
 ion-footer {
     --background: transparent;
@@ -200,7 +166,7 @@ ion-footer {
 // Dark mode refinements
 @media (prefers-color-scheme: dark) {
     .glass-background {
-        background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1a1c1f 100%);
     }
 
     .message-row.bot-message .message-bubble {
@@ -209,15 +175,7 @@ ion-footer {
         border-color: rgba(255, 255, 255, 0.05);
     }
 
-    .quick-actions h3 {
-        color: #cbd5e1;
-    }
 
-    .quick-actions .chip {
-        background: #1e293b;
-        color: white;
-        border-color: rgba(255, 255, 255, 0.1);
-    }
 
     .input-container {
         background: #1e293b;

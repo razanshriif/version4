@@ -19,23 +19,29 @@
     </div>
 
     <div class="form-container">
-        <div class="premium-card glass-card shadow-lg">
-            <div class="section-container">
-                <h2 class="section-title">Informations Générales</h2>
+        <!-- Section 1: Informations Générales -->
+        <div class="premium-card section-card">
+            <div class="section-header">
+                <div class="header-icon-box orange-box">
+                    <ion-icon name="person-outline"></ion-icon>
+                </div>
+                <h2 class="section-label">Informations Générales</h2>
+            </div>
 
+            <div class="card-body">
                 <div class="input-grid">
                     <div class="premium-input-item">
-                        <ion-label position="stacked">Code *</ion-label>
+                        <ion-label position="stacked">Matricule *</ion-label>
                         <ion-input type="number" [(ngModel)]="client.code" placeholder="Ex: 1001"></ion-input>
                     </div>
 
                     <div class="premium-input-item">
-                        <ion-label position="stacked">Code Client *</ion-label>
+                        <ion-label position="stacked">Cli *</ion-label>
                         <ion-input type="text" [(ngModel)]="client.codeclient" placeholder="Ex: CLI001"></ion-input>
                     </div>
                 </div>
 
-                <div class="input-grid">
+                <div class="input-grid mt-3">
                     <div class="premium-input-item">
                         <ion-label position="stacked">Civilité</ion-label>
                         <ion-select [(ngModel)]="client.civilite" interface="popover" placeholder="Sélectionner">
@@ -50,10 +56,18 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="section-container mt-4">
-                <h2 class="section-title">Organisation</h2>
+        <!-- Section 2: Organisation -->
+        <div class="premium-card section-card">
+            <div class="section-header">
+                <div class="header-icon-box orange-box">
+                    <ion-icon name="business-outline"></ion-icon>
+                </div>
+                <h2 class="section-label">Organisation</h2>
+            </div>
 
+            <div class="card-body">
                 <div class="premium-input-item">
                     <ion-label position="stacked">S-Type</ion-label>
                     <ion-input type="text" [(ngModel)]="client.sType" placeholder="Ex: Division A"></ion-input>
@@ -75,10 +89,18 @@
                     <ion-input type="text" [(ngModel)]="client.siteExploitation" placeholder="Nom du site"></ion-input>
                 </div>
             </div>
+        </div>
 
-            <div class="section-container mt-4">
-                <h2 class="section-title">Adresse & Contact</h2>
+        <!-- Section 3: Adresse & Contact -->
+        <div class="premium-card section-card">
+            <div class="section-header">
+                <div class="header-icon-box green-box">
+                    <ion-icon name="location-outline"></ion-icon>
+                </div>
+                <h2 class="section-label">Adresse & Contact</h2>
+            </div>
 
+            <div class="card-body">
                 <div class="premium-input-item">
                     <ion-label position="stacked">Nom *</ion-label>
                     <ion-input type="text" [(ngModel)]="client.nom" placeholder="Nom complet"></ion-input>
@@ -124,10 +146,18 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="section-container mt-4">
-                <h2 class="section-title">Fiscalité</h2>
+        <!-- Section 4: Fiscalité -->
+        <div class="premium-card section-card">
+            <div class="section-header">
+                <div class="header-icon-box dark-box">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </div>
+                <h2 class="section-label">Fiscalité</h2>
+            </div>
 
+            <div class="card-body">
                 <div class="input-grid">
                     <div class="premium-input-item">
                         <ion-label position="stacked">ID TVA</ion-label>
@@ -140,13 +170,13 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="button-container mt-5">
-                <ion-button expand="block" class="premium-button shadow-primary" (click)="saveClient()">
-                    <ion-icon name="save-outline" slot="start"></ion-icon>
-                    {{ isEditMode ? 'Enregistrer les modifications' : 'Créer le client' }}
-                </ion-button>
-            </div>
+        <div class="button-container mt-4">
+            <ion-button expand="block" class="premium-button shadow-primary" (click)="saveClient()">
+                <ion-icon name="save-outline" slot="start"></ion-icon>
+                {{ isEditMode ? 'Enregistrer les modifications' : 'Créer le client' }}
+            </ion-button>
         </div>
     </div>
 </ion-content>

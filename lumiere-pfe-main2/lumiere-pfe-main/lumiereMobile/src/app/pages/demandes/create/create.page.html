@@ -5,9 +5,7 @@
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <div class="header-logo-container">
-      <img src="assets/lum.png" alt="Logo" class="mini-logo" />
-    </div>
+
     <ion-title>Nouvel Ordre</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onSubmit()" [disabled]="!ordre.client">
@@ -26,198 +24,213 @@
   <div class="form-container">
     <form (ngSubmit)="onSubmit()">
 
-      <!-- Section 1: Informations Client (Auto-filled) -->
-      <div class="premium-card glass-card shadow-lg">
-        <h2 class="section-title">Informations Client</h2>
-
-        <div class="info-summary mb-4" *ngIf="userProfile">
-          <div class="summary-item">
-            <span class="label">Code Client</span>
-            <span class="value">{{ userProfile.email || userProfile.codeClient }}</span>
+      <!-- Section 1: Information Client -->
+      <div class="premium-card section-card">
+        <div class="section-header">
+          <div class="header-icon-box blue-box">
+            <ion-icon name="person-outline"></ion-icon>
           </div>
-          <div class="summary-item">
-            <span class="label">Nom</span>
-            <span class="value">{{ userProfile.firstname }} {{ userProfile.lastname }}</span>
-          </div>
+          <h2 class="section-label">CLIENT</h2>
         </div>
 
-        <div class="premium-input-item">
-          <ion-label position="stacked">Site d'exploitation</ion-label>
-          <ion-select [(ngModel)]="ordre.siteclient" name="siteclient" interface="popover">
-            <ion-select-option *ngFor="let s of siteOptions" [value]="s">{{ s }}</ion-select-option>
-          </ion-select>
+        <div class="card-body">
+          <div class="input-grid">
+            <div class="premium-input-item">
+              <ion-label position="stacked">CODE *</ion-label>
+              <ion-input [(ngModel)]="ordre.client" name="codeclient" placeholder="Code client" readonly></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">NOM *</ion-label>
+              <ion-input [value]="userProfile?.firstname + ' ' + userProfile?.lastname" name="username"
+                placeholder="Raison sociale" readonly></ion-input>
+            </div>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">SITE</ion-label>
+            <ion-select [(ngModel)]="ordre.siteclient" name="siteclient" interface="popover"
+              placeholder="Sélectionner...">
+              <ion-select-option *ngFor="let s of siteOptions" [value]="s">{{ s }}</ion-select-option>
+            </ion-select>
+          </div>
         </div>
       </div>
 
-      <!-- Section 2: Chargement (Auto-filled from profile) -->
-      <div class="premium-card glass-card shadow-lg mt-4">
-        <div class="section-header-flex">
-          <h2 class="section-title">Chargement</h2>
-          <ion-button fill="clear" size="small" (click)="openClientPicker('chargement')">
-            <ion-icon name="search-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </div>
-
-        <div class="premium-input-item">
-          <ion-label position="stacked">Nom du Lieu</ion-label>
-          <ion-input [(ngModel)]="ordre.chargementNom" name="chargementNom" placeholder="Nom du lieu"></ion-input>
-        </div>
-
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Adresse</ion-label>
-          <ion-input [(ngModel)]="ordre.chargementAdr1" name="chargementAdr1"
-            placeholder="Adresse complète"></ion-input>
-        </div>
-
-        <div class="input-grid mt-3">
-          <div class="premium-input-item">
-            <ion-label position="stacked">Ville</ion-label>
-            <ion-input [(ngModel)]="ordre.chargementVille" name="chargementVille" placeholder="Ville"></ion-input>
+      <!-- Section 2: Chargement -->
+      <div class="premium-card section-card mt-4">
+        <div class="section-header">
+          <div class="header-icon-box orange-box">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
           </div>
-          <div class="premium-input-item">
-            <ion-label position="stacked">Code Postal</ion-label>
-            <ion-input [(ngModel)]="ordre.codepostalcharg" name="codepostalcharg" placeholder="Ex: 1000"></ion-input>
-          </div>
+          <h2 class="section-label">CHARGEMENT</h2>
         </div>
 
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Date & Heure de Chargement</ion-label>
-          <ion-datetime-button datetime="chargement-date"></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime id="chargement-date" [(ngModel)]="ordre.chargementDate" name="chargementDate"
-                presentation="date-time"></ion-datetime>
-            </ng-template>
-          </ion-modal>
+        <div class="card-body">
+          <div class="premium-input-item search-item">
+            <ion-label position="stacked">POINT *</ion-label>
+            <div class="input-with-icon" (click)="openClientPicker('chargement')">
+              <ion-input [(ngModel)]="ordre.chargementNom" name="chargementNom" placeholder="Sélectionner..."
+                readonly></ion-input>
+              <ion-icon name="search-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="input-grid mt-3">
+            <div class="premium-input-item">
+              <ion-label position="stacked">ADRESSE</ion-label>
+              <ion-input [(ngModel)]="ordre.chargementAdr1" name="chargementAdr1" placeholder="Rue, n°..."></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">VILLE</ion-label>
+              <ion-input [(ngModel)]="ordre.chargementVille" name="chargementVille" placeholder="Ville..."></ion-input>
+            </div>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">DATE *</ion-label>
+            <div class="datetime-wrapper">
+              <ion-datetime-button datetime="chargement-date"></ion-datetime-button>
+            </div>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="chargement-date" [(ngModel)]="ordre.chargementDate" name="chargementDate"
+                  presentation="date-time"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
         </div>
       </div>
 
-      <!-- Section 3: Destination (Livraison) -->
-      <div class="premium-card glass-card shadow-lg mt-4">
-        <div class="section-header-flex">
-          <h2 class="section-title">Destination (Livraison)</h2>
-          <ion-button fill="clear" size="small" (click)="openClientPicker('livraison')">
-            <ion-icon name="search-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </div>
-
-        <div class="premium-input-item">
-          <ion-label position="stacked">Nom Destinataire</ion-label>
-          <ion-input [(ngModel)]="ordre.livraisonNom" name="livraisonNom" placeholder="Nom du destinataire"></ion-input>
-        </div>
-
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Adresse</ion-label>
-          <ion-input [(ngModel)]="ordre.livraisonAdr1" name="livraisonAdr1" placeholder="Adresse complète"></ion-input>
-        </div>
-
-        <div class="input-grid mt-3">
-          <div class="premium-input-item">
-            <ion-label position="stacked">Ville</ion-label>
-            <ion-input [(ngModel)]="ordre.livraisonVille" name="livraisonVille" placeholder="Ville"></ion-input>
+      <!-- Section 3: Livraison -->
+      <div class="premium-card section-card mt-4">
+        <div class="section-header">
+          <div class="header-icon-box green-box">
+            <ion-icon name="location-outline"></ion-icon>
           </div>
-          <div class="premium-input-item">
-            <ion-label position="stacked">Code Postal</ion-label>
-            <ion-input [(ngModel)]="ordre.codepostalliv" name="codepostalliv" placeholder="Ex: 2000"></ion-input>
-          </div>
+          <h2 class="section-label">LIVRAISON</h2>
         </div>
 
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Date & Heure de Livraison</ion-label>
-          <ion-datetime-button datetime="livraison-date"></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime id="livraison-date" [(ngModel)]="ordre.livraisonDate" name="livraisonDate"
-                presentation="date-time"></ion-datetime>
-            </ng-template>
-          </ion-modal>
+        <div class="card-body">
+          <div class="premium-input-item search-item">
+            <ion-label position="stacked">POINT *</ion-label>
+            <div class="input-with-icon" (click)="openClientPicker('livraison')">
+              <ion-input [(ngModel)]="ordre.livraisonNom" name="livraisonNom" placeholder="Sélectionner..."
+                readonly></ion-input>
+              <ion-icon name="search-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="input-grid mt-3">
+            <div class="premium-input-item">
+              <ion-label position="stacked">ADRESSE</ion-label>
+              <ion-input [(ngModel)]="ordre.livraisonAdr1" name="livraisonAdr1" placeholder="Rue, n°..."></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">VILLE</ion-label>
+              <ion-input [(ngModel)]="ordre.livraisonVille" name="livraisonVille" placeholder="Ville..."></ion-input>
+            </div>
+          </div>
+
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">DATE PRÉVUE *</ion-label>
+            <div class="datetime-wrapper">
+              <ion-datetime-button datetime="livraison-date"></ion-datetime-button>
+            </div>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="livraison-date" [(ngModel)]="ordre.livraisonDate" name="livraisonDate"
+                  presentation="date-time"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </div>
         </div>
       </div>
 
       <!-- Section 4: Marchandise -->
-      <div class="premium-card glass-card shadow-lg mt-4">
-        <div class="section-header-flex">
-          <h2 class="section-title">Marchandise</h2>
-          <ion-button fill="clear" size="small" (click)="openArticlePicker()">
-            <ion-icon name="search-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </div>
-
-        <div class="premium-input-item">
-          <ion-label position="stacked">Code Article</ion-label>
-          <ion-input [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="Entrer le code..."></ion-input>
-        </div>
-
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Désignation</ion-label>
-          <ion-input [(ngModel)]="ordre.designation" name="designation"
-            placeholder="Description du produit"></ion-input>
-        </div>
-
-        <div class="input-grid mt-3">
-          <div class="premium-input-item">
-            <ion-label position="stacked">Nb Palettes</ion-label>
-            <ion-input type="number" [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes"
-              placeholder="0"></ion-input>
+      <div class="premium-card section-card mt-4">
+        <div class="section-header">
+          <div class="header-icon-box dark-box">
+            <ion-icon name="cube-outline"></ion-icon>
           </div>
-          <div class="premium-input-item">
-            <ion-label position="stacked">Nb Colis</ion-label>
-            <ion-input type="number" [(ngModel)]="ordre.nombreColis" name="nombreColis" placeholder="0"></ion-input>
-          </div>
+          <h2 class="section-label">MARCHANDISE</h2>
         </div>
 
-        <div class="input-grid mt-3">
-          <div class="premium-input-item">
-            <ion-label position="stacked">Poids (kg)</ion-label>
-            <ion-input type="number" [(ngModel)]="ordre.poids" name="poids" placeholder="0"></ion-input>
+        <div class="card-body">
+          <div class="premium-input-item search-item">
+            <ion-label position="stacked">ARTICLE *</ion-label>
+            <div class="input-with-icon" (click)="openArticlePicker()">
+              <ion-input [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="Sélectionner..."
+                readonly></ion-input>
+              <ion-icon name="search-outline"></ion-icon>
+            </div>
           </div>
-          <div class="premium-input-item">
-            <ion-label position="stacked">Volume (m³)</ion-label>
-            <ion-input type="number" [(ngModel)]="ordre.volume" name="volume" placeholder="0"></ion-input>
+
+          <div class="input-grid mt-3">
+            <div class="premium-input-item">
+              <ion-label position="stacked">NB PALETTES</ion-label>
+              <ion-input type="number" [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes"
+                placeholder="0"></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">NB COLIS</ion-label>
+              <ion-input type="number" [(ngModel)]="ordre.nombreColis" name="nombreColis" placeholder="0"></ion-input>
+            </div>
+          </div>
+
+          <div class="input-grid mt-3">
+            <div class="premium-input-item">
+              <ion-label position="stacked">POIDS (KG)</ion-label>
+              <ion-input type="number" [(ngModel)]="ordre.poids" name="poids" placeholder="0"></ion-input>
+            </div>
+            <div class="premium-input-item">
+              <ion-label position="stacked">VOLUME (M³)</ion-label>
+              <ion-input type="number" [(ngModel)]="ordre.volume" name="volume" placeholder="0"></ion-input>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Section 5: Transport & Commentaires (Choix du commentaire) -->
-      <div class="premium-card glass-card shadow-lg mt-4">
-        <h2 class="section-title">Transport & Commentaires</h2>
-
-        <div class="choice-group mt-3">
-          <ion-label class="choice-label">Type de Camion</ion-label>
-          <ion-select [(ngModel)]="optionsCommentaire.typeCamion" name="typeCamion" (ionChange)="updateCommentaire()"
-            interface="popover">
-            <ion-select-option value="Cargo">Cargo</ion-select-option>
-            <ion-select-option value="NPR">NPR</ion-select-option>
-            <ion-select-option value="DMAX">DMAX</ion-select-option>
-            <ion-select-option value="NKR">NKR</ion-select-option>
-            <ion-select-option value="Semi">Semi</ion-select-option>
-          </ion-select>
+      <!-- Section 5: Transport & Commentaires -->
+      <div class="premium-card section-card mt-4">
+        <div class="section-header">
+          <div class="header-icon-box charcoal-box">
+            <ion-icon name="car-outline"></ion-icon>
+          </div>
+          <h2 class="section-label">TRANSPORT</h2>
         </div>
 
-        <div class="choice-group mt-3" *ngIf="optionsCommentaire.typeCamion === 'Semi'">
-          <ion-label class="choice-label">Type de Semi</ion-label>
-          <ion-segment [(ngModel)]="optionsCommentaire.typeSemi" name="typeSemi" (ionChange)="updateCommentaire()">
-            <ion-segment-button value="Plateau">
-              <ion-label>Plateau</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="Frigo">
-              <ion-label>Frigo</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="Bache">
-              <ion-label>Bâche</ion-label>
-            </ion-segment-button>
-          </ion-segment>
-        </div>
+        <div class="card-body">
+          <div class="premium-input-item">
+            <ion-label position="stacked">TYPE DE CAMION</ion-label>
+            <ion-select [(ngModel)]="optionsCommentaire.typeCamion" name="typeCamion" (ionChange)="updateCommentaire()"
+              interface="popover" placeholder="Sélectionner...">
+              <ion-select-option value="Cargo">Cargo</ion-select-option>
+              <ion-select-option value="NPR">NPR</ion-select-option>
+              <ion-select-option value="DMAX">DMAX</ion-select-option>
+              <ion-select-option value="NKR">NKR</ion-select-option>
+              <ion-select-option value="Semi">Semi</ion-select-option>
+            </ion-select>
+          </div>
 
-        <div class="premium-input-item mt-3">
-          <ion-label position="stacked">Commentaire libre</ion-label>
-          <ion-textarea [(ngModel)]="optionsCommentaire.commentaireLibre" name="commentaireLibre"
-            (ionInput)="updateCommentaire()" rows="2"></ion-textarea>
-        </div>
+          <div class="premium-input-item mt-3" *ngIf="optionsCommentaire.typeCamion === 'Semi'">
+            <ion-label position="stacked">TYPE DE SEMI</ion-label>
+            <ion-segment [(ngModel)]="optionsCommentaire.typeSemi" name="typeSemi" (ionChange)="updateCommentaire()">
+              <ion-segment-button value="Plateau"><ion-label>Plateau</ion-label></ion-segment-button>
+              <ion-segment-button value="Frigo"><ion-label>Frigo</ion-label></ion-segment-button>
+              <ion-segment-button value="Bache"><ion-label>Bâche</ion-label></ion-segment-button>
+            </ion-segment>
+          </div>
 
-        <div class="comment-preview mt-3" *ngIf="commentaireFinal">
-          <div class="preview-header">Aperçu du commentaire</div>
-          <div class="preview-text">{{ commentaireFinal }}</div>
+          <div class="premium-input-item mt-3">
+            <ion-label position="stacked">COMMENTAIRE LIBRE</ion-label>
+            <ion-textarea [(ngModel)]="optionsCommentaire.commentaireLibre" name="commentaireLibre"
+              (ionInput)="updateCommentaire()" rows="2" placeholder="Note additionnelle..."></ion-textarea>
+          </div>
+
+          <div class="comment-preview mt-3" *ngIf="commentaireFinal">
+            <div class="preview-header">Aperçu du commentaire</div>
+            <div class="preview-text">{{ commentaireFinal }}</div>
+          </div>
         </div>
       </div>
 
@@ -249,7 +262,7 @@
           <ion-searchbar (ionInput)="filterClients($event)" placeholder="Rechercher..."></ion-searchbar>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content class="modal-content">
         <ion-list lines="none" class="modal-list">
           <ion-item *ngFor="let c of filteredClients" button (click)="selectClient(c)">
             <ion-label>
@@ -277,7 +290,7 @@
           <ion-searchbar (ionInput)="filterArticles($event)" placeholder="Rechercher..."></ion-searchbar>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content class="modal-content">
         <ion-list lines="none" class="modal-list">
           <ion-item *ngFor="let a of filteredArticles" button (click)="selectArticle(a)">
             <ion-label>

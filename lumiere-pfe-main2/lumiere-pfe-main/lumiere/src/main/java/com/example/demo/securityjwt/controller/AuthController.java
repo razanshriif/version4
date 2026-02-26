@@ -4,13 +4,12 @@ import com.example.demo.securityjwt.controller.dto.AuthenticationRequest;
 import com.example.demo.securityjwt.controller.dto.AuthenticationResponse;
 import com.example.demo.securityjwt.service.AuthenticationService;
 import com.example.demo.securityjwt.controller.dto.RegisterRequest;
-import com.example.demo.Service.UserService;
+
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;

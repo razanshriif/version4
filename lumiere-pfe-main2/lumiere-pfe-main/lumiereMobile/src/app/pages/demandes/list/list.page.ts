@@ -32,7 +32,11 @@ import {
   addOutline,
   layersOutline,
   chevronForwardOutline,
-  chatbubbleEllipsesOutline
+  chatbubbleEllipsesOutline,
+  pinOutline,
+  navigateCircleOutline,
+  chevronForward,
+  timeOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -99,7 +103,11 @@ export class ListPage implements OnInit {
       addOutline,
       layersOutline,
       chevronForwardOutline,
-      chatbubbleEllipsesOutline
+      chatbubbleEllipsesOutline,
+      pinOutline,
+      navigateCircleOutline,
+      chevronForward,
+      timeOutline
     });
   }
 

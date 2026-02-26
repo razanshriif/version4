@@ -85,4 +85,9 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/map/map.page').then(m => m.MapPage),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'rappel',
+    loadComponent: () => import('./pages/rappel/rappel.page').then(m => m.RappelPage),
+    canActivate: [AuthGuard]
+  },
 ];

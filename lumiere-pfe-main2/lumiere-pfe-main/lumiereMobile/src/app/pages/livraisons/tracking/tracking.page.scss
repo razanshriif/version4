@@ -45,6 +45,21 @@
     letter-spacing: -1px;
 }
 
+.premium-toolbar {
+    --background: #ffffff;
+    --color: #1a1c1f;
+
+    ion-title {
+        color: #1a1c1f;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    ion-back-button {
+        --color: #1a1c1f;
+    }
+}
+
 .tracker-card {
     background: #ffffff;
     border-radius: 28px;
@@ -72,8 +87,8 @@
         .tracker-id {
             font-size: 1.1rem;
             font-weight: 800;
-            color: #1e293b;
-            background: #f1f5f9;
+            color: var(--orange);
+            background: rgba(245, 146, 30, 0.1);
             padding: 4px 12px;
             border-radius: 10px;
         }
@@ -166,7 +181,7 @@
 // Dark mode refinements
 @media (prefers-color-scheme: dark) {
     .glass-background {
-        background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1a1c1f 100%);
     }
 
     .section-title {

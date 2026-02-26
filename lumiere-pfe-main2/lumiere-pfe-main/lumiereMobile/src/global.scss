@@ -23,11 +23,11 @@
     --charcoal-light: #2c2f33;
 
     // --- UI Context ---
-    --bg-app: #f8f9fa;
+    --bg-app: #f5f2ed; // Blanc sale background
     --fg-app: #ffffff;
     --text-main: #1a1c1f;
     --text-muted: #64748b;
-    --border-light: rgba(0, 0, 0, 0.06);
+    --border-light: rgba(0, 0, 0, 0.05);
 
     // --- Ionic Tokens Override ---
     --ion-color-primary: #f5921e;
@@ -39,10 +39,41 @@
 
     --ion-background-color: var(--bg-app);
     --ion-font-family: 'Outfit', sans-serif;
+
+    // --- Modern Radius ---
+    --br-premium: 24px;
+    --br-list: 22px;
 }
 
 * {
     font-family: 'Outfit', sans-serif !important;
+}
+
+// Global List Item Styling - NO BLUE
+ion-item,
+ion-input,
+ion-textarea,
+ion-select {
+    --ripple-color: var(--orange);
+    --background-activated: rgba(var(--ion-color-primary-rgb), 0.1);
+    --background-hover: rgba(var(--ion-color-primary-rgb), 0.05);
+    --highlight-color-focused: var(--orange);
+}
+
+// Remove the default Ionic blue/focus outline
+:focus {
+    outline: none !important;
+}
+
+// Ensure all interactive elements use Orange instead of Blue
+ion-toggle,
+ion-checkbox,
+ion-radio,
+ion-select,
+ion-datetime {
+    --color-checked: var(--orange) !important;
+    --background-checked: var(--orange) !important;
+    --ion-color-primary: var(--orange) !important;
 }
 
 body {
@@ -111,6 +142,35 @@ ion-tab-bar {
     border-top: 1px solid var(--border-light);
     padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
     height: auto;
+}
+
+// ========== GLOBAL HEADER STYLING ==========
+
+ion-header {
+    background-color: #ffffff;
+
+    ion-toolbar {
+        --background: #ffffff;
+        --color: var(--charcoal);
+        --border-width: 0 0 1px;
+        --border-color: var(--border-light);
+        color: var(--charcoal);
+
+        ion-title {
+            color: var(--charcoal);
+            font-weight: 700;
+        }
+
+        ion-icon {
+            color: var(--charcoal);
+        }
+    }
+}
+
+.premium-toolbar {
+    --background: #ffffff;
+    --color: var(--charcoal);
+    --border-style: none;
 }
 
 ion-tab-button {

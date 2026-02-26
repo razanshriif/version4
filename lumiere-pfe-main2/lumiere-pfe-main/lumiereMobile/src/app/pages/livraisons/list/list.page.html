@@ -27,23 +27,62 @@
     </div>
 
     <ion-list lines="none" *ngIf="livraisons.length > 0" class="transparent-list">
-      <ion-item *ngFor="let liv of livraisons" (click)="viewDetails(liv)" class="delivery-item">
+      <ion-item *ngFor="let liv of livraisons; let i = index" (click)="viewDetails(liv)" class="delivery-item"
+        [style.animation-delay]="(i * 0.07) + 's'">
         <div class="delivery-card">
           <div class="card-edge-accent"></div>
           <div class="card-inner">
+
+            <!-- Header row: ID + Status badge -->
             <div class="card-header">
               <span class="delivery-id">#{{ liv.id || '---' }}</span>
-              <ion-badge [color]="getStatusColor(liv.statut!)">{{ liv.statut || 'Inconnu' }}</ion-badge>
+              <span class="status-pill" [class]="'pill-' + getStatusKey(liv.statut)">
+                {{ liv.statut || 'Inconnu' }}
+              </span>
             </div>
 
-            <div class="card-body">
-              <div class="location">
-                <ion-icon name="location-outline"></ion-icon>
-                <span>{{ liv.destinationVille || 'Destination' }}</span>
+            <!-- Route: chargement → livraison -->
+            <div class="route-row">
+              <div class="route-stop from">
+                <div class="stop-dot from-dot"></div>
+                <div class="stop-info">
+                  <span class="stop-city">{{ liv.chargementVille || '—' }}</span>
+                  <span class="stop-label">Chargement · {{ formatDate(liv.chargementDate) }}</span>
+                </div>
               </div>
-              <div class="date">
-                <ion-icon name="calendar-outline"></ion-icon>
-                <span>{{ formatDate(liv.dateLivraisonPrevue!) }}</span>
+              <div class="route-line"></div>
+              <div class="route-stop to">
+                <div class="stop-dot to-dot"></div>
+                <div class="stop-info">
+                  <span class="stop-city">{{ liv.livraisonVille || '—' }}</span>
+                  <span class="stop-label">Livraison · {{ formatDate(liv.livraisonDate) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-Step Event Timeline -->
+            <div class="timeline-stepper">
+              <ng-container *ngFor="let step of getSteps(liv.statut); let j = index; let last = last">
+                <div class="step" [class.done]="step.done" [class.active]="step.active">
+                  <div class="step-circle">
+                    <ion-icon *ngIf="step.done" name="checkmark-outline"></ion-icon>
+                    <div *ngIf="!step.done" class="step-dot"></div>
+                  </div>
+                  <span class="step-label">{{ step.label }}</span>
+                </div>
+                <div *ngIf="!last" class="step-connector" [class.done]="step.done"></div>
+              </ng-container>
+            </div>
+
+            <!-- Chauffeur / Camion row -->
+            <div class="meta-row" *ngIf="liv.chauffeur || liv.camion">
+              <div class="meta-item" *ngIf="liv.chauffeur">
+                <ion-icon name="person-outline"></ion-icon>
+                <span>{{ liv.chauffeur }}</span>
+              </div>
+              <div class="meta-item" *ngIf="liv.camion || liv.matricule">
+                <ion-icon name="car-outline"></ion-icon>
+                <span>{{ liv.camion || liv.matricule }}</span>
               </div>
             </div>
 

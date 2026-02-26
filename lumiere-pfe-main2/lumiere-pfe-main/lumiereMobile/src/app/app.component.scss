@@ -133,8 +133,8 @@ $bg: #ffffff;
     width: 54px;
     height: 54px;
     border-radius: 50%;
-    background: $charcoal;
-    box-shadow: 0 4px 16px rgba(44, 47, 52, 0.35);
+    background: $bg;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     display: grid;
     place-items: center;
     border: 3px solid $bg;
@@ -148,6 +148,122 @@ $bg: #ffffff;
 
     .bnav__fab:active & {
         transform: scale(0.91);
-        background: $orange;
+        background: #fafafa;
+    }
+}
+
+// ── Floating Add Menu ──
+.bnav__menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.2s;
+}
+
+.bnav__menu {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px) scale(0.9);
+    display: flex;
+    gap: 24px;
+    z-index: 1001;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &--active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+.bnav__menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    .bnav__menu-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        display: grid;
+        place-items: center;
+        color: $orange;
+        font-size: 28px;
+        transition: transform 0.1s;
+
+        &:active {
+            transform: scale(0.92);
+        }
+    }
+
+    .bnav__menu-label {
+        background: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 800;
+        color: #1a1a1a; // Darker/black for visibility
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+// ── Global Chatbot FAB ──────────────────
+.global-chatbot-fab {
+    bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 16px !important;
+    z-index: 2000 !important;
+    pointer-events: auto !important;
+}
+
+.premium-chatbot-btn {
+    --background: #f5921e;
+    --background-activated: #f5921e;
+    --color: #ffffff;
+    --box-shadow: 0 8px 25px rgba(245, 146, 30, 0.4);
+    --border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    transition: transform 0.2s;
+
+    ion-icon {
+        font-size: 20px;
+    }
+
+    &:active {
+        transform: scale(0.92);
+    }
+
+    animation: floatButton 3s infinite ease-in-out;
+}
+
+@keyframes floatButton {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0);
     }
 }

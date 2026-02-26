@@ -11,10 +11,6 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
-import com.example.demo.Entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Data
 @Entity
 public class Client {

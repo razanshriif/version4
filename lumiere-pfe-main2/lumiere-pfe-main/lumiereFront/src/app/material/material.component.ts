@@ -38,7 +38,7 @@ export class MaterialComponent {
     private service: NotificationService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.observer.observe(['(max-width: 600px)']).subscribe((screenSize) => {
@@ -62,12 +62,6 @@ export class MaterialComponent {
       this.isCollapsed = !this.sidenav.opened;
     } else {
       this.isCollapsed = !this.isCollapsed;
-    }
-  }
-
-  toggleSubMenu(menu: string) {
-    if (menu === 'orders') {
-      this.showOrdersSubMenu = !this.showOrdersSubMenu;
     }
   }
 

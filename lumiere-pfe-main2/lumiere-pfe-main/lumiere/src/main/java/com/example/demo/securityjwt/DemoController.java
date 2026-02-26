@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.User;
-import com.example.demo.Repository.UserRepository;
+
 import java.util.Optional;
 
 @RestController

@@ -11,10 +11,10 @@ import { LoginRequest, RegisterRequest, AuthResponse } from '../models/auth.mode
 export class AuthService {
 
   // Auth: /api/v1/auth
-  private apiUrl = `${environment.authUrl}`;
+  private apiUrl = `${environment.apiUrl}/api/v1/auth`;
 
   // Admin: /api/v1/admin
-  private adminUrl = `${environment.adminUrl}`;
+  private adminUrl = `${environment.apiUrl}/api/v1/admin`;
 
   constructor(private http: HttpClient) { }
 

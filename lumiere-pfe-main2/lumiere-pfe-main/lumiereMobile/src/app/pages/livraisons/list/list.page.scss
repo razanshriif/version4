@@ -1,3 +1,35 @@
+$orange: #f5921e;
+$charcoal: #1a1c1f;
+$green: #10b981;
+$red: #ef4444;
+$sub: #64748b;
+$muted: #94a3b8;
+$border: rgba(0, 0, 0, 0.06);
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink-green {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba($green, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba($green, 0);
+    }
+}
+
 :host {
     display: block;
     height: 100%;
@@ -9,51 +41,34 @@
 
 .glass-background {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffffff; // Light background
+    inset: 0;
+    background: #f5f2ed;
     z-index: -1;
 
     &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 70% 20%, rgba(245, 146, 30, 0.05) 0%, transparent 60%);
+        inset: 0;
+        background: radial-gradient(circle at 70% 20%, rgba($orange, 0.05) 0%, transparent 60%);
         pointer-events: none;
     }
 }
 
 .premium-toolbar {
-    --background: rgba(244, 244, 247, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    --background: rgba(255, 255, 255, 0.9);
     --color: #1a1c1f;
     --border-width: 0 0 1px;
-    --border-style: solid;
-    --border-color: rgba(0, 0, 0, 0.06);
-
-    ion-title {
-        font-family: 'Barlow Condensed', sans-serif;
-        font-weight: 800;
-        color: var(--orange);
-        font-size: 1.4rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+    --border-color: #{$border};
+    backdrop-filter: blur(20px);
 
     ion-back-button {
-        --color: var(--orange);
+        --color: #1a1c1f;
     }
 }
 
+// ── Empty / Loading ──────────────
 .list-container {
-    padding: 16px;
-    padding-bottom: 120px;
+    padding: 16px 16px 120px;
 }
 
 .loading-state,
@@ -65,29 +80,29 @@
     padding: 60px 24px;
     text-align: center;
     background: rgba(0, 0, 0, 0.02);
-    border-radius: 30px;
+    border-radius: 24px;
     border: 1px dashed rgba(0, 0, 0, 0.08);
     margin-top: 20px;
 
     ion-spinner {
-        color: var(--orange);
+        color: $orange;
         margin-bottom: 16px;
     }
 
     ion-icon {
-        font-size: 64px;
+        font-size: 60px;
+        color: rgba($orange, 0.25);
         margin-bottom: 16px;
-        color: rgba(245, 146, 30, 0.2);
     }
 
     h3 {
-        color: #1a1c1f;
+        color: $charcoal;
         font-weight: 800;
         margin-bottom: 8px;
     }
 
     p {
-        color: #71717a;
+        color: $sub;
     }
 }
 
@@ -95,22 +110,29 @@
     background: transparent;
 }
 
+// ── Delivery Card ────────────────
 .delivery-item {
     --background: transparent;
     --padding-start: 0;
     --inner-padding-end: 0;
     --min-height: auto;
     margin-bottom: 16px;
+    animation: cardIn 0.45s ease-out both;
 }
 
 .delivery-card {
     width: 100%;
     background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 24px;
+    border: 1px solid $border;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+
+    &:active {
+        transform: scale(0.98);
+    }
 
     .card-edge-accent {
         position: absolute;
@@ -118,82 +140,259 @@
         left: 0;
         bottom: 0;
         width: 4px;
-        background: var(--orange);
+        background: $orange;
     }
 
     .card-inner {
-        padding: 18px;
+        padding: 18px 18px 14px 22px;
     }
 }
 
+// ── Card Header ──────────────────
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 
     .delivery-id {
         font-weight: 800;
-        color: #1a1c1f;
+        color: $orange;
         font-size: 1.1rem;
         letter-spacing: -0.5px;
     }
+}
 
-    ion-badge {
-        --padding-start: 10px;
-        --padding-end: 10px;
-        --padding-top: 5px;
-        --padding-bottom: 5px;
-        border-radius: 8px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.75rem;
+.status-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.pill-pending {
+        background: rgba($muted, 0.12);
+        color: $sub;
+    }
+
+    &.pill-ready {
+        background: rgba($orange, 0.1);
+        color: $orange;
+    }
+
+    &.pill-transit {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    &.pill-delivery {
+        background: rgba($green, 0.12);
+        color: $green;
+    }
+
+    &.pill-done {
+        background: rgba($green, 0.15);
+        color: darken($green, 10%);
+    }
+
+    &.pill-failed {
+        background: rgba($red, 0.1);
+        color: $red;
     }
 }
 
-.card-body {
-    margin-bottom: 20px;
+// ── Route Row ────────────────────
+.route-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+}
 
-    .location,
-    .date {
+.route-stop {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+
+    .stop-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 4px;
+
+        &.from-dot {
+            background: $orange;
+        }
+
+        &.to-dot {
+            background: $green;
+        }
+    }
+
+    .stop-info {
         display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #52525b;
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-        font-weight: 600;
+        flex-direction: column;
+        gap: 2px;
 
-        ion-icon {
-            color: var(--orange);
-            font-size: 18px;
+        .stop-city {
+            font-size: 14px;
+            font-weight: 700;
+            color: $charcoal;
+        }
+
+        .stop-label {
+            font-size: 11px;
+            color: $sub;
+            font-weight: 500;
         }
     }
 }
 
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding-top: 14px;
-    color: var(--orange);
-    font-weight: 700;
-    font-size: 0.9rem;
+.route-line {
+    width: 32px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, $muted 0px, $muted 4px, transparent 4px, transparent 8px);
+    flex-shrink: 0;
+    margin-top: 10px;
+}
 
-    ion-icon {
-        font-size: 20px;
+// ── 5-Step Timeline Stepper ──────
+.timeline-stepper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 6px 0 14px;
+    gap: 4px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+
+    .step-circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid $muted;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+
+        ion-icon {
+            font-size: 12px;
+            color: white;
+        }
+
+        .step-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: $muted;
+            opacity: 0.4;
+        }
+    }
+
+    .step-label {
+        font-size: 9px;
+        font-weight: 700;
+        color: $muted;
+        text-align: center;
+        line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    // ── Done step: grey ──
+    &.done {
+        .step-circle {
+            background: #d1d5db;
+            border-color: #d1d5db;
+        }
+
+        .step-label {
+            color: #9ca3af;
+        }
+    }
+
+    // ── Active step: blinking green ──
+    &.active {
+        .step-circle {
+            background: $green;
+            border-color: $green;
+            animation: blink-green 1.5s infinite;
+
+            .step-dot {
+                background: white;
+                width: 7px;
+                height: 7px;
+                opacity: 1;
+            }
+        }
+
+        .step-label {
+            color: $green;
+            font-weight: 800;
+        }
+    }
+}
+
+.step-connector {
+    height: 2px;
+    flex: 1;
+    background: $muted;
+    opacity: 0.25;
+    margin-top: 10px;
+    border-radius: 1px;
+    transition: background 0.3s;
+
+    &.done {
+        background: #9ca3af;
         opacity: 0.5;
     }
 }
 
-.premium-fab {
-    --background: var(--orange);
-    --background-activated: var(--orange-deep);
-    --color: #ffffff;
-    --box-shadow: 0 8px 20px rgba(245, 146, 30, 0.4);
+// ── Meta Row (chauffeur/camion) ───
+.meta-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: $sub;
+        font-weight: 600;
+
+        ion-icon {
+            font-size: 14px;
+        }
+    }
+}
+
+// ── Card Footer ──────────────────
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid $border;
+    padding-top: 12px;
+    color: $charcoal;
+    font-weight: 700;
+    font-size: 13px;
 
     ion-icon {
-        font-size: 28px;
+        font-size: 18px;
+        opacity: 0.4;
     }
 }

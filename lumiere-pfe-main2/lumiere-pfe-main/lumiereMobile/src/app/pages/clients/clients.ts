@@ -122,7 +122,7 @@ export class Clients implements OnInit, ViewDidEnter {
           text: 'Supprimer',
           role: 'destructive',
           handler: () => {
-            this.performDelete(client.id!);
+            this.performDelete(client.code!);
           }
         }
       ]
@@ -141,7 +141,7 @@ export class Clients implements OnInit, ViewDidEnter {
   }
 
   editClient(client: Client) {
-    this.router.navigate(['/clients/edit', client.id]);
+    this.router.navigate(['/clients/edit', client.code]);
   }
 
   createClient() {

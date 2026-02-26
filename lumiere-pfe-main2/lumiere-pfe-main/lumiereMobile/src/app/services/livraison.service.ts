@@ -14,6 +14,8 @@ export interface LivraisonSimple {
   client: string;
   nomclient: string;
   chargementDate: string | Date;
+  chargementVille?: string;
+  chargementNom?: string;
   livraisonVille: string;
   livraisonDate: string | Date;
   chauffeur?: string;

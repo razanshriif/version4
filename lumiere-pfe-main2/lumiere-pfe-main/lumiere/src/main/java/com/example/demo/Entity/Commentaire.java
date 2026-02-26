@@ -1,7 +1,5 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,11 +13,11 @@ public class Commentaire {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private Long id;
 	private String contenue;
-	
+
 	@ManyToOne
-	
+
 	private Ordre ordre;
 
 	public Long getId() {
@@ -45,6 +43,5 @@ public class Commentaire {
 	public void setOrdre(Ordre ordre) {
 		this.ordre = ordre;
 	}
-	
-	
+
 }

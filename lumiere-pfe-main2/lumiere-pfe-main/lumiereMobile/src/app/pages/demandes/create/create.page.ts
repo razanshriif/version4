@@ -14,8 +14,7 @@ import { addIcons } from 'ionicons';
 import {
   businessOutline, locationOutline, cubeOutline, calendarOutline,
   carOutline, searchOutline, sendOutline, arrowUpCircleOutline, chatbubbleOutline,
-  arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline
-} from 'ionicons/icons';
+  arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline, personOutline } from 'ionicons/icons';
 import { DemandeService } from '../../../services/demande.service';
 import { ClientService } from '../../../services/client.service';
 import { ArticleService } from '../../../services/article.service';
@@ -93,11 +92,7 @@ export class CreatePage implements OnInit {
     private toastController: ToastController,
     private loadingController: LoadingController
   ) {
-    addIcons({
-      businessOutline, locationOutline, cubeOutline, calendarOutline,
-      carOutline, searchOutline, sendOutline, arrowUpCircleOutline, chatbubbleOutline,
-      arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline
-    });
+    addIcons({arrowBackOutline,personOutline,cloudUploadOutline,searchOutline,locationOutline,cubeOutline,carOutline,sendOutline,businessOutline,calendarOutline,arrowUpCircleOutline,chatbubbleOutline,personAddOutline,closeOutline});
   }
 
   async ngOnInit() {

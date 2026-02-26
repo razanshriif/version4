@@ -8,9 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.example.demo.Entity.Role;
-import com.example.demo.Entity.Status;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

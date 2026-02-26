@@ -41,14 +41,14 @@
         ion-title {
             font-family: 'Barlow Condensed', sans-serif;
             font-weight: 800;
-            color: var(--orange);
-            font-size: 1.4rem;
+            color: #1a1c1f;
+            font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         ion-button {
-            --color: var(--orange);
+            --color: #1a1c1f;
         }
     }
 }
@@ -180,7 +180,7 @@
 
             ion-icon {
                 font-size: 0.9rem;
-                color: var(--orange);
+                color: #1a1c1f;
             }
         }
     }
@@ -193,7 +193,7 @@
 
 .option-btn {
     &.edit {
-        --background: #2563eb;
+        --background: var(--orange);
     }
 
     &.delete {
@@ -202,10 +202,10 @@
 }
 
 .premium-fab {
-    --background: var(--orange);
-    --background-activated: var(--orange-deep);
+    --background: #1a1c1f;
+    --background-activated: #2c2f33;
     --color: #ffffff;
-    --box-shadow: 0 8px 20px rgba(245, 146, 30, 0.4);
+    --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 
     ion-icon {
         font-size: 28px;

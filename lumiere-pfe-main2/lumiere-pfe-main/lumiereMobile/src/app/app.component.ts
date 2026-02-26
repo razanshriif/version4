@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonApp, IonRouterOutlet, NavController } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, NavController, IonIcon, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { addIcons } from 'ionicons';
@@ -86,11 +86,12 @@ const TAB_ROUTES = ['/home', '/demandes', '/livraisons', '/clients', '/profile',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonApp, IonRouterOutlet],
+  imports: [CommonModule, IonApp, IonRouterOutlet, IonIcon, IonFab, IonFabButton],
 })
 export class AppComponent {
 
   showNav = false;
+  showAddMenu = false;
   currentUrl = '';
 
   constructor(
@@ -220,5 +221,9 @@ export class AppComponent {
 
     // Use Angular Router for smoother transitions especially with queryParams
     this.router.navigate([url], { queryParams });
+  }
+
+  toggleAddMenu() {
+    this.showAddMenu = !this.showAddMenu;
   }
 }

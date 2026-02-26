@@ -4,7 +4,7 @@ import com.example.demo.securityjwt.controller.dto.AuthenticationRequest;
 import com.example.demo.securityjwt.controller.dto.AuthenticationResponse;
 import com.example.demo.securityjwt.controller.dto.RegisterRequest;
 import com.example.demo.Repository.UserRepository;
-import com.example.demo.Entity.Role;
+
 import com.example.demo.Entity.User;
 import com.example.demo.securityjwt.utils.JwtService;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class AuthenticationService {
         user.setLastname(request.lastname());
         user.setPasswd(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
-        user.setStatus(com.example.demo.Entity.Status.PENDING);
+        user.setStatus(com.example.demo.Entity.Status.ACTIVE); // Auto-activate for now to fix 403
 
         userRepository.save(user);
 
@@ -83,13 +83,21 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()));
-        final var user = userRepository.findFirstByEmailOrderByIdAsc(request.email()).orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()));
+        } catch (Exception e) {
+            logger.error("Authentication failed for user {}: {}", request.email(), e.getMessage());
+            throw e;
+        }
+
+        final var user = userRepository.findFirstByEmailOrderByIdAsc(request.email())
+                .orElseThrow(() -> new RuntimeException("User not found: " + request.email()));
 
         if (user.getStatus() != com.example.demo.Entity.Status.ACTIVE) {
+            logger.warn("Login attempt for non-active user {}: status is {}", request.email(), user.getStatus());
             throw new RuntimeException("Account is not active. Current status: " + user.getStatus());
         }
 

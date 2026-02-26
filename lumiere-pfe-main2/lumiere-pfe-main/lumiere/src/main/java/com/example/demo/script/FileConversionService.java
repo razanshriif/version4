@@ -1,12 +1,9 @@
 package com.example.demo.script;
 
 import java.io.BufferedReader;
-
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,13 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.Entity.Events;
 import com.example.demo.Entity.Ordre;
 import com.example.demo.Entity.Statut;
 import com.example.demo.Repository.EventsRepository;
 import com.example.demo.Repository.OrdreRepository;
-import com.example.demo.Service.OrdreService;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -32,8 +26,6 @@ public class FileConversionService {
 
     @Autowired
     private OrdreRepository ordreRepository;
-    @Autowired
-    private EventsRepository eventsRepository;
 
     private final String scriptPath = "C:\\Users\\LENOVO\\Dropbox\\PC\\Downloads\\lumiere-pfe-main\\lumiere-pfe-main\\lumiere-pfe-main2\\lumiere-pfe-main\\ConvertScript.py";
     private final String inputPath = "\\\\172.18.3.56\\requetes_edge_5555\\mesvoyes.json";
