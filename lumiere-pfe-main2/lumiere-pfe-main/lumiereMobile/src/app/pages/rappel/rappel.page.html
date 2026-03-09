@@ -1,92 +1,68 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border inner-page-header">
     <ion-toolbar class="premium-toolbar">
-        <ion-buttons slot="start">
-            <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
-        </ion-buttons>
-        <ion-title>
-            Mes Rappels
-            <ion-badge *ngIf="pending.length > 0" color="warning" class="header-badge">{{ pending.length }}</ion-badge>
-        </ion-title>
-        <ion-buttons slot="end">
-            <ion-button (click)="toggleInfo()">
-                <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-        </ion-buttons>
+        <div class="header-wrapper-global">
+            <div class="header-left-group">
+                <button type="button" class="header-round-btn" (click)="navCtrl.back()">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </button>
+                <span class="header-page-title">Mes Rappels <small *ngIf="rappels.length > 0">({{ rappels.length
+                        }})</small></span>
+            </div>
+            <div class="header-right-group">
+                <button type="button" class="header-round-btn">
+                    <ion-icon name="options-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-content">
     <div class="glass-bg"></div>
 
-    <div class="info-card" *ngIf="showInfo">
-        <ion-icon name="information-circle-outline"></ion-icon>
-        <div class="info-text">
-            <h3>À propos des Rappels</h3>
-            <p>Gérez vos tâches logistiques, suivis de livraison et rappels importants ici.</p>
-        </div>
-    </div>
-
     <!-- Empty State -->
-    <div *ngIf="rappels.length === 0" class="empty-state">
-        <div class="empty-icon">
-            <ion-icon name="alarm-outline"></ion-icon>
+    <div *ngIf="rappels.length === 0" class="empty-state-container">
+        <div class="empty-icon-box">
+            <ion-icon name="time-outline"></ion-icon>
         </div>
-        <h2>Aucun rappel</h2>
-        <p>Appuyez sur le bouton <strong>+</strong> pour créer votre premier rappel.</p>
+        <h2 class="empty-title">Aucun rappel</h2>
+        <p class="empty-text">Créez un rappel pour ne plus oublier une livraison ou un suivi client.</p>
+        <ion-button (click)="openModal()" class="premium-button nouveau-rappel-btn" mode="md">
+            <ion-icon name="add-outline" slot="start"></ion-icon>
+            Nouveau rappel
+        </ion-button>
     </div>
 
-    <div class="list-container" *ngIf="rappels.length > 0">
-
-        <!-- Pending Rappels -->
-        <div *ngIf="pending.length > 0">
-            <div class="section-label">À faire ({{ pending.length }})</div>
-            <div *ngFor="let r of pending; let i = index" class="rappel-card pending" [class.overdue]="isPast(r.date)"
-                [style.animation-delay]="(i * 0.07) + 's'" (click)="openModal(r)">
-                <div class="card-left" (click)="$event.stopPropagation()">
-                    <button class="check-btn" (click)="toggleFait(r)">
-                        <div class="check-circle"></div>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="r-title">{{ r.titre }}</div>
-                    <div class="r-date" [class.overdue-text]="isPast(r.date)">
-                        <ion-icon name="calendar-outline"></ion-icon>
-                        {{ formatDate(r.date) }}
-                        <span *ngIf="isPast(r.date)" class="overdue-chip">En retard</span>
-                    </div>
-                    <div class="r-note" *ngIf="r.note">{{ r.note }}</div>
-                </div>
-                <button class="delete-btn" (click)="deleteRappel(r); $event.stopPropagation()">
-                    <ion-icon name="trash-outline"></ion-icon>
-                </button>
+    <!-- Grouped Rappels List -->
+    <div class="list-container-premium" *ngIf="rappels.length > 0">
+        <div *ngFor="let group of groupedRappels" class="rappel-section">
+            <div class="section-divider">
+                <span>{{ group.label }}</span>
+                <div class="divider-line"></div>
             </div>
-        </div>
 
-        <!-- Done Rappels -->
-        <div *ngIf="done.length > 0">
-            <div class="section-label done-label">Terminés ({{ done.length }})</div>
-            <div *ngFor="let r of done" class="rappel-card done-card" (click)="openModal(r)">
-                <div class="card-left" (click)="$event.stopPropagation()">
-                    <button class="check-btn done" (click)="toggleFait(r)">
-                        <ion-icon name="checkmark-circle" class="check-done-icon"></ion-icon>
+            <div *ngFor="let r of group.items" class="rappel-premium-card" [class.is-done]="r.fait"
+                (click)="openModal(r)">
+                <div class="card-accent-bar"></div>
+                <div class="card-main-content">
+                    <div class="time-label">{{ formatTime(r.date) }}</div>
+                    <h3 class="rappel-title">{{ r.titre }}</h3>
+                    <p class="rappel-subtitle">{{ r.note || 'Pas de note supplémentaire' }}</p>
+                </div>
+                <div class="card-actions" (click)="$event.stopPropagation()">
+                    <button class="rappel-action-btn edit" (click)="openModal(r)">
+                        <ion-icon name="create-outline"></ion-icon>
+                    </button>
+                    <button class="rappel-action-btn delete" (click)="deleteRappel(r)">
+                        <ion-icon name="trash-outline"></ion-icon>
                     </button>
                 </div>
-                <div class="card-body done-body">
-                    <div class="r-title done-title">{{ r.titre }}</div>
-                    <div class="r-date">
-                        <ion-icon name="calendar-outline"></ion-icon>
-                        {{ formatDate(r.date) }}
-                    </div>
-                </div>
-                <button class="delete-btn" (click)="deleteRappel(r); $event.stopPropagation()">
-                    <ion-icon name="trash-outline"></ion-icon>
-                </button>
             </div>
         </div>
     </div>
 
     <!-- New Rappel Modal (Premium UI) -->
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()" class="rappel-modal-custom">
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()" class="rappel-modal-premium">
         <ng-template>
             <ion-header class="ion-no-border">
                 <ion-toolbar class="modal-toolbar">
@@ -98,28 +74,31 @@
             </ion-header>
 
             <ion-content class="modal-content-area">
-                <div class="premium-form">
-                    <div class="form-item">
-                        <input type="text" [(ngModel)]="newRappel.titre" placeholder="Titre du rappel..."
-                            class="elegant-input">
+                <div class="modal-form-wrapper">
+                    <div class="form-group">
+                        <label>Titre de la tâche</label>
+                        <input type="text" [(ngModel)]="newRappel.titre" placeholder="Ex: Appeler client X..."
+                            class="modern-input">
                     </div>
 
-                    <div class="form-item">
-                        <div class="datetime-container">
+                    <div class="form-group">
+                        <label>Date et Heure</label>
+                        <div class="modern-datetime-box">
                             <ion-datetime presentation="date-time" [(ngModel)]="newRappel.date" size="cover"
-                                class="custom-datetime" locale="fr-FR" preferred-style="inline"></ion-datetime>
+                                class="modern-dt" locale="fr-FR"></ion-datetime>
                         </div>
                     </div>
 
-                    <div class="form-item">
-                        <textarea [(ngModel)]="newRappel.note" placeholder="Détails ou notes (facultatif)..."
-                            class="elegant-textarea" rows="2"></textarea>
+                    <div class="form-group">
+                        <label>Notes (optionnel)</label>
+                        <textarea [(ngModel)]="newRappel.note" placeholder="Détails..." class="modern-textarea"
+                            rows="3"></textarea>
                     </div>
 
-                    <div class="btn-group">
-                        <ion-button expand="block" (click)="saveRappel()" class="premium-save-btn"
+                    <div class="modal-footer">
+                        <ion-button expand="block" (click)="saveRappel()" class="premium-button shadow-primary"
                             [disabled]="!newRappel.titre">
-                            {{ editingRappel ? 'METTRE À JOUR' : 'AJOUTER RAPPEL' }}
+                            {{ editingRappel ? 'ENREGISTRER LES MODIFICATIONS' : 'CRÉER LE RAPPEL' }}
                         </ion-button>
                     </div>
                 </div>
@@ -128,9 +107,10 @@
     </ion-modal>
 </ion-content>
 
-<!-- FAB Add Button -->
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openModal()" class="add-fab">
+<!-- FAB Button replaced by empty state button as per design, but keeping it for when list has items if needed? 
+     The design shows a button in empty state. Let's add FAB only if needed. Design has no FAB in list view. -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="rappels.length > 0">
+    <ion-fab-button (click)="openModal()" class="rappel-fab">
         <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
 </ion-fab>

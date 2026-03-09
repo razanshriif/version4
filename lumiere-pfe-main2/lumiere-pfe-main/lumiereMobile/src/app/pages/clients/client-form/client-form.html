@@ -1,14 +1,18 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border inner-page-header">
     <ion-toolbar class="premium-toolbar">
-        <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/clients" icon="arrow-back-outline"></ion-back-button>
-        </ion-buttons>
-        <ion-title>{{ isEditMode ? 'Modifier le Client' : 'Nouveau Client' }}</ion-title>
-        <ion-buttons slot="end">
-            <ion-button (click)="saveClient()">
-                <ion-icon slot="icon-only" name="save-outline"></ion-icon>
-            </ion-button>
-        </ion-buttons>
+        <div class="header-wrapper-global">
+            <div class="header-left-group">
+                <button type="button" class="header-round-btn" (click)="navCtrl.back()">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </button>
+                <span class="header-page-title">{{ isEditMode ? 'Modifier le Client' : 'Nouveau Client' }}</span>
+            </div>
+            <div class="header-right-group">
+                <button type="button" class="header-round-btn" (click)="saveClient()" aria-label="Enregistrer">
+                    <ion-icon name="save-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
     </ion-toolbar>
 </ion-header>
 

@@ -1,5 +1,5 @@
 // --- Variables & Tokens ---
-$orange: #f5921e;
+$orange: #F7941D;
 $charcoal: #1a1c1f;
 $blanc-sale: #f5f2ed;
 $bg: #dcd7cc; // Darker cream for background
@@ -16,7 +16,7 @@ $radius: 20px;
     left: 0;
     width: 100%;
     height: 100%;
-    background: $bg;
+    background: #f5f2ed;
     z-index: -1;
     overflow: hidden;
 
@@ -80,7 +80,7 @@ $radius: 20px;
 
 .form-container {
     padding: 16px;
-    padding-bottom: 40px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
 // --- Premium Card System ---

@@ -48,19 +48,15 @@ public class OrdreService {
 		tranck.setChargement(false);
 		tranck.setLivraison(false);
 
-		tranck = tranckRepository.save(tranck);
-
+		// Establish bidirectional relationship
 		ordre.setTrancking(tranck);
-
 		tranck.setOrdre(ordre);
 
 		String orderNumber = "DIV" + generateOrderNumber();
 		ordre.setOrderNumber(orderNumber);
-
 		ordre.setStatut(Statut.NON_CONFIRME);
 
 		return ordreRepository.save(ordre);
-
 	}
 
 	private String generateOrderNumber() {

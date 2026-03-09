@@ -1,94 +1,80 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="premium-toolbar">
-    <ion-buttons slot="start">
-      <ion-button (click)="cancel()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <ion-title>Nouvel Ordre</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="onSubmit()" [disabled]="!ordre.client">
-        Envoyer
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glass-background">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
+    </div>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="goToNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
   </div>
 
-  <div class="form-container">
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="cancel()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Nouvelle Commande</h1>
+  </div>
+</ion-header>
+
+<ion-content class="premium-content">
+  <!-- Step Indicator -->
+  <div class="step-progress fade-up">
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <div class="form-body">
     <form (ngSubmit)="onSubmit()">
 
-      <!-- Section 1: Information Client -->
-      <div class="premium-card section-card">
-        <div class="section-header">
-          <div class="header-icon-box blue-box">
-            <ion-icon name="person-outline"></ion-icon>
-          </div>
-          <h2 class="section-label">CLIENT</h2>
-        </div>
-
-        <div class="card-body">
-          <div class="input-grid">
-            <div class="premium-input-item">
-              <ion-label position="stacked">CODE *</ion-label>
-              <ion-input [(ngModel)]="ordre.client" name="codeclient" placeholder="Code client" readonly></ion-input>
-            </div>
-            <div class="premium-input-item">
-              <ion-label position="stacked">NOM *</ion-label>
-              <ion-input [value]="userProfile?.firstname + ' ' + userProfile?.lastname" name="username"
-                placeholder="Raison sociale" readonly></ion-input>
+      <!-- Section: Client -->
+      <section class="form-section fade-up">
+        <h2 class="section-title">Informations Client</h2>
+        <div class="ds-form-group">
+          <div class="ds-field readonly">
+            <label>Compte Client</label>
+            <div class="input-wrapper">
+              <ion-icon name="business-outline"></ion-icon>
+              <ion-input [(ngModel)]="ordre.client" name="codeclient" readonly></ion-input>
             </div>
           </div>
 
-          <div class="premium-input-item mt-3">
-            <ion-label position="stacked">SITE</ion-label>
-            <ion-select [(ngModel)]="ordre.siteclient" name="siteclient" interface="popover"
-              placeholder="Sélectionner...">
-              <ion-select-option *ngFor="let s of siteOptions" [value]="s">{{ s }}</ion-select-option>
-            </ion-select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 2: Chargement -->
-      <div class="premium-card section-card mt-4">
-        <div class="section-header">
-          <div class="header-icon-box orange-box">
-            <ion-icon name="cloud-upload-outline"></ion-icon>
-          </div>
-          <h2 class="section-label">CHARGEMENT</h2>
-        </div>
-
-        <div class="card-body">
-          <div class="premium-input-item search-item">
-            <ion-label position="stacked">POINT *</ion-label>
-            <div class="input-with-icon" (click)="openClientPicker('chargement')">
-              <ion-input [(ngModel)]="ordre.chargementNom" name="chargementNom" placeholder="Sélectionner..."
+          <div class="ds-field">
+            <label>Site de distribution</label>
+            <div class="input-wrapper" (click)="openSitePicker()">
+              <ion-icon name="layers-outline"></ion-icon>
+              <ion-input [(ngModel)]="ordre.siteclient" name="siteclient" placeholder="Sélectionner..."
                 readonly></ion-input>
-              <ion-icon name="search-outline"></ion-icon>
+              <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Itinéraire -->
+      <section class="form-section fade-up">
+        <h2 class="section-title">Chargement & Livraison</h2>
+        <div class="ds-form-group">
+          <!-- Chargement -->
+          <div class="ds-field">
+            <label>Point de chargement</label>
+            <div class="input-wrapper" (click)="openClientPicker('chargement')">
+              <ion-icon name="log-out-outline" style="transform: rotate(-90deg)"></ion-icon>
+              <ion-input [(ngModel)]="ordre.chargementNom" name="chargementNom" placeholder="Où charger ?"
+                readonly></ion-input>
+              <ion-icon name="chevron-down-outline"></ion-icon>
             </div>
           </div>
 
-          <div class="input-grid mt-3">
-            <div class="premium-input-item">
-              <ion-label position="stacked">ADRESSE</ion-label>
-              <ion-input [(ngModel)]="ordre.chargementAdr1" name="chargementAdr1" placeholder="Rue, n°..."></ion-input>
-            </div>
-            <div class="premium-input-item">
-              <ion-label position="stacked">VILLE</ion-label>
-              <ion-input [(ngModel)]="ordre.chargementVille" name="chargementVille" placeholder="Ville..."></ion-input>
-            </div>
-          </div>
-
-          <div class="premium-input-item mt-3">
-            <ion-label position="stacked">DATE *</ion-label>
-            <div class="datetime-wrapper">
+          <div class="ds-field">
+            <label>Date & Heure de chargement</label>
+            <div class="input-wrapper">
+              <ion-icon name="calendar-outline"></ion-icon>
               <ion-datetime-button datetime="chargement-date"></ion-datetime-button>
             </div>
             <ion-modal [keepContentsMounted]="true">
@@ -98,42 +84,22 @@
               </ng-template>
             </ion-modal>
           </div>
-        </div>
-      </div>
 
-      <!-- Section 3: Livraison -->
-      <div class="premium-card section-card mt-4">
-        <div class="section-header">
-          <div class="header-icon-box green-box">
-            <ion-icon name="location-outline"></ion-icon>
-          </div>
-          <h2 class="section-label">LIVRAISON</h2>
-        </div>
-
-        <div class="card-body">
-          <div class="premium-input-item search-item">
-            <ion-label position="stacked">POINT *</ion-label>
-            <div class="input-with-icon" (click)="openClientPicker('livraison')">
-              <ion-input [(ngModel)]="ordre.livraisonNom" name="livraisonNom" placeholder="Sélectionner..."
+          <!-- Livraison -->
+          <div class="ds-field mt-3">
+            <label>Point de livraison</label>
+            <div class="input-wrapper" (click)="openClientPicker('livraison')">
+              <ion-icon name="log-in-outline" style="transform: rotate(90deg)"></ion-icon>
+              <ion-input [(ngModel)]="ordre.livraisonNom" name="livraisonNom" placeholder="Où livrer ?"
                 readonly></ion-input>
-              <ion-icon name="search-outline"></ion-icon>
+              <ion-icon name="chevron-down-outline"></ion-icon>
             </div>
           </div>
 
-          <div class="input-grid mt-3">
-            <div class="premium-input-item">
-              <ion-label position="stacked">ADRESSE</ion-label>
-              <ion-input [(ngModel)]="ordre.livraisonAdr1" name="livraisonAdr1" placeholder="Rue, n°..."></ion-input>
-            </div>
-            <div class="premium-input-item">
-              <ion-label position="stacked">VILLE</ion-label>
-              <ion-input [(ngModel)]="ordre.livraisonVille" name="livraisonVille" placeholder="Ville..."></ion-input>
-            </div>
-          </div>
-
-          <div class="premium-input-item mt-3">
-            <ion-label position="stacked">DATE PRÉVUE *</ion-label>
-            <div class="datetime-wrapper">
+          <div class="ds-field">
+            <label>Date prévue de livraison</label>
+            <div class="input-wrapper">
+              <ion-icon name="calendar-outline"></ion-icon>
               <ion-datetime-button datetime="livraison-date"></ion-datetime-button>
             </div>
             <ion-modal [keepContentsMounted]="true">
@@ -144,161 +110,267 @@
             </ion-modal>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Section 4: Marchandise -->
-      <div class="premium-card section-card mt-4">
-        <div class="section-header">
-          <div class="header-icon-box dark-box">
-            <ion-icon name="cube-outline"></ion-icon>
-          </div>
-          <h2 class="section-label">MARCHANDISE</h2>
-        </div>
-
-        <div class="card-body">
-          <div class="premium-input-item search-item">
-            <ion-label position="stacked">ARTICLE *</ion-label>
-            <div class="input-with-icon" (click)="openArticlePicker()">
-              <ion-input [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="Sélectionner..."
+      <!-- Section: Marchandise -->
+      <section class="form-section fade-up">
+        <h2 class="section-title">Détails Marchandise</h2>
+        <div class="ds-form-group">
+          <div class="ds-field">
+            <label>Article</label>
+            <div class="input-wrapper" (click)="openArticlePicker()">
+              <ion-icon name="cube-outline"></ion-icon>
+              <ion-input [(ngModel)]="ordre.codeArticle" name="codeArticle" placeholder="Sélectionner un article..."
                 readonly></ion-input>
-              <ion-icon name="search-outline"></ion-icon>
+              <ion-icon name="chevron-down-outline"></ion-icon>
             </div>
           </div>
 
-          <div class="input-grid mt-3">
-            <div class="premium-input-item">
-              <ion-label position="stacked">NB PALETTES</ion-label>
-              <ion-input type="number" [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes"
-                placeholder="0"></ion-input>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="ds-field">
+              <label>Palettes</label>
+              <div class="input-wrapper">
+                <ion-input type="number" [(ngModel)]="ordre.nombrePalettes" name="nombrePalettes"
+                  (ionChange)="updateCommentaire()" placeholder="0"></ion-input>
+              </div>
             </div>
-            <div class="premium-input-item">
-              <ion-label position="stacked">NB COLIS</ion-label>
-              <ion-input type="number" [(ngModel)]="ordre.nombreColis" name="nombreColis" placeholder="0"></ion-input>
-            </div>
-          </div>
-
-          <div class="input-grid mt-3">
-            <div class="premium-input-item">
-              <ion-label position="stacked">POIDS (KG)</ion-label>
-              <ion-input type="number" [(ngModel)]="ordre.poids" name="poids" placeholder="0"></ion-input>
-            </div>
-            <div class="premium-input-item">
-              <ion-label position="stacked">VOLUME (M³)</ion-label>
-              <ion-input type="number" [(ngModel)]="ordre.volume" name="volume" placeholder="0"></ion-input>
+            <div class="ds-field">
+              <label>Poids (kg)</label>
+              <div class="input-wrapper">
+                <ion-input type="number" [(ngModel)]="ordre.poids" name="poids" (ionChange)="updateCommentaire()"
+                  placeholder="0"></ion-input>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Section 5: Transport & Commentaires -->
-      <div class="premium-card section-card mt-4">
-        <div class="section-header">
-          <div class="header-icon-box charcoal-box">
-            <ion-icon name="car-outline"></ion-icon>
+      <!-- Section: Transport -->
+      <section class="form-section fade-up">
+        <h2 class="section-title">Besoin Transport</h2>
+        <div class="ds-form-group">
+          <label class="ds-field label">Type de véhicule</label>
+          <ion-radio-group [(ngModel)]="optionsCommentaire.typeCamion" name="typeCamion"
+            (ionChange)="updateCommentaire()" class="custom-radio-grid">
+            <div class="radio-pill" [class.active]="optionsCommentaire.typeCamion === 'Cargo'"
+              (click)="optionsCommentaire.typeCamion = 'Cargo'; updateCommentaire()">
+              <ion-radio value="Cargo"></ion-radio>
+              <ion-icon name="bus-outline"></ion-icon>
+              <span>Cargo</span>
+            </div>
+            <div class="radio-pill" [class.active]="optionsCommentaire.typeCamion === 'NPR'"
+              (click)="optionsCommentaire.typeCamion = 'NPR'; updateCommentaire()">
+              <ion-radio value="NPR"></ion-radio>
+              <ion-icon name="bus-outline"></ion-icon>
+              <span>NPR</span>
+            </div>
+            <div class="radio-pill" [class.active]="optionsCommentaire.typeCamion === 'DMAX'"
+              (click)="optionsCommentaire.typeCamion = 'DMAX'; updateCommentaire()">
+              <ion-radio value="DMAX"></ion-radio>
+              <ion-icon name="car-outline"></ion-icon>
+              <span>DMAX</span>
+            </div>
+            <div class="radio-pill" [class.active]="optionsCommentaire.typeCamion === 'Semi'"
+              (click)="optionsCommentaire.typeCamion = 'Semi'; updateCommentaire()">
+              <ion-radio value="Semi"></ion-radio>
+              <ion-icon name="bus-outline"></ion-icon>
+              <span>Semi</span>
+            </div>
+          </ion-radio-group>
+
+          <!-- Semi Sub-types -->
+          <div class="sub-type-container fade-up" *ngIf="optionsCommentaire.typeCamion === 'Semi'">
+            <label class="ds-field label">Type de Semi</label>
+            <ion-radio-group [(ngModel)]="optionsCommentaire.typeSemi" name="typeSemi" (ionChange)="updateCommentaire()"
+              class="custom-radio-grid">
+              <div class="radio-pill mini" [class.active]="optionsCommentaire.typeSemi === 'Frigo'"
+                (click)="optionsCommentaire.typeSemi = 'Frigo'; updateCommentaire()">
+                <ion-radio value="Frigo"></ion-radio>
+                <ion-icon name="snow-outline"></ion-icon>
+                <span>Frigo</span>
+              </div>
+              <div class="radio-pill mini" [class.active]="optionsCommentaire.typeSemi === 'Bache'"
+                (click)="optionsCommentaire.typeSemi = 'Bache'; updateCommentaire()">
+                <ion-radio value="Bache"></ion-radio>
+                <ion-icon name="layers-outline"></ion-icon>
+                <span>Bâche</span>
+              </div>
+              <div class="radio-pill mini" [class.active]="optionsCommentaire.typeSemi === 'Plateau'"
+                (click)="optionsCommentaire.typeSemi = 'Plateau'; updateCommentaire()">
+                <ion-radio value="Plateau"></ion-radio>
+                <ion-icon name="water-outline"></ion-icon>
+                <span>Plateau</span>
+              </div>
+            </ion-radio-group>
           </div>
-          <h2 class="section-label">TRANSPORT</h2>
+
+          <!-- Cargo Sub-types -->
+          <div class="sub-type-container fade-up" *ngIf="optionsCommentaire.typeCamion === 'Cargo'">
+            <label class="ds-field label">Type de Cargo</label>
+            <ion-radio-group [(ngModel)]="optionsCommentaire.typeSemi" name="typeCargo"
+              (ionChange)="updateCommentaire()" class="custom-radio-grid">
+              <div class="radio-pill mini" [class.active]="optionsCommentaire.typeSemi === 'Frigo'"
+                (click)="optionsCommentaire.typeSemi = 'Frigo'; updateCommentaire()">
+                <ion-radio value="Frigo"></ion-radio>
+                <ion-icon name="snow-outline"></ion-icon>
+                <span>Frigo</span>
+              </div>
+              <div class="radio-pill mini" [class.active]="optionsCommentaire.typeSemi === 'Bache'"
+                (click)="optionsCommentaire.typeSemi = 'Bache'; updateCommentaire()">
+                <ion-radio value="Bache"></ion-radio>
+                <ion-icon name="layers-outline"></ion-icon>
+                <span>Bâche</span>
+              </div>
+            </ion-radio-group>
+          </div>
+
+          <!-- AI Recommendation banner -->
+          <div class="reco-banner fade-up" *ngIf="ordre.nombrePalettes && optionsCommentaire.typeCamion">
+            <div class="reco-header">
+              <ion-icon name="sparkles"></ion-icon>
+              <span>CONSEIL LOGISTIQUE</span>
+            </div>
+            <p class="reco-text">
+              D'après vos articles ({{ ordre.nombrePalettes }} palettes), un véhicule de type
+              <strong>{{ optionsCommentaire.typeCamion }}</strong> est parfaitement adapté.
+            </p>
+          </div>
+
+          <div class="ds-field mt-3">
+            <label>Instructions libres</label>
+            <div class="input-wrapper">
+              <ion-textarea [(ngModel)]="optionsCommentaire.commentaireLibre" name="commentaireLibre"
+                (ionInput)="updateCommentaire()" rows="3" placeholder="Notes pour l'exploitation..."></ion-textarea>
+            </div>
+          </div>
+
+          <!-- Auto-Comment Preview -->
+          <div class="auto-comment-preview fade-up" *ngIf="commentaireFinal">
+            <div class="preview-header">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>COMMENTAIRE AUTOMATIQUE</span>
+            </div>
+            <div class="preview-content">
+              {{ commentaireFinal }}
+            </div>
+            <p class="preview-hint">Ce texte sera transmis à l'exploitation avec votre commande.</p>
+          </div>
         </div>
+      </section>
 
-        <div class="card-body">
-          <div class="premium-input-item">
-            <ion-label position="stacked">TYPE DE CAMION</ion-label>
-            <ion-select [(ngModel)]="optionsCommentaire.typeCamion" name="typeCamion" (ionChange)="updateCommentaire()"
-              interface="popover" placeholder="Sélectionner...">
-              <ion-select-option value="Cargo">Cargo</ion-select-option>
-              <ion-select-option value="NPR">NPR</ion-select-option>
-              <ion-select-option value="DMAX">DMAX</ion-select-option>
-              <ion-select-option value="NKR">NKR</ion-select-option>
-              <ion-select-option value="Semi">Semi</ion-select-option>
-            </ion-select>
-          </div>
-
-          <div class="premium-input-item mt-3" *ngIf="optionsCommentaire.typeCamion === 'Semi'">
-            <ion-label position="stacked">TYPE DE SEMI</ion-label>
-            <ion-segment [(ngModel)]="optionsCommentaire.typeSemi" name="typeSemi" (ionChange)="updateCommentaire()">
-              <ion-segment-button value="Plateau"><ion-label>Plateau</ion-label></ion-segment-button>
-              <ion-segment-button value="Frigo"><ion-label>Frigo</ion-label></ion-segment-button>
-              <ion-segment-button value="Bache"><ion-label>Bâche</ion-label></ion-segment-button>
-            </ion-segment>
-          </div>
-
-          <div class="premium-input-item mt-3">
-            <ion-label position="stacked">COMMENTAIRE LIBRE</ion-label>
-            <ion-textarea [(ngModel)]="optionsCommentaire.commentaireLibre" name="commentaireLibre"
-              (ionInput)="updateCommentaire()" rows="2" placeholder="Note additionnelle..."></ion-textarea>
-          </div>
-
-          <div class="comment-preview mt-3" *ngIf="commentaireFinal">
-            <div class="preview-header">Aperçu du commentaire</div>
-            <div class="preview-text">{{ commentaireFinal }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-actions mt-5">
-        <ion-button expand="block" type="submit" class="premium-button shadow-primary" [disabled]="!ordre.client">
-          <ion-icon name="send-outline" slot="start"></ion-icon>
-          Créer l'ordre
+      <div class="footer-actions">
+        <ion-button expand="block" type="submit" class="lum-submit-btn" [disabled]="!ordre.client">
+          VALIDER LA COMMANDE
         </ion-button>
-        <ion-button expand="block" fill="clear" (click)="cancel()" class="cancel-link mt-2">
-          Annuler
-        </ion-button>
       </div>
-
-      <div class="spacer"></div>
     </form>
   </div>
 
-  <!-- Client Picker Modal -->
-  <ion-modal [isOpen]="isClientPickerOpen" (didDismiss)="isClientPickerOpen = false">
+  <!-- Pickers (Modals) -->
+
+  <!-- Client Picker -->
+  <ion-modal [isOpen]="isClientPickerOpen" (didDismiss)="isClientPickerOpen = false" [initialBreakpoint]="0.7"
+    [breakpoints]="[0, 0.7, 0.9]">
     <ng-template>
-      <ion-header>
-        <ion-toolbar class="modal-toolbar">
-          <ion-title>{{ pickerTarget === 'livraison' ? 'Destinataire' : 'Chargement' }}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="isClientPickerOpen = false">Fermer</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-        <ion-toolbar class="modal-search">
-          <ion-searchbar (ionInput)="filterClients($event)" placeholder="Rechercher..."></ion-searchbar>
-        </ion-toolbar>
+      <div class="modal-handle"></div>
+      <ion-header class="ion-no-border">
+        <div class="lum-sub-bar" style="background: transparent">
+          <h1 class="lum-page-title">{{ pickerTarget === 'livraison' ? 'Point de livraison' : 'Point de chargement' }}
+          </h1>
+          <button class="lum-icon-btn" (click)="isClientPickerOpen = false">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div style="padding: 0 16px 16px">
+          <div class="unified-search-container">
+            <ion-icon name="search-outline"></ion-icon>
+            <ion-searchbar (ionInput)="filterClients($event)" placeholder="Rechercher..."></ion-searchbar>
+          </div>
+        </div>
       </ion-header>
-      <ion-content class="modal-content">
-        <ion-list lines="none" class="modal-list">
-          <ion-item *ngFor="let c of filteredClients" button (click)="selectClient(c)">
-            <ion-label>
-              <h2>{{ c.nom }}</h2>
-              <p>{{ c.ville }}</p>
-            </ion-label>
-            <ion-note slot="end">{{ c.codeclient }}</ion-note>
-          </ion-item>
-        </ion-list>
+      <ion-content>
+        <div style="padding: 0 16px">
+          <div class="client-card" style="margin-bottom: 12px" *ngFor="let c of filteredClients"
+            (click)="selectClient(c)">
+            <div class="client-avatar">{{ c.nom?.charAt(0) || '?' }}</div>
+            <div class="client-info">
+              <h2 class="client-name">{{ c.nom }}</h2>
+              <div class="info-row">
+                <span class="client-code">{{ c.codeclient }}</span>
+                <div class="client-city"><ion-icon name="location-outline"></ion-icon>{{ c.ville }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>
 
-  <!-- Article Picker Modal -->
-  <ion-modal [isOpen]="isArticlePickerOpen" (didDismiss)="isArticlePickerOpen = false">
+  <!-- Article Picker -->
+  <ion-modal [isOpen]="isArticlePickerOpen" (didDismiss)="isArticlePickerOpen = false" [initialBreakpoint]="0.7"
+    [breakpoints]="[0, 0.7, 0.9]">
     <ng-template>
-      <ion-header>
-        <ion-toolbar class="modal-toolbar">
-          <ion-title>Sélectionner Article</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="isArticlePickerOpen = false">Fermer</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-        <ion-toolbar class="modal-search">
-          <ion-searchbar (ionInput)="filterArticles($event)" placeholder="Rechercher..."></ion-searchbar>
-        </ion-toolbar>
+      <div class="modal-handle"></div>
+      <ion-header class="ion-no-border">
+        <div class="lum-sub-bar" style="background: transparent">
+          <h1 class="lum-page-title">Articles</h1>
+          <button class="lum-icon-btn" (click)="isArticlePickerOpen = false">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div style="padding: 0 16px 16px">
+          <div class="unified-search-container">
+            <ion-icon name="search-outline"></ion-icon>
+            <ion-searchbar (ionInput)="filterArticles($event)" placeholder="Rechercher un article..."></ion-searchbar>
+          </div>
+        </div>
       </ion-header>
-      <ion-content class="modal-content">
-        <ion-list lines="none" class="modal-list">
-          <ion-item *ngFor="let a of filteredArticles" button (click)="selectArticle(a)">
-            <ion-label>
-              <h2>{{ a.label }}</h2>
-              <p>Code: {{ a.codeArticle }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
+      <ion-content>
+        <div style="padding: 0 16px">
+          <div class="client-card article-card" *ngFor="let a of filteredArticles" (click)="selectArticle(a)">
+            <div class="client-avatar article">
+              <ion-icon name="cube-outline"></ion-icon>
+            </div>
+            <div class="client-info">
+              <h2 class="client-name">{{ a.label }}</h2>
+              <div class="info-row">
+                <span class="client-code">{{ a.codeArticle }}</span>
+                <div class="client-city" *ngIf="a.unite">
+                  <ion-icon name="layers-outline"></ion-icon>
+                  {{ a.unite }}
+                </div>
+              </div>
+            </div>
+            <div class="article-tag" *ngIf="a.typeDeRemorque">
+              {{ a.typeDeRemorque }}
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Site Picker -->
+  <ion-modal [isOpen]="isSitePickerOpen" (didDismiss)="isSitePickerOpen = false" [initialBreakpoint]="0.5"
+    [breakpoints]="[0, 0.5]">
+    <ng-template>
+      <div class="modal-handle"></div>
+      <ion-header class="ion-no-border">
+        <div class="lum-sub-bar" style="background: transparent">
+          <h1 class="lum-page-title">Sites de distribution</h1>
+          <button class="lum-icon-btn" (click)="isSitePickerOpen = false">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+      </ion-header>
+      <ion-content>
+        <div class="sites-grid">
+          <div class="site-chip" *ngFor="let site of siteOptions" [class.active]="ordre.siteclient === site"
+            (click)="selectSite(site)">
+            <ion-icon name="business-outline"></ion-icon>
+            <span>{{ site }}</span>
+          </div>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>

@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonContent, IonHeader, IonToolbar, IonButtons, IonIcon, IonList, IonItem, IonLabel, IonBadge, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, warningOutline, alertCircleOutline, informationOutline, chatbubbleEllipsesOutline, closeOutline, arrowBackOutline, refreshOutline, informationCircleOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, warningOutline, alertCircleOutline, informationOutline, chatbubbleEllipsesOutline, closeOutline, arrowBackOutline, refreshOutline, informationCircleOutline, notificationsOffOutline, logOutOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.page.html',
   styleUrls: ['./notifications.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonContent, IonHeader, IonToolbar, IonIcon]
 })
 export class NotificationsPage implements OnInit {
 
@@ -34,18 +35,11 @@ export class NotificationsPage implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {
-    addIcons({
-      checkmarkCircleOutline,
-      warningOutline,
-      alertCircleOutline,
-      informationOutline,
-      chatbubbleEllipsesOutline,
-      closeOutline,
-      arrowBackOutline,
-      refreshOutline,
-      informationCircleOutline
-    });
+  constructor(
+    private router: Router,
+    public navCtrl: NavController
+  ) {
+    addIcons({ arrowBackOutline, closeOutline, notificationsOffOutline, checkmarkCircleOutline, warningOutline, alertCircleOutline, informationOutline, chatbubbleEllipsesOutline, refreshOutline, informationCircleOutline, logOutOutline });
   }
 
   ngOnInit() {
@@ -88,6 +82,10 @@ export class NotificationsPage implements OnInit {
 
   navigateTo(path: string) {
     this.router.navigate([path]);
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login');
   }
 }
 

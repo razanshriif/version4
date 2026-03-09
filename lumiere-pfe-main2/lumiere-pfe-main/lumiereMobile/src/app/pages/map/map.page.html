@@ -1,13 +1,18 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>map</ion-title>
+<ion-header class="ion-no-border inner-page-header">
+  <ion-toolbar class="premium-toolbar">
+    <div class="header-wrapper-global">
+      <div class="header-left-group">
+        <button type="button" class="header-round-btn" (click)="navCtrl.back()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <span class="header-page-title">Localisation</span>
+      </div>
+      <div class="header-right-group">
+        <img src="assets/lum.png" class="global-logo" alt="Lumière Logo" />
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">map</ion-title>
-    </ion-toolbar>
-  </ion-header>
 </ion-content>

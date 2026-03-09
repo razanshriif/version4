@@ -42,7 +42,7 @@ export class ToastService {
             color: color,
             icon: icon,
             position: 'top',
-            cssClass: 'custom-toast',
+            cssClass: `custom-toast toast-${type}`,
             buttons: [
                 {
                     icon: 'close',

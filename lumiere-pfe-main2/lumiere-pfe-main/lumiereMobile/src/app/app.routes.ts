@@ -8,6 +8,12 @@ export const routes: Routes = [
   { path: 'register', loadComponent: () => import('./pages/auth/register/register.page').then(m => m.RegisterPage) },
   { path: 'pending', loadComponent: () => import('./pages/auth/pending/pending.page').then(m => m.PendingPage) },
   { path: 'orders/non-planned', redirectTo: '/demandes/create', pathMatch: 'full' },
+  // Aliases to avoid NG04002 (unknown URL segments)
+  { path: 'nouvelle-demande', redirectTo: '/demandes/create', pathMatch: 'full' },
+  { path: 'mes-commandes', redirectTo: '/demandes/list', pathMatch: 'full' },
+  { path: 'suivi', redirectTo: '/livraisons/tracking', pathMatch: 'full' },
+  { path: 'profil', redirectTo: '/profile', pathMatch: 'full' },
+  { path: 'tabs/clients', redirectTo: '/clients', pathMatch: 'full' },
 
   {
     path: 'home',

@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
-  IonContent, IonBackButton, IonLabel, IonInput, IonTextarea,
-  IonSelect, IonSelectOption, IonCheckbox, ToastController, NavController
+  IonHeader, IonToolbar, IonButton, IonIcon,
+  IonContent, IonLabel, IonInput, IonTextarea,
+  IonSelect, IonSelectOption, IonCheckbox, ToastController
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../../services/client.service';
 import { Client } from '../../../models/client.model';
@@ -20,8 +21,8 @@ import { saveOutline, arrowBackOutline } from 'ionicons/icons';
   imports: [
     CommonModule,
     FormsModule,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
-    IonContent, IonBackButton, IonLabel, IonInput, IonTextarea,
+    IonHeader, IonToolbar, IonButton, IonIcon,
+    IonContent, IonLabel, IonInput, IonTextarea,
     IonSelect, IonSelectOption, IonCheckbox
   ]
 })
@@ -53,7 +54,7 @@ export class ClientForm implements OnInit {
   constructor(
     private clientService: ClientService,
     private route: ActivatedRoute,
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     private toastController: ToastController
   ) {
     addIcons({ saveOutline, arrowBackOutline });

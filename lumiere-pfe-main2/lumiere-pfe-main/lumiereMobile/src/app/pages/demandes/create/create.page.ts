@@ -5,16 +5,20 @@ import { Router } from '@angular/router';
 import {
   ToastController,
   LoadingController,
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
-  IonContent, IonItem, IonLabel, IonInput, IonDatetime,
-  IonDatetimeButton, IonModal, IonSegment, IonSegmentButton, IonSelect,
-  IonSelectOption, IonList, IonSearchbar, IonNote, IonTextarea
+  IonHeader, IonButton, IonIcon,
+  IonContent, IonInput, IonDatetime,
+  IonDatetimeButton, IonModal,
+  IonRadioGroup, IonRadio,
+  IonSearchbar, IonTextarea
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   businessOutline, locationOutline, cubeOutline, calendarOutline,
   carOutline, searchOutline, sendOutline, arrowUpCircleOutline, chatbubbleOutline,
-  arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline, personOutline } from 'ionicons/icons';
+  arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline, personOutline,
+  busOutline, snowOutline, layersOutline, waterOutline,
+  notificationsOutline, logOutOutline
+} from 'ionicons/icons';
 import { DemandeService } from '../../../services/demande.service';
 import { ClientService } from '../../../services/client.service';
 import { ArticleService } from '../../../services/article.service';
@@ -29,10 +33,11 @@ import { Ordre } from '../../../models/ordre.model';
   styleUrls: ['./create.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent,
-    IonButtons, IonButton, IonIcon, IonItem, IonLabel,
-    IonInput, IonDatetime, IonDatetimeButton, IonModal, IonSegment,
-    IonSegmentButton, IonSelect, IonSelectOption, IonList, IonSearchbar, IonNote, IonTextarea
+    CommonModule, FormsModule, IonHeader, IonContent,
+    IonButton, IonIcon,
+    IonInput, IonDatetime, IonDatetimeButton, IonModal,
+    IonRadioGroup, IonRadio,
+    IonSearchbar, IonTextarea
   ]
 })
 export class CreatePage implements OnInit {
@@ -40,6 +45,7 @@ export class CreatePage implements OnInit {
     client: '',
     nomclient: '',
     siteclient: 'SAL',
+    idedi: 'LUMIERE',
     codeclientcharg: '',
     chargementNom: '',
     chargementAdr1: '',
@@ -50,16 +56,16 @@ export class CreatePage implements OnInit {
     livraisonAdr1: '',
     livraisonVille: '',
     codepostalliv: '',
-    chargementDate: '',
-    livraisonDate: '',
+    chargementDate: new Date().toISOString(),
+    livraisonDate: new Date().toISOString(),
     codeArticle: '',
     designation: '',
     nombreColis: 0,
     nombrePalettes: 0,
-    commentaires: [],
     volume: 0,
     poids: 0,
-    statut: "NON_CONFIRME"
+    longueur: 0,
+    commentaires: []
   };
 
   siteOptions = ['BAR', 'SAL', 'BKS', 'SFX', 'TUN', 'GAB', 'GAS', 'BSL', 'JER', 'BIZ', 'NAS'];
@@ -72,6 +78,8 @@ export class CreatePage implements OnInit {
   allArticles: Article[] = [];
   filteredArticles: Article[] = [];
   isArticlePickerOpen = false;
+  isSitePickerOpen = false;
+  filteredSites: string[] = [];
 
   optionsCommentaire = {
     typeVoyage: '',
@@ -92,12 +100,13 @@ export class CreatePage implements OnInit {
     private toastController: ToastController,
     private loadingController: LoadingController
   ) {
-    addIcons({arrowBackOutline,personOutline,cloudUploadOutline,searchOutline,locationOutline,cubeOutline,carOutline,sendOutline,businessOutline,calendarOutline,arrowUpCircleOutline,chatbubbleOutline,personAddOutline,closeOutline});
+    addIcons({ notificationsOutline, logOutOutline, arrowBackOutline, personOutline, cloudUploadOutline, searchOutline, locationOutline, cubeOutline, carOutline, sendOutline, businessOutline, calendarOutline, arrowUpCircleOutline, chatbubbleOutline, personAddOutline, closeOutline, busOutline, snowOutline, layersOutline, waterOutline });
   }
 
   async ngOnInit() {
     this.initDates();
     await this.loadInitialData();
+    this.updateCommentaire();
   }
 
   initDates() {
@@ -189,7 +198,41 @@ export class CreatePage implements OnInit {
   selectArticle(a: Article) {
     this.ordre.codeArticle = a.codeArticle || '';
     this.ordre.designation = a.label || '';
+
+    // Auto-fill logic based on new Article model fields
+    if (a.typeDeRemorque) {
+      if (['Standard', 'Bache'].includes(a.typeDeRemorque)) {
+        this.optionsCommentaire.typeCamion = 'Semi';
+        this.optionsCommentaire.typeSemi = 'Bache';
+      } else if (a.typeDeRemorque === 'Frigo') {
+        this.optionsCommentaire.typeCamion = 'Semi';
+        this.optionsCommentaire.typeSemi = 'Frigo';
+      } else if (a.typeDeRemorque === 'Plateau') {
+        this.optionsCommentaire.typeCamion = 'Semi';
+        this.optionsCommentaire.typeSemi = 'Plateau';
+      }
+      this.updateCommentaire();
+    }
+
     this.isArticlePickerOpen = false;
+  }
+
+  onArticleCodeChange(event: any) {
+    const val = event.target.value?.toUpperCase().trim();
+    if (!val) {
+      this.ordre.designation = '';
+      return;
+    }
+
+    const match = this.allArticles.find(a =>
+      a.codeArticle?.toUpperCase() === val
+    );
+
+    if (match) {
+      this.ordre.designation = match.label;
+    } else {
+      this.ordre.designation = '';
+    }
   }
 
   updateCommentaire() {
@@ -199,7 +242,7 @@ export class CreatePage implements OnInit {
     }
     if (this.optionsCommentaire.typeCamion) {
       parts.push(this.optionsCommentaire.typeCamion);
-      if (this.optionsCommentaire.typeCamion === 'Semi' && this.optionsCommentaire.typeSemi) {
+      if ((this.optionsCommentaire.typeCamion === 'Semi' || this.optionsCommentaire.typeCamion === 'Cargo') && this.optionsCommentaire.typeSemi) {
         parts.push(`(${this.optionsCommentaire.typeSemi})`);
       }
     }
@@ -224,8 +267,22 @@ export class CreatePage implements OnInit {
         this.ordre.commentaires = [this.commentaireFinal];
       }
 
-      const payload = { ...this.ordre };
-      await this.demandeService.createDemande(payload as any).toPromise();
+      // Clean payload for backend (remove auto-generated/conflict fields)
+      const { id, orderNumber, dateSaisie, statut, ...cleanPayload } = this.ordre as any;
+
+      // Ensure numeric fields are definitely numbers
+      const finalPayload = {
+        ...cleanPayload,
+        poids: Number(cleanPayload.poids || 0),
+        volume: Number(cleanPayload.volume || 0),
+        longueur: Number(cleanPayload.longueur || 0),
+        nombreColis: Number(cleanPayload.nombreColis || 0),
+        nombrePalettes: Number(cleanPayload.nombrePalettes || 0),
+        commentaires: this.ordre.commentaires && this.ordre.commentaires.length > 0
+          ? Array.from(new Set(this.ordre.commentaires)) : null
+      };
+
+      await this.demandeService.createDemande(finalPayload as any).toPromise();
       await loading.dismiss();
       await this.showToast('Ordre créé avec succès!', 'success');
       this.router.navigate(['/demandes/list']);
@@ -236,12 +293,37 @@ export class CreatePage implements OnInit {
     }
   }
 
+  // Site Picker
+  openSitePicker() {
+    this.filteredSites = [...this.siteOptions];
+    this.isSitePickerOpen = true;
+  }
+
+  filterSites(event: any) {
+    const val = event.target.value?.toLowerCase() || '';
+    this.filteredSites = this.siteOptions.filter(s => s.toLowerCase().includes(val));
+  }
+
+  selectSite(site: string) {
+    this.ordre.siteclient = site;
+    this.isSitePickerOpen = false;
+  }
+
   cancel() {
     this.router.navigate(['/demandes/list']);
   }
 
   goToCreateClient() {
     this.router.navigate(['/clients/create']);
+  }
+
+  goToNotifications() {
+    this.router.navigate(['/notifications']);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   private async showToast(message: string, color: string) {

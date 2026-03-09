@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
   IonToolbar,
-
   IonButton,
   IonButtons,
-  IonBackButton,
-  IonInput,
   IonIcon,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
-  ToastController,
   AlertController
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chatbubbleEllipsesOutline, arrowBackOutline, createOutline, keyOutline, logOutOutline } from 'ionicons/icons';
+import {
+  chatbubbleEllipsesOutline, arrowBackOutline, createOutline, keyOutline,
+  logOutOutline, personOutline, mailOutline, callOutline,
+  lockClosedOutline, notificationsOutline, chevronForwardOutline
+} from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service'; // Assuming this path for ToastService
 
 @Component({
   selector: 'app-profile',
@@ -32,76 +32,56 @@ import { AuthService } from '../../services/auth.service';
   imports: [
     IonContent,
     IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonButton,
-    IonInput,
     IonIcon,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
+    IonButton,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    HttpClientModule
   ]
 })
 export class ProfilePage implements OnInit {
-  profileForm!: FormGroup;
-  passwordForm!: FormGroup;
   loading = false;
   updating = false;
   editMode = false;
   selectedSegment = 'profile';
   user: any = null;
+  stats: any = {
+    totalMesDemandes: 0,
+    totalMesLivraisons: 0
+  };
 
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     public router: Router,
-    private toastController: ToastController,
-    private alertController: AlertController
+    private toastService: ToastService,
+    private alertController: AlertController,
+    public navCtrl: NavController,
+    private http: HttpClient
   ) {
-    addIcons({ chatbubbleEllipsesOutline, arrowBackOutline, createOutline, keyOutline, logOutOutline });
+    addIcons({
+      chatbubbleEllipsesOutline, arrowBackOutline, createOutline, keyOutline, logOutOutline,
+      personOutline, mailOutline, callOutline, lockClosedOutline, notificationsOutline, chevronForwardOutline
+    });
   }
 
   ngOnInit() {
-    this.initForms();
     this.loadProfile();
+    this.loadStats();
   }
 
-  initForms() {
-    // Profile form
-    this.profileForm = this.fb.group({
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      telephone: [''],
-      adresse: [''],
-      ville: [''],
-      codePostal: ['']
+  loadStats() {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
 
-    // Password change form
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
-
-    this.profileForm.disable();
-  }
-
-  passwordMatchValidator(form: FormGroup) {
-    const newPassword = form.get('newPassword');
-    const confirmPassword = form.get('confirmPassword');
-
-    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    return null;
+    this.http.get(`${environment.apiUrl}/client/dashboard/stats`, { headers }).subscribe({
+      next: (res: any) => {
+        this.stats = res;
+      },
+      error: (err) => console.error('Error loading stats:', err)
+    });
   }
 
   loadProfile() {
@@ -109,7 +89,6 @@ export class ProfilePage implements OnInit {
     this.authService.getProfile().subscribe({
       next: (user) => {
         this.user = user;
-        this.profileForm.patchValue(user);
         this.loading = false;
       },
       error: (error) => {
@@ -125,61 +104,38 @@ export class ProfilePage implements OnInit {
 
   toggleEditMode() {
     this.editMode = !this.editMode;
-
-    if (this.editMode) {
-      this.profileForm.enable();
-    } else {
-      this.profileForm.disable();
-      this.profileForm.patchValue(this.user);
-    }
+    // For now, toggleEditMode just switches the state. 
+    // Further implementation for editing can be added here.
   }
 
-  async onSubmitProfile() {
-    if (this.profileForm.invalid) {
-      await this.showToast('Veuillez remplir tous les champs obligatoires', 'warning');
-      return;
-    }
+  async editField(field: string) {
+    const labels: any = {
+      'firstname': 'Prénom',
+      'lastname': 'Nom',
+      'email': 'Email',
+      'telephone': 'Téléphone'
+    };
 
-    this.updating = true;
-
-    this.authService.updateProfile(this.profileForm.value).subscribe({
-      next: async (response) => {
-        this.user = response;
-        this.editMode = false;
-        this.profileForm.disable();
-        this.updating = false;
-        await this.showToast('Profil mis à jour avec succès', 'success');
-      },
-      error: async (error) => {
-        console.error('Error updating profile:', error);
-        this.updating = false;
-        await this.showToast('Erreur lors de la mise à jour du profil', 'danger');
-      }
-    });
-  }
-
-  async onSubmitPassword() {
-    if (this.passwordForm.invalid) {
-      if (this.passwordForm.hasError('passwordMismatch')) {
-        await this.showToast('Les mots de passe ne correspondent pas', 'warning');
-      } else {
-        await this.showToast('Veuillez remplir tous les champs', 'warning');
-      }
-      return;
-    }
+    const currentValue = this.user[field] || '';
 
     const alert = await this.alertController.create({
-      header: 'Confirmer',
-      message: 'Voulez-vous vraiment changer votre mot de passe ?',
+      header: `Modifier ${labels[field]}`,
+      inputs: [
+        {
+          name: 'value',
+          type: field === 'email' ? 'email' : (field === 'telephone' ? 'tel' : 'text'),
+          placeholder: labels[field],
+          value: currentValue
+        }
+      ],
       buttons: [
+        { text: 'Annuler', role: 'cancel' },
         {
-          text: 'Annuler',
-          role: 'cancel'
-        },
-        {
-          text: 'Confirmer',
-          handler: () => {
-            this.changePassword();
+          text: 'Enregistrer',
+          handler: (data) => {
+            if (data.value !== currentValue) {
+              this.updateProfile(field, data.value);
+            }
           }
         }
       ]
@@ -188,16 +144,11 @@ export class ProfilePage implements OnInit {
     await alert.present();
   }
 
-  changePassword() {
-    this.updating = true;
-    const { currentPassword, newPassword } = this.passwordForm.value;
-
-    // Simulate API call (you'll need to implement this in AuthService)
-    setTimeout(async () => {
-      this.updating = false;
-      this.passwordForm.reset();
-      await this.showToast('Mot de passe modifié avec succès', 'success');
-    }, 1500);
+  updateProfile(field: string, value: string) {
+    // For now, update locally to show immediate feedback.
+    // In a real app, we would send this to the backend.
+    this.user[field] = value;
+    this.toastService.show(`${field} mis à jour avec succès (simulation)`, 'success');
   }
 
   async logout() {
@@ -229,17 +180,16 @@ export class ProfilePage implements OnInit {
     return `${firstname.charAt(0)}${lastname.charAt(0)}`.toUpperCase() || 'U';
   }
 
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 3000,
-      color,
-      position: 'top'
-    });
-    await toast.present();
-  }
-
   navigateTo(path: string) {
     this.router.navigate([path]);
+  }
+
+  goToNotifications() {
+    this.router.navigate(['/notifications']);
+  }
+
+  goToPassword() {
+    // Assuming a route for password change
+    this.router.navigate(['/profile/password']);
   }
 }

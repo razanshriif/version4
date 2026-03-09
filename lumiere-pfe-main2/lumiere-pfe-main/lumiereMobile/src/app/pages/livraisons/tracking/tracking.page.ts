@@ -5,18 +5,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
   IonToolbar,
-  IonButtons,
-  IonBackButton,
   IonIcon,
   IonSpinner,
   IonRefresher,
   IonRefresherContent,
   IonButton
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline } from 'ionicons/icons';
+import { chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline } from 'ionicons/icons';
 import { LivraisonService, LivraisonSimple } from '../../../services/livraison.service';
 import { Subscription } from 'rxjs';
 
@@ -28,10 +26,7 @@ import { Subscription } from 'rxjs';
   imports: [
     IonContent,
     IonHeader,
-    IonTitle,
     IonToolbar,
-    IonButtons,
-    IonBackButton,
     IonIcon,
     IonSpinner,
     IonRefresher,
@@ -50,9 +45,10 @@ export class TrackingPage implements OnInit, OnDestroy {
   constructor(
     private livraisonService: LivraisonService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public navCtrl: NavController
   ) {
-    addIcons({ chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline });
+    addIcons({ chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline });
   }
 
   ngOnInit() {
@@ -140,6 +136,21 @@ export class TrackingPage implements OnInit, OnDestroy {
     return classes[statut] || 'status-pending';
   }
 
+  getStatusKey(statut: string): string {
+    const map: Record<string, string> = {
+      NON_CONFIRME: 'pending',
+      EN_ATTENTE: 'pending',
+      PLANIFIE: 'ready',
+      CHARGE: 'ready',
+      EN_COURS_DE_LIVRAISON: 'transit',
+      EN_LIVRAISON: 'delivery',
+      LIVRE: 'done',
+      FIN: 'done',
+      NON_LIVRE: 'failed'
+    };
+    return map[statut] || 'pending';
+  }
+
   getStatusLabel(statut: string): string {
     const labels: any = {
       'NON_CONFIRME': 'Brouillon',
@@ -174,7 +185,24 @@ export class TrackingPage implements OnInit, OnDestroy {
     }
   }
 
+  viewHistory() {
+    if (this.selectedLivraison) {
+      // Pour l'instant, on redirige vers la même carte avec un paramètre historique ou on affiche un toast/modal
+      // En attendant l'implémentation réelle du tracé historique sur la carte
+      this.router.navigate(['/map'], {
+        queryParams: {
+          livraisonId: this.selectedLivraison.id,
+          view: 'history'
+        }
+      });
+    }
+  }
+
   navigateTo(path: string) {
     this.router.navigate([path]);
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login');
   }
 }

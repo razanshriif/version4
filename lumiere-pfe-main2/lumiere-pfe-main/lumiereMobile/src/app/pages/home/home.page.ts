@@ -5,7 +5,6 @@ import {
   IonHeader, IonToolbar, IonIcon, IonContent, IonRefresher, IonRefresherContent,
   IonFab, IonFabButton, NavController, IonLabel, IonFabList
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
 import {
   cubeOutline,
   peopleOutline,
@@ -41,12 +40,14 @@ import {
   refreshOutline,
   alarmOutline,
   chatbubbleOutline,
-  personAddOutline
+  personAddOutline, timeOutline
 } from 'ionicons/icons';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { ToastService } from '../../services/toast.service';
+import { ClientService } from '../../services/client.service';
+import { addIcons } from 'ionicons';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -58,15 +59,10 @@ import { Observable } from 'rxjs';
   imports: [
     CommonModule,
     IonHeader,
-    IonToolbar,
     IonIcon,
     IonContent,
     IonRefresher,
-    IonRefresherContent,
-    IonFab,
-    IonFabButton,
-    IonLabel,
-    IonFabList
+    IonRefresherContent
   ]
 })
 export class HomePage implements OnInit {
@@ -95,6 +91,7 @@ export class HomePage implements OnInit {
   isLoading = true;
   darkMode$: Observable<boolean>;
   pendingRappelsCount = 0;
+  clientCount = 0;
 
   // Dashboard sections
   mainSections = [
@@ -142,45 +139,48 @@ export class HomePage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private themeService: ThemeService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private clientService: ClientService
   ) {
     this.darkMode$ = this.themeService.darkMode$;
-    addIcons({
-      cubeOutline,
-      peopleOutline,
-      navigateOutline,
-      documentText,
-      documentTextOutline,
-      pencilOutline,
-      chevronForward,
-      chevronForwardOutline,
-      swapHorizontalOutline,
-      sunny,
-      sunnyOutline,
-      moon,
-      moonOutline,
-      personOutline,
-      logOutOutline,
-      chatbubbleEllipses,
-      chatbubbleEllipsesOutline,
-      arrowForwardOutline,
-      chevronDownOutline,
-      addCircleOutline,
-      addOutline,
-      notificationsOutline,
-      barcodeOutline,
-      locationOutline,
-      calendarOutline,
-      carOutline,
-      barChartOutline,
-      informationCircleOutline,
-      sparkles,
-      sparklesOutline,
-      refresh,
-      refreshOutline,
-      alarmOutline,
-      chatbubbleOutline,
-      personAddOutline
+    addIcons({ 
+      'arrow-forward': arrowForwardOutline,
+      notificationsOutline, 
+      logOutOutline, 
+      timeOutline, 
+      cubeOutline, 
+      arrowForwardOutline, 
+      peopleOutline, 
+      navigateOutline, 
+      addCircleOutline, 
+      documentTextOutline, 
+      addOutline, 
+      personAddOutline, 
+      documentText, 
+      pencilOutline, 
+      chevronForward, 
+      chevronForwardOutline, 
+      swapHorizontalOutline, 
+      sunny, 
+      sunnyOutline, 
+      moon, 
+      moonOutline, 
+      personOutline, 
+      chatbubbleEllipses, 
+      chatbubbleEllipsesOutline, 
+      chevronDownOutline, 
+      barcodeOutline, 
+      locationOutline, 
+      calendarOutline, 
+      carOutline, 
+      barChartOutline, 
+      informationCircleOutline, 
+      sparkles, 
+      sparklesOutline, 
+      refresh, 
+      refreshOutline, 
+      alarmOutline, 
+      chatbubbleOutline 
     });
   }
 
@@ -231,6 +231,7 @@ export class HomePage implements OnInit {
       this.loadMesDemandesRecentes();
       this.loadMesDrafts();
       this.loadMesLivraisonsActives();
+      this.loadClientCount();
     }, 100);
 
     // 🛡️ Safety fallback: Force isLoading to false after 10s if API hangs
@@ -319,6 +320,17 @@ export class HomePage implements OnInit {
     });
   }
 
+  loadClientCount() {
+    this.clientService.getAll().subscribe({
+      next: (res: any) => {
+        this.clientCount = res.length;
+        const clientSection = this.mainSections.find(s => s.id === 'clients');
+        if (clientSection) clientSection.count = this.clientCount;
+      },
+      error: (err) => console.error('❌ Error loading client count:', err)
+    });
+  }
+
   refreshData(event: any) {
     this.loadUserProfile();
     this.loadMyStats();
@@ -356,6 +368,10 @@ export class HomePage implements OnInit {
 
   goToProfile() {
     this.navCtrl.navigateForward(['/profile']);
+  }
+
+  goToRappels() {
+    this.navCtrl.navigateForward('/rappel');
   }
 
   createNewDemande() {

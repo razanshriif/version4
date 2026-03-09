@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
+  IonHeader, IonIcon,
   IonContent, IonRefresher, IonRefresherContent,
   IonInfiniteScroll, IonInfiniteScrollContent,
-  IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton, IonInput
+  IonInput, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption
 } from '@ionic/angular/standalone';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { DemandeService, DemandeFilter } from '../../../services/demande.service';
 import { Demande } from '../../../models/demande.model';
 import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
+  notificationsOutline,
+  logOutOutline,
   checkmarkCircleOutline,
   trashOutline,
   copyOutline,
@@ -35,8 +37,13 @@ import {
   chatbubbleEllipsesOutline,
   pinOutline,
   navigateCircleOutline,
+  navigateOutline,
   chevronForward,
-  timeOutline
+  timeOutline,
+  chevronBackOutline,
+  locationOutline,
+  archiveOutline,
+  funnelOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -47,20 +54,26 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    NgFor,
-    NgIf,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
+    IonHeader, IonIcon,
     IonContent, IonRefresher, IonRefresherContent,
     IonInfiniteScroll, IonInfiniteScrollContent,
-    IonBackButton, IonSelect, IonSelectOption, IonSegment, IonSegmentButton, IonInput
+    IonInput, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption
   ]
 })
 export class ListPage implements OnInit {
   demandes: Demande[] = [];
+  draftDemandes: Demande[] = [];
+  confirmedDemandes: Demande[] = [];
   loading = false;
   searchTerm = '';
   selectedStatut = '';
-  listMode: 'confirmed' | 'draft' = 'confirmed';
+  listMode: 'confirmed' | 'draft' = 'draft';
+  draftCount = 0;
+  confirmedCount = 0;
+  stats = { notifications: 0 };
+
+  @ViewChild('swipeContainer', { static: false }) swipeContainer!: ElementRef;
+  private isScrolling = false;
 
   // Pagination
   currentPage = 0;
@@ -74,7 +87,6 @@ export class ListPage implements OnInit {
   statutOptions = [
     { value: '', label: 'Tous les statuts' },
     { value: 'EN_ATTENTE', label: 'En attente' },
-    { value: 'PLANIFIE', label: 'Validé' },
     { value: 'EN_COURS_DE_LIVRAISON', label: 'En cours' },
     { value: 'LIVRE', label: 'Livré' },
     { value: 'NON_LIVRE', label: 'Non livré' }
@@ -85,8 +97,11 @@ export class ListPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private toastController: ToastController,
+    public navCtrl: NavController
   ) {
     addIcons({
+      notificationsOutline,
+      logOutOutline,
       checkmarkCircleOutline,
       trashOutline,
       copyOutline,
@@ -106,8 +121,13 @@ export class ListPage implements OnInit {
       chatbubbleEllipsesOutline,
       pinOutline,
       navigateCircleOutline,
+      navigateOutline,
       chevronForward,
-      timeOutline
+      timeOutline,
+      chevronBackOutline,
+      locationOutline,
+      archiveOutline,
+      funnelOutline
     });
   }
 
@@ -122,12 +142,10 @@ export class ListPage implements OnInit {
       distinctUntilChanged()
     ).subscribe(term => {
       this.searchTerm = term;
-      this.currentPage = 0;
-      this.loadDemandes();
+      this.applyFilters();
     });
   }
 
-  // Toutes les demandes chargées depuis le backend
   private allDemandes: Demande[] = [];
 
   loadDemandes(event?: any) {
@@ -135,13 +153,10 @@ export class ListPage implements OnInit {
 
     this.demandeService.getDemandes().subscribe({
       next: (response: any) => {
-        // Le backend peut retourner une liste simple ou paginée ({content: [...]})
         this.allDemandes = response.content || response;
+        this.updateCounts();
         this.applyFilters();
-        this.totalElements = this.demandes.length;
-        this.totalPages = Math.ceil(this.totalElements / this.pageSize);
         this.loading = false;
-
         if (event) { event.target.complete(); }
       },
       error: (error: any) => {
@@ -153,31 +168,27 @@ export class ListPage implements OnInit {
   }
 
   private applyFilters() {
-    let filtered = [...this.allDemandes];
+    const term = this.searchTerm.toLowerCase();
 
-    // Filtre par mode (brouillon vs confirmé)
-    if (this.listMode === 'draft') {
-      filtered = filtered.filter(d => (d as any).statut === 'NON_CONFIRME');
-    } else {
-      filtered = filtered.filter(d => (d as any).statut !== 'NON_CONFIRME');
-    }
+    // Filter Drafts
+    this.draftDemandes = this.allDemandes.filter(d => {
+      const status = (d.statut || '').toString().trim().toUpperCase();
+      const isDraft = status === 'NON_CONFIRME' || status === 'BROUILLON';
+      return isDraft &&
+        (!term || (d as any).nomclient?.toLowerCase().includes(term) || (d as any).orderNumber?.toLowerCase().includes(term) || (d as any).client?.toLowerCase().includes(term));
+    });
 
-    // Filtre par statut
-    if (this.selectedStatut) {
-      filtered = filtered.filter(d => (d as any).statut === this.selectedStatut);
-    }
+    // Filter Confirmed
+    this.confirmedDemandes = this.allDemandes.filter(d => {
+      const status = (d.statut || '').toString().trim().toUpperCase();
+      const isDraft = status === 'NON_CONFIRME' || status === 'BROUILLON';
+      return !isDraft &&
+        (!this.selectedStatut || status === this.selectedStatut.toUpperCase()) &&
+        (!term || (d as any).nomclient?.toLowerCase().includes(term) || (d as any).orderNumber?.toLowerCase().includes(term) || (d as any).client?.toLowerCase().includes(term));
+    });
 
-    // Filtre par recherche
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(d =>
-        (d as any).nomclient?.toLowerCase().includes(term) ||
-        (d as any).orderNumber?.toLowerCase().includes(term) ||
-        (d as any).client?.toLowerCase().includes(term)
-      );
-    }
-
-    this.demandes = filtered;
+    // Keep 'demandes' for count total if needed
+    this.demandes = this.listMode === 'draft' ? this.draftDemandes : this.confirmedDemandes;
   }
 
   onSearch(event: any) {
@@ -186,28 +197,81 @@ export class ListPage implements OnInit {
 
   onStatutChange(event: any) {
     this.selectedStatut = event.target.value;
-    this.currentPage = 0;
-    this.loadDemandes();
+    this.applyFilters();
   }
 
   resetFilters() {
     this.searchTerm = '';
     this.selectedStatut = '';
-    this.currentPage = 0;
-    this.loadDemandes();
+    this.applyFilters();
+  }
+
+  private updateCounts() {
+    this.draftCount = this.allDemandes.filter(d => {
+      const status = (d.statut || '').toString().trim().toUpperCase();
+      return status === 'NON_CONFIRME' || status === 'BROUILLON';
+    }).length;
+    this.confirmedCount = this.allDemandes.filter(d => {
+      const status = (d.statut || '').toString().trim().toUpperCase();
+      return status !== 'NON_CONFIRME' && status !== 'BROUILLON';
+    }).length;
+  }
+
+  setListMode(mode: 'confirmed' | 'draft') {
+    if (this.listMode === mode) return;
+    this.listMode = mode;
+    this.isScrolling = true;
+
+    const container = this.swipeContainer.nativeElement;
+    const scrollAmount = mode === 'draft' ? 0 : container.offsetWidth;
+
+    container.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+
+    // Reset scrolling flag after animation
+    setTimeout(() => {
+      this.isScrolling = false;
+    }, 500);
+  }
+
+  onScroll(event: any) {
+    if (this.isScrolling) return;
+
+    const scrollLeft = event.target.scrollLeft;
+    const width = event.target.offsetWidth;
+    const threshold = width / 2;
+
+    const newMode = scrollLeft < threshold ? 'draft' : 'confirmed';
+
+    if (this.listMode !== newMode) {
+      this.listMode = newMode;
+    }
   }
 
   onModeChange() {
     this.currentPage = 0;
-    this.loadDemandes();
+    this.applyFilters(); // Filter locally for immediate feedback
   }
 
-  viewDetails(demande: Demande) {
+  getClientDisplay(d: Demande): string {
+    return (d as any).client || d.chargementNom || 'Client Privé';
+  }
+
+  viewDetails(demande: Demande, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.router.navigate(['/demandes/details'], { queryParams: { id: demande.id } });
   }
 
   createNewDemande() {
     this.router.navigate(['/demandes/create']);
+  }
+
+  goToCreate() {
+    this.createNewDemande();
   }
 
   refreshData(event: any) {
@@ -245,12 +309,26 @@ export class ListPage implements OnInit {
     return labels[statut] || statut;
   }
 
+  /**
+   * Returns true if the order is in a state where transport is active
+   * (i.e. the commercial has planned it). EN_ATTENTE = confirmed by user
+   * but not yet scheduled by the commercial → no tracking available.
+   */
+  isTrackable(statut: string): boolean {
+    const trackableStatuses = [
+      'PLANIFIE', 'CHARGE',
+      'EN_COURS_DE_LIVRAISON', 'EN_LIVRAISON',
+      'LIVRE', 'FIN', 'NON_LIVRE'
+    ];
+    return trackableStatuses.includes(statut);
+  }
+
   formatDate(date: string | Date): string {
     if (!date) return '';
     const d = new Date(date);
     return d.toLocaleDateString('fr-FR', {
       day: '2-digit',
-      month: 'short',
+      month: 'long',
       year: 'numeric'
     });
   }
@@ -328,10 +406,26 @@ export class ListPage implements OnInit {
     this.router.navigate([path]);
   }
 
+  goToNotifications() {
+    this.router.navigate(['/notifications']);
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login');
+  }
+
+  toggleFilter() {
+    // Placeholder: expand filter panel or show filter popover
+  }
+
   private async showToast(message: string, color: string) {
-    // Assuming ToastController is injected or using ToastService
-    // Since ToastController is not in constructor yet, I will add it
-    // For now, logging to console as placeholder
-    console.log(message, color);
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom',
+      cssClass: 'premium-toast'
+    });
+    await toast.present();
   }
 }

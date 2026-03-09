@@ -1,14 +1,19 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border inner-page-header">
   <ion-toolbar class="premium-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/demandes/list" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Détails de l'Ordre</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="generatePDF()" *ngIf="ordre">
-        <ion-icon slot="icon-only" name="share-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <div class="header-wrapper-global">
+      <div class="header-left-group">
+        <button type="button" class="header-round-btn" (click)="navCtrl.back()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <span class="header-page-title">Suivi Ordre</span>
+      </div>
+      <div class="header-right-group">
+        <button type="button" class="header-round-btn" (click)="generatePDF()" *ngIf="ordre" aria-label="Partager PDF">
+          <ion-icon name="share-outline"></ion-icon>
+        </button>
+        <!-- Logo removed -->
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 

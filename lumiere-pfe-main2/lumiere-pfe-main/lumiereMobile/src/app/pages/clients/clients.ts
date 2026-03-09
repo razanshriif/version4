@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ViewDidEnter, ToastController, AlertController } from '@ionic/angular';
+import { ViewDidEnter, ToastController, AlertController, NavController } from '@ionic/angular';
 import {
-  IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
-  IonContent, IonRefresher, IonRefresherContent, IonSpinner,
-  IonItem, IonItemSliding, IonItemOptions, IonItemOption,
-  IonBackButton, IonInput
+  IonHeader, IonIcon,
+  IonContent, IonRefresher, IonRefresherContent,
+  IonInput, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Client } from '../../models/client.model';
 import { addIcons } from 'ionicons';
 import {
+  notificationsOutline,
+  logOutOutline,
   searchOutline,
   addOutline,
   pencilOutline,
@@ -36,10 +37,9 @@ import {
     CommonModule,
     FormsModule,
     RouterModule,
-    IonHeader, IonToolbar, IonButtons, IonButton, IonIcon, IonTitle,
-    IonContent, IonRefresher, IonRefresherContent, IonSpinner,
-    IonItem, IonItemSliding, IonItemOptions, IonItemOption,
-    IonBackButton, IonInput
+    IonHeader, IonIcon,
+    IonContent, IonRefresher, IonRefresherContent,
+    IonInput, IonList, IonItemSliding, IonItem, IonItemOptions, IonItemOption
   ]
 })
 export class Clients implements OnInit, ViewDidEnter {
@@ -47,14 +47,18 @@ export class Clients implements OnInit, ViewDidEnter {
   filteredClients: Client[] = [];
   searchTerm: string = '';
   isLoading: boolean = false;
+  stats = { notifications: 0 };
 
   constructor(
     private clientService: ClientService,
     private router: Router,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public navCtrl: NavController
   ) {
     addIcons({
+      notificationsOutline,
+      logOutOutline,
       searchOutline,
       addOutline,
       pencilOutline,
@@ -150,6 +154,15 @@ export class Clients implements OnInit, ViewDidEnter {
 
   navigateTo(path: string) {
     this.router.navigate([path]);
+  }
+
+  goToNotifications() {
+    this.router.navigate(['/notifications']);
+  }
+
+  logout() {
+    // In a real app, call authService.logout()
+    this.router.navigate(['/login']);
   }
 
   private async showToast(message: string, color: 'success' | 'danger' | 'warning') {

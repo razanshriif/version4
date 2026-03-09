@@ -1,98 +1,93 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar class="premium-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Mes Livraisons</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
+    </div>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="goToNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span class="lum-pip" *ngIf="stats.notifications > 0"></span>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="navCtrl.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Mes Livraisons</h1>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glass-background"></div>
-
+<ion-content class="liv-content">
   <ion-refresher slot="fixed" (ionRefresh)="loadLivraisons($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content refreshingSpinner="dots"></ion-refresher-content>
   </ion-refresher>
 
-  <div class="list-container">
-    <div class="loading-state" *ngIf="isLoading && livraisons.length === 0">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Chargement des livraisons...</p>
+  <!-- Tabs -->
+  <div class="ds-tab-pills">
+    <div class="tab-pill" [class.active]="activeTab === 'today'" (click)="setTab('today')">Aujourd'hui</div>
+    <div class="tab-pill" [class.active]="activeTab === 'date'" (click)="setTab('date')">Par date</div>
+    <div class="tab-pill" [class.active]="activeTab === 'history'" (click)="setTab('history')">Historique</div>
+  </div>
+
+  <div class="list-body">
+    <!-- Today Banner -->
+    <div class="today-banner fade-up" *ngIf="activeTab === 'today'">
+      <div class="banner-inner">
+        <span class="label">Aujourd'hui</span>
+        <span class="date">{{ getTodayLabel() }}</span>
+      </div>
     </div>
 
-    <div class="empty-state" *ngIf="!isLoading && livraisons.length === 0">
-      <ion-icon name="car-outline"></ion-icon>
-      <h3>Aucune livraison</h3>
-      <p>Vos livraisons actives apparaîtront ici.</p>
+    <!-- Date Picker / Search for other tabs -->
+    <div class="filter-wrapper fade-up" *ngIf="activeTab !== 'today'">
+      <div class="date-picker-card" *ngIf="activeTab === 'date'">
+        <div class="card-header">Sélectionnez une date</div>
+        <ion-datetime presentation="date" [(ngModel)]="selectedDate" (ionChange)="onDateChange()"
+          class="inline-datetime" locale="fr-FR" [max]="todayStr"></ion-datetime>
+      </div>
+
+      <div class="unified-search-container" *ngIf="activeTab === 'history'">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-input [(ngModel)]="searchTerm" (ionInput)="onSearch()" placeholder="Rechercher..."></ion-input>
+      </div>
     </div>
 
-    <ion-list lines="none" *ngIf="livraisons.length > 0" class="transparent-list">
-      <ion-item *ngFor="let liv of livraisons; let i = index" (click)="viewDetails(liv)" class="delivery-item"
-        [style.animation-delay]="(i * 0.07) + 's'">
-        <div class="delivery-card">
-          <div class="card-edge-accent"></div>
-          <div class="card-inner">
+    <!-- Delivery List -->
+    <div class="delivery-list" *ngIf="!isLoading">
+      <div class="delivery-card fade-up" *ngFor="let liv of filteredLivraisons" (click)="viewDetails(liv)">
+        <div class="card-main">
+          <div class="card-top">
+            <span class="id-pill">{{ '#' + liv.id }}</span>
+            <span class="status-pill" [class]="getStatusKey(liv.statut)">{{ getStatusLabel(liv.statut) }}</span>
+          </div>
 
-            <!-- Header row: ID + Status badge -->
-            <div class="card-header">
-              <span class="delivery-id">#{{ liv.id || '---' }}</span>
-              <span class="status-pill" [class]="'pill-' + getStatusKey(liv.statut)">
-                {{ liv.statut || 'Inconnu' }}
-              </span>
-            </div>
-
-            <!-- Route: chargement → livraison -->
-            <div class="route-row">
-              <div class="route-stop from">
-                <div class="stop-dot from-dot"></div>
-                <div class="stop-info">
-                  <span class="stop-city">{{ liv.chargementVille || '—' }}</span>
-                  <span class="stop-label">Chargement · {{ formatDate(liv.chargementDate) }}</span>
-                </div>
-              </div>
-              <div class="route-line"></div>
-              <div class="route-stop to">
-                <div class="stop-dot to-dot"></div>
-                <div class="stop-info">
-                  <span class="stop-city">{{ liv.livraisonVille || '—' }}</span>
-                  <span class="stop-label">Livraison · {{ formatDate(liv.livraisonDate) }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- 5-Step Event Timeline -->
-            <div class="timeline-stepper">
-              <ng-container *ngFor="let step of getSteps(liv.statut); let j = index; let last = last">
-                <div class="step" [class.done]="step.done" [class.active]="step.active">
-                  <div class="step-circle">
-                    <ion-icon *ngIf="step.done" name="checkmark-outline"></ion-icon>
-                    <div *ngIf="!step.done" class="step-dot"></div>
-                  </div>
-                  <span class="step-label">{{ step.label }}</span>
-                </div>
-                <div *ngIf="!last" class="step-connector" [class.done]="step.done"></div>
-              </ng-container>
-            </div>
-
-            <!-- Chauffeur / Camion row -->
-            <div class="meta-row" *ngIf="liv.chauffeur || liv.camion">
-              <div class="meta-item" *ngIf="liv.chauffeur">
-                <ion-icon name="person-outline"></ion-icon>
-                <span>{{ liv.chauffeur }}</span>
-              </div>
-              <div class="meta-item" *ngIf="liv.camion || liv.matricule">
-                <ion-icon name="car-outline"></ion-icon>
-                <span>{{ liv.camion || liv.matricule }}</span>
-              </div>
-            </div>
-
-            <div class="card-footer">
-              <span class="view-details">Suivre l'expédition</span>
-              <ion-icon name="chevron-forward-outline"></ion-icon>
-            </div>
+          <div class="route-info">
+            <span class="town">{{ liv.chargementVille || '---' }}</span>
+            <ion-icon name="chevron-down-outline"></ion-icon>
+            <span class="town">{{ liv.livraisonVille || '---' }}</span>
           </div>
         </div>
-      </ion-item>
-    </ion-list>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-liv fade-up" *ngIf="filteredLivraisons.length === 0">
+        <div class="empty-icon">
+          <ion-icon name="car-outline"></ion-icon>
+        </div>
+        <h3>Aucune livraison</h3>
+        <p>Il n'y a pas de livraisons pour cette sélection.</p>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="delivery-list" *ngIf="isLoading">
+      <div class="delivery-card skeleton" *ngFor="let s of [1,2,3]"></div>
+    </div>
   </div>
 </ion-content>

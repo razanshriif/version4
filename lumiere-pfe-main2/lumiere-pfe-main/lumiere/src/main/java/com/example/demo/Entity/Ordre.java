@@ -34,7 +34,7 @@ public class Ordre {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String orderNumber;;
+	private String orderNumber;
 
 	private String client;
 	private String nomclient;
@@ -86,11 +86,17 @@ public class Ordre {
 	private String telchauffeur;
 	private String camion;
 	private String datevoy;
+	@jakarta.persistence.ElementCollection(fetch = jakarta.persistence.FetchType.EAGER)
+	@jakarta.persistence.CollectionTable(name = "ordre_commentaires", joinColumns = @jakarta.persistence.JoinColumn(name = "ordre_id"))
+	@jakarta.persistence.Column(name = "commentaire")
 	private Set<String> commentaires;
 
+	@jakarta.persistence.ElementCollection(fetch = jakarta.persistence.FetchType.EAGER)
+	@jakarta.persistence.CollectionTable(name = "ordre_events", joinColumns = @jakarta.persistence.JoinColumn(name = "ordre_id"))
+	@jakarta.persistence.Column(name = "event")
 	private Set<String> events;
 
-	@OneToOne
+	@OneToOne(cascade = jakarta.persistence.CascadeType.ALL)
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private Tranck trancking;

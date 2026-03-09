@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, LoadingController, ToastController } from '@ionic/angular';
+import { IonicModule, LoadingController, ToastController, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DemandeService } from '../../../services/demande.service';
 import { Demande } from '../../../models/demande.model';
@@ -27,7 +27,8 @@ export class DetailsPage implements OnInit {
     private router: Router,
     private demandeService: DemandeService,
     private loadingController: LoadingController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    public navCtrl: NavController
   ) {
     addIcons({ arrowBackOutline, downloadOutline, printOutline, timeOutline, locationOutline, cubeOutline, personOutline, shareOutline, pricetagOutline, barbellOutline, layersOutline, businessOutline });
   }

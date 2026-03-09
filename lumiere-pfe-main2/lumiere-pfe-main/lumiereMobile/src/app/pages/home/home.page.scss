@@ -1,653 +1,222 @@
-@use "sass:color";
-
-// ── Variables ──────────────────────────
-$orange: #f5921e;
-$orange-deep: #d97c10;
-$charcoal: #1a1c1f;
-$charcoal-light: #2c2f33;
-$white: #ffffff;
-$blanc-sale: #f5f2ed;
-$bg: $blanc-sale; // Blanc sale background
-$card: #ffffff; // White components
-$text: #1a1c1f;
-$sub: #64748b;
-$muted: #94a3b8;
-$border: rgba(0, 0, 0, 0.06);
-$green: #10b981;
-$radius: 24px;
-
-// ── Mixins ─────────────────────────────
-@mixin tap {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-
-  &:active {
-    transform: scale(0.96);
-  }
-}
-
-@mixin card-base {
-  background: $card;
-  border-radius: $radius;
-  border: 1px solid $border;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-
-// ── Keyframes ──────────────────────────
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes floatButton {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInCard {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes float {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(-20px, 30px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes floatReverse {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(20px, -30px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
 :host {
   display: block;
   height: 100%;
 }
 
-.header-toolbar {
-  --background: hsl(0, 0%, 100%);
-  --border-width: 0 0 1px;
-  --border-color: #{$border};
+.home-content {
+  --background: var(--bg-app);
 }
 
-.premium-content {
-  --background: transparent;
+.home-body {
+  padding: 0 16px 100px;
 }
 
-.glass-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: $blanc-sale;
-  z-index: -1;
-  overflow: hidden;
-
-  .bubble {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba($orange, 0.05);
-    filter: blur(60px);
-    animation: float 15s infinite ease-in-out;
-
-    &:nth-child(1) {
-      width: 300px;
-      height: 300px;
-      top: -100px;
-      right: -50px;
-    }
-
-    &:nth-child(2) {
-      width: 250px;
-      height: 250px;
-      bottom: -40px;
-      left: -30px;
-      animation-name: floatReverse;
-      background: rgba($charcoal, 0.03);
-    }
-  }
-}
-
-.header-wrapper {
-  padding: 12px 20px;
+// ── Header Level 2: Greeting ──
+.greeting-bar {
+  background: #fff;
+  padding: 24px 16px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-}
+  position: relative;
 
-.logo-flex {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  .brand-img {
-    background: #f5921e;
-    padding: 6px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      width: 28px;
-      height: 28px;
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--orange) 0%, transparent 100%);
   }
 
-  .brand-text {
-    display: flex;
-    flex-direction: column;
-
-    &__main {
-      font-weight: 800;
-      font-size: 16px;
-      color: #1a1c1f;
-      letter-spacing: 0.5px;
-      line-height: 1.1;
-    }
-
-    &__sub {
+  .greeting__info {
+    .greeting__date {
+      font-size: 12px;
       font-weight: 700;
-      font-size: 10px;
-      color: #f5921e;
-      letter-spacing: 1.5px;
+      color: var(--orange);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .greeting__name {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0;
+      letter-spacing: -0.5px;
     }
   }
-}
 
-.hdr-actions {
-  display: flex;
-  gap: 10px;
-
-  .hdr-btn {
-    @include tap;
-    width: 42px;
-    height: 42px;
-    background: #f1f5fa;
-    border-radius: 14px;
+  .rappel-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    background: var(--orange);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:active {
+      transform: scale(0.92);
+    }
 
     ion-icon {
       font-size: 20px;
-      color: $charcoal;
-    }
-
-    &.logout-btn ion-icon {
-      color: #ef4444;
-    }
-
-    &__pip {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 7px;
-      height: 7px;
-      background: $orange;
-      border: 2px solid #f1f5f9;
-      border-radius: 50%;
+      color: #fff;
     }
   }
 }
 
-.body-content {
-  padding: 0 16px 120px;
-  animation: fadeUp 0.6s ease-out;
+// ── Section Styles ──
+section {
+  margin-top: 24px;
 }
 
-.content-header-card {
-  background: transparent;
-  padding: 16px 20px 10px;
-  margin: 0 -16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  .greet__date {
-    font-size: 12px;
-    font-weight: 600;
-    color: $orange;
-    margin-bottom: 2px;
-    text-transform: capitalize;
-  }
-
-  .greet__label {
-    font-size: 11px;
-    font-weight: 600;
-    color: $sub;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
-  }
-
-  .greet__name {
-    font-size: 28px;
-    font-weight: 800;
-    color: $charcoal;
-    margin: 0;
-    line-height: 1.1;
-  }
-
-  .rappel-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba($orange, 0.1);
-    color: $orange;
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 700;
-    max-width: fit-content;
-    margin-top: 6px;
-    @include tap;
-    border: 1px solid rgba($orange, 0.15);
-    animation: fadeUp 0.8s ease-out both;
-    animation-delay: 0.1s;
-
-    ion-icon {
-      font-size: 14px;
-    }
-
-    &:active {
-      background: rgba($orange, 0.2);
-    }
-  }
+.sec-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-sub);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
 }
 
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba($green, 0.08);
-  padding: 6px 14px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  color: $green;
-
-  &__dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: $green;
-  }
-}
-
-.accent-line {
-  height: 4px;
-  background: $orange;
-  width: 60px;
-  border-radius: 2px;
-  margin-top: -6px;
-}
-
-.sec {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  margin-bottom: 10px;
-
-  &__title {
-    font-size: 11px;
-    font-weight: 800;
-    color: $sub;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  &__action {
-    font-size: 12px;
-    font-weight: 700;
-    color: $orange;
-  }
-}
-
-.grid {
+// ── Action Grid 2x2 ──
+.action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-}
 
-.acard {
-  background: #ffffff;
-  border-radius: $radius;
-  padding: 20px;
-  min-height: 160px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  // stagger animation applied via inline style animation-delay
-  animation: slideInCard 0.45s ease-out both;
-
-  &:active {
-    transform: scale(0.96);
-    box-shadow: 0 4px 8px rgba(233, 77, 33, 0.04);
-  }
-
-  &__icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: rgba($orange, 0.1);
+  .acard {
+    aspect-ratio: 1/1;
+    background: #fff;
+    border: 1px solid var(--border-card);
+    border-radius: 22px;
+    padding: 16px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s;
+    cursor: pointer;
 
-    ion-icon {
-      font-size: 24px;
-      color: $orange;
+    &:hover,
+    &:active {
+      border-color: #FCDCC8;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
     }
-  }
 
-  &__title {
-    font-size: 15px;
-    font-weight: 800;
-    color: $charcoal;
-    margin-top: 12px;
-  }
+    .acard__top {
+      .ds-icon-pill {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: var(--orange-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
 
-  &__desc {
-    font-size: 11px;
-    color: $sub;
-    font-weight: 500;
-  }
-
-  &__cta {
-    margin-top: 12px;
-    font-size: 11px;
-    font-weight: 800;
-    color: $orange;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    ion-icon {
-      font-size: 14px;
-    }
-  }
-
-  // --- Variations Unified to White ---
-  &--primary,
-  &--charcoal,
-  &--accent,
-  &--dark {
-    background: #ffffff !important;
-    color: inherit !important;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
-
-    .acard__icon {
-      background: rgba($charcoal, 0.05);
-
-      ion-icon {
-        color: $charcoal;
+        ion-icon {
+          font-size: 22px;
+          color: var(--orange);
+        }
       }
-    }
-  }
-
-  &--primary {
-    .acard__icon {
-      background: rgba($orange, 0.1);
-
-      ion-icon {
-        color: $orange;
-      }
-    }
-  }
-
-  // Rappels — full-width warm accent card
-  &--rappel {
-    background: linear-gradient(135deg, #1a1c1f 0%, #2c2f33 100%) !important;
-    color: white !important;
-    flex-direction: row;
-    align-items: center;
-    min-height: 80px;
-    gap: 16px;
-    padding: 16px 20px;
-
-    .acard__icon {
-      background: rgba($orange, 0.2);
-      flex-shrink: 0;
-
-      ion-icon {
-        color: $orange;
-      }
-    }
-
-    .acard__footer {
-      flex: 1;
 
       .acard__title {
-        color: white;
-        font-size: 16px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-main);
+        line-height: 1.2;
       }
 
       .acard__desc {
-        color: rgba(255, 255, 255, 0.55);
-      }
-
-      .acard__cta {
-        color: $orange;
-        margin-top: 6px;
+        font-size: 11.5px;
+        color: var(--text-sub);
+        margin-top: 4px;
+        line-height: 1.3;
       }
     }
-  }
-}
 
-.activity-item {
-  @include card-base;
-  @include tap;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-
-  .act-icon {
-    width: 40px;
-    height: 40px;
-    background: #f1f5f9;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    ion-icon {
-      font-size: 20px;
-      color: $orange;
-    }
-  }
-
-  .act-meta {
-    flex: 1;
-
-    h4 {
-      margin: 0;
-      font-size: 14px;
+    .acard__more {
+      font-size: 12px;
       font-weight: 700;
-      color: $charcoal;
-    }
-
-    p {
-      margin: 2px 0 0;
-      font-size: 11px;
-      color: $sub;
-    }
-  }
-
-  .act-status {
-    padding: 4px 10px;
-    border-radius: 100px;
-    font-size: 10px;
-    font-weight: 700;
-    background: #f1f5f9;
-    color: $sub;
-
-    &.PLANIFIE,
-    &.CONFIRME {
-      background: rgba($green, 0.1);
-      color: $green;
-    }
-
-    &.EN_ATTENTE {
-      background: rgba($orange, 0.1);
-      color: $orange;
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
   }
 }
 
-.empty {
-  @include card-base;
-  padding: 40px 20px;
+// ── Brouillons List ──
+.draft-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  border-style: dashed;
+  gap: 10px;
 
-  &__icon {
-    font-size: 40px;
-    color: $muted;
-    margin-bottom: 12px;
-  }
+  .draft-card {
+    background: #fff;
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
 
-  &__title {
-    font-size: 15px;
-    font-weight: 700;
-    color: $charcoal;
-  }
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--orange);
+    }
 
-  &__text {
-    font-size: 12px;
-    color: $sub;
-    margin-bottom: 20px;
-  }
+    .draft__info {
+      .draft__id {
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        color: var(--text-sub);
+        display: block;
+        margin-bottom: 2px;
+      }
 
-  &__btn {
-    @include tap;
-    background: $charcoal;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 700;
+      .draft__name {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-main);
+        display: block;
+      }
+
+      .draft__date {
+        font-size: 11.5px;
+        color: var(--text-sub);
+        margin-top: 2px;
+        display: block;
+      }
+    }
+
+    .draft__badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--orange);
+      background: var(--orange-pale);
+      border: 1px solid #FCDCC8;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
   }
 }
 
 .spacer {
-  height: 80px;
+  height: 40px;
 }
-
-// ── Main Action FAB (+) ────────────────
-.main-action-fab {
-  margin-bottom: 24px;
-  margin-left: 16px;
-  z-index: 10001;
-
-  .premium-add-btn {
-    --background: #{$charcoal};
-    --color: #{$white};
-    --border-radius: 18px;
-    --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    width: 62px;
-    height: 62px;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    ion-icon {
-      font-size: 30px;
-    }
-  }
-
-  // List buttons styling
-  ion-fab-list {
-    ion-fab-button {
-      --background: #{$white};
-      --color: #{$charcoal};
-      --border-radius: 14px;
-      --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      margin: 8px 0;
-      width: 50px;
-      height: 50px;
-      position: relative;
-
-      ion-icon {
-        font-size: 22px;
-      }
-
-      ion-label {
-        position: absolute;
-        left: 60px;
-        background: $charcoal;
-        color: white;
-        padding: 5px 12px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 700;
-        white-space: nowrap;
-        opacity: 0;
-        transform: translateX(-10px);
-        transition: all 0.2s ease;
-        pointer-events: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    // Show label when list is open (Ionic handles fab-list-active)
-    &.fab-list-active ion-label {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-}
-
-// ── Chatbot FAB removed (moved to app-level)

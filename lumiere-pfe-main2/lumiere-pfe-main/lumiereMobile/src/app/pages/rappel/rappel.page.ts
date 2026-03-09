@@ -2,14 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonIcon, IonFab, IonFabButton, IonBadge, IonModal, IonDatetime, IonButton,
-    AlertController
+    IonContent, IonHeader, IonToolbar, IonButtons,
+    IonIcon, IonFab, IonFabButton, IonModal, IonDatetime, IonButton,
+    AlertController, IonTitle
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
-    addOutline, alarmOutline, trashOutline, checkmarkCircle,
-    arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline
+    addOutline, alarmOutline, trashOutline, checkmarkCircle, createOutline,
+    arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline,
+    optionsOutline, timeOutline
 } from 'ionicons/icons';
 
 export interface Rappel {
@@ -20,6 +22,11 @@ export interface Rappel {
     fait: boolean;
 }
 
+export interface RappelGroup {
+    label: string;
+    items: Rappel[];
+}
+
 @Component({
     selector: 'app-rappel',
     templateUrl: './rappel.page.html',
@@ -27,12 +34,13 @@ export interface Rappel {
     standalone: true,
     imports: [
         CommonModule, FormsModule,
-        IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-        IonIcon, IonFab, IonFabButton, IonBadge, IonModal, IonDatetime, IonButton
+        IonContent, IonHeader, IonToolbar, IonButtons, IonTitle,
+        IonIcon, IonFab, IonFabButton, IonModal, IonDatetime, IonButton
     ]
 })
 export class RappelPage implements OnInit {
     rappels: Rappel[] = [];
+    groupedRappels: RappelGroup[] = [];
     isModalOpen = false;
     editingRappel: Rappel | null = null;
     newRappel: Partial<Rappel> = {
@@ -40,12 +48,15 @@ export class RappelPage implements OnInit {
         note: '',
         date: ''
     };
-    showInfo = false;
 
-    constructor(private alertCtrl: AlertController) {
+    constructor(
+        private alertCtrl: AlertController,
+        public navCtrl: NavController
+    ) {
         addIcons({
-            addOutline, alarmOutline, trashOutline, checkmarkCircle,
-            arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline
+            addOutline, alarmOutline, trashOutline, checkmarkCircle, createOutline,
+            arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline,
+            optionsOutline, timeOutline
         });
     }
 
@@ -58,21 +69,65 @@ export class RappelPage implements OnInit {
     }
 
     load() {
-        const raw = localStorage.getItem('rappels');
-        if (raw) {
-            this.rappels = JSON.parse(raw);
-        } else {
+        try {
+            const raw = localStorage.getItem('rappels');
+            this.rappels = raw ? JSON.parse(raw) : [];
+
+            // Safety: Ensure it's an array
+            if (!Array.isArray(this.rappels)) {
+                this.rappels = [];
+            }
+
+            // Sort by date safety
+            this.rappels.sort((a, b) => {
+                const dateA = a.date ? new Date(a.date).getTime() : 0;
+                const dateB = b.date ? new Date(b.date).getTime() : 0;
+                return dateA - dateB;
+            });
+
+            this.updateGrouping();
+        } catch (e) {
+            console.error('Error loading rappels:', e);
             this.rappels = [];
+            this.groupedRappels = [];
         }
-        // Sort: pending first, then by date
-        this.rappels.sort((a, b) => {
-            if (a.fait !== b.fait) return a.fait ? 1 : -1;
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
+    }
+
+    updateGrouping() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const groupsMap: { [key: string]: Rappel[] } = {
+            "AUJOURD'HUI": [],
+            "DEMAIN": [],
+            "PLUS TARD": []
+        };
+
+        this.rappels.forEach(r => {
+            if (!r.date) return;
+            const d = new Date(r.date);
+            d.setHours(0, 0, 0, 0);
+
+            if (d.getTime() === today.getTime()) {
+                groupsMap["AUJOURD'HUI"].push(r);
+            } else if (d.getTime() === tomorrow.getTime()) {
+                groupsMap["DEMAIN"].push(r);
+            } else {
+                groupsMap["PLUS TARD"].push(r);
+            }
         });
+
+        this.groupedRappels = Object.keys(groupsMap)
+            .map(label => ({ label, items: groupsMap[label] }))
+            .filter(g => g.items.length > 0);
     }
 
     save() {
         localStorage.setItem('rappels', JSON.stringify(this.rappels));
+        this.updateGrouping();
     }
 
     openModal(r?: Rappel) {
@@ -82,6 +137,7 @@ export class RappelPage implements OnInit {
         } else {
             this.editingRappel = null;
             const now = new Date();
+            // Local ISO string for ion-datetime
             const localeDateTime = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
             this.newRappel = {
                 titre: '',
@@ -102,7 +158,7 @@ export class RappelPage implements OnInit {
         if (this.editingRappel) {
             const idx = this.rappels.findIndex(x => x.id === this.editingRappel!.id);
             if (idx > -1) {
-                this.rappels[idx] = { ...this.editingRappel, ...this.newRappel } as Rappel;
+                this.rappels[idx] = { ...this.editingRappel, ...this.newRappel, fait: this.editingRappel.fait } as Rappel;
             }
         } else {
             const r: Rappel = {
@@ -112,21 +168,15 @@ export class RappelPage implements OnInit {
                 date: this.newRappel.date || new Date().toISOString(),
                 fait: false
             };
-            this.rappels.unshift(r);
+            this.rappels.push(r);
         }
 
         this.save();
-        this.load();
         this.closeModal();
     }
 
-    toggleFait(r: Rappel) {
-        r.fait = !r.fait;
-        this.save();
-        this.load();
-    }
-
-    async deleteRappel(r: Rappel) {
+    async deleteRappel(r: Rappel, event?: Event) {
+        if (event) event.stopPropagation();
         const alert = await this.alertCtrl.create({
             header: 'Supprimer',
             message: `Supprimer « ${r.titre} » ?`,
@@ -144,26 +194,32 @@ export class RappelPage implements OnInit {
         await alert.present();
     }
 
-    toggleInfo() {
-        this.showInfo = !this.showInfo;
+    toggleFait(r: Rappel, event?: Event) {
+        if (event) event.stopPropagation();
+        r.fait = !r.fait;
+        this.save();
+    }
+
+    formatTime(iso: string): string {
+        if (!iso) return '';
+        try {
+            const d = new Date(iso);
+            return d.toLocaleTimeString('fr-FR', {
+                hour: '2-digit', minute: '2-digit'
+            }).replace(':', 'h');
+        } catch (e) {
+            return '';
+        }
     }
 
     formatDate(iso: string): string {
         if (!iso) return '';
-        const d = new Date(iso);
-        const datePart = d.toLocaleDateString('fr-FR', {
-            weekday: 'short', day: '2-digit', month: 'short'
-        });
-        const timePart = d.toLocaleTimeString('fr-FR', {
-            hour: '2-digit', minute: '2-digit'
-        });
-        return `${datePart} à ${timePart}`;
+        try {
+            return new Date(iso).toLocaleDateString('fr-FR', {
+                day: '2-digit', month: 'short', year: 'numeric'
+            });
+        } catch (e) {
+            return '';
+        }
     }
-
-    isPast(iso: string): boolean {
-        return new Date(iso) < new Date();
-    }
-
-    get pending() { return this.rappels.filter(r => !r.fait); }
-    get done() { return this.rappels.filter(r => r.fait); }
 }

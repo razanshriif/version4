@@ -4,251 +4,112 @@
 }
 
 .premium-content {
-    --background: transparent;
+    --background: var(--bg-app);
 }
 
-.glass-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffffff; // Light background
-    z-index: -1;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 70% 20%, rgba(245, 146, 30, 0.05) 0%, transparent 60%);
-        pointer-events: none;
-    }
+.list-body {
+    padding: 16px 0 100px;
 }
 
-.glass-header {
-    background: rgba(244, 244, 247, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-
-    .premium-toolbar {
-        --background: transparent;
-        --color: #1a1c1f;
-
-        ion-title {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 800;
-            color: #1a1c1f;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        ion-button {
-            --color: #1a1c1f;
-        }
-    }
-}
-
-.search-toolbar {
-    --background: transparent;
-    padding: 8px 16px 16px;
-
-    .search-container {
-        background: rgba(0, 0, 0, 0.03);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        padding: 4px 16px;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        transition: all 0.3s;
-
-        &:focus-within {
-            border-color: var(--orange);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 15px rgba(245, 146, 30, 0.2);
-        }
-
-        ion-icon {
-            color: var(--orange);
-            font-size: 1.2rem;
-        }
-
-        ion-input {
-            --padding-start: 12px;
-            font-size: 1rem;
-            color: #1a1c1f;
-            font-weight: 500;
-            --placeholder-color: rgba(0, 0, 0, 0.4);
-        }
-    }
-}
-
-.transparent-item {
-    --background: transparent !important;
-    --background-focused: transparent !important;
-    --background-hover: transparent !important;
-    --background-activated: transparent !important;
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --min-height: auto;
-}
-
-.list-container {
-    padding: 16px;
-    padding-bottom: 120px;
-}
-
+// ── Client Cards ──
 .client-card {
-    background: #ffffff;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-
-    .card-edge-accent {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 4px;
-        background: var(--orange);
-    }
-
-    .card-inner {
-        padding: 18px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-}
-
-.avatar-box {
-    width: 52px;
-    height: 52px;
-    background: rgba(245, 146, 30, 0.1);
-    border-radius: 16px;
+    background: #fff;
+    border-radius: 22px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--orange);
-    border: 1px solid rgba(245, 146, 30, 0.2);
-}
+    gap: 16px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 
-.client-details {
-    flex: 1;
-
-    .client-name {
-        margin: 0;
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #1a1c1f;
-        letter-spacing: -0.3px;
-    }
-
-    .client-meta {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 6px;
-
-        .id-tag {
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--orange);
-            background: rgba(245, 146, 30, 0.1);
-            padding: 2px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(245, 146, 30, 0.1);
-        }
-
-        .city-info {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.8rem;
-            color: rgba(24, 24, 27, 0.5);
-            font-weight: 600;
-
-            ion-icon {
-                font-size: 0.9rem;
-                color: #1a1c1f;
-            }
-        }
-    }
-}
-
-.detail-icon {
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 1.2rem;
-}
-
-.option-btn {
-    &.edit {
-        --background: var(--orange);
-    }
-
-    &.delete {
-        --background: #dc2626;
-    }
-}
-
-.premium-fab {
-    --background: #1a1c1f;
-    --background-activated: #2c2f33;
-    --color: #ffffff;
-    --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-
-    ion-icon {
-        font-size: 28px;
-    }
-}
-
-.empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 30px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-
-    .empty-icon-circle {
-        width: 80px;
-        height: 80px;
-        background: rgba(245, 146, 30, 0.1);
-        border-radius: 50%;
+    .client-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px; // Modern squircle
+        background: linear-gradient(135deg, #FFF4ED 0%, #FFF 100%);
+        border: 1.5px solid rgba(249, 115, 22, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--orange);
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(249, 115, 22, 0.08);
+    }
 
-        ion-icon {
-            font-size: 40px;
-            color: var(--orange);
+    .client-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .client-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .client-code {
+                background: #F3F1EF;
+                color: #555;
+                font-family: 'DM Mono', monospace;
+                font-size: 10px;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 8px;
+            }
+
+            .client-city {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 13px;
+                color: var(--text-sub);
+                font-weight: 600;
+
+                ion-icon {
+                    font-size: 15px;
+                    color: var(--orange);
+                }
+            }
         }
     }
 
-    h3 {
-        color: #ffffff;
-        font-weight: 800;
-        margin-bottom: 8px;
+    .chevron-icon {
+        color: #D1D1D1;
+        font-size: 18px;
     }
+}
 
-    p {
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 24px;
-    }
+// ── Empty State ──
+.empty-clients {
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 
-    .premium-link {
-        --color: var(--orange);
-        font-weight: 700;
-        font-size: 1rem;
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        background: #EDE9E4;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+
+        ion-icon {
+            font-size: 32px;
+            color: var(--orange);
+        }
     }
 }

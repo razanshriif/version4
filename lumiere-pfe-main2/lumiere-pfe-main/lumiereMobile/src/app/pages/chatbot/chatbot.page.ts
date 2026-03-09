@@ -4,15 +4,13 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
   IonToolbar,
-  IonButtons,
-  IonBackButton,
   IonButton,
   IonIcon,
   IonFooter,
   IonTextarea
 } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
 
 interface Message {
   text: string;
@@ -28,10 +26,7 @@ interface Message {
   imports: [
     IonContent,
     IonHeader,
-    IonTitle,
     IonToolbar,
-    IonButtons,
-    IonBackButton,
     IonButton,
     IonIcon,
     IonFooter,
@@ -65,7 +60,7 @@ export class ChatbotPage implements OnInit {
     'bye': 'Au revoir ! Bonne journée !'
   };
 
-  constructor() { }
+  constructor(public navCtrl: NavController) { }
 
   ngOnInit() {
     // Welcome message

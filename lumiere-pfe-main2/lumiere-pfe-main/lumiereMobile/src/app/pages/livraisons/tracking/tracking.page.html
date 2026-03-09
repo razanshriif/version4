@@ -1,15 +1,24 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar class="premium-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Suivi Logistique</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="refreshData($event)">
-        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
+    </div>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="refreshData($event)">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="navCtrl.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Suivi Livraison</h1>
+  </div>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-content">
@@ -23,41 +32,87 @@
   </div>
 
   <div class="tracking-container">
-    <h1 class="section-title">Mes Livraisons</h1>
 
+    <!-- Loading -->
     <div *ngIf="loading" class="ion-text-center ion-padding mt-5">
       <ion-spinner name="dots" color="primary"></ion-spinner>
-      <p class="mt-3" style="color: #64748b; font-weight: 600;">Synchronisation des colis...</p>
+      <p class="mt-3 loading-text">Synchronisation en cours...</p>
     </div>
 
+    <!-- Empty -->
     <div *ngIf="!loading && livraisons.length === 0" class="empty-state">
       <ion-icon name="cube-outline"></ion-icon>
       <p>Aucun colis en transit pour le moment</p>
     </div>
 
+    <!-- Tracking cards -->
     <div *ngIf="!loading && livraisons.length > 0">
-      <div class="tracker-card shadow-sm" *ngFor="let livraison of livraisons" (click)="selectLivraison(livraison)"
+      <div class="tracker-card" *ngFor="let livraison of livraisons" (click)="selectLivraison(livraison)"
         [ngClass]="{'selected': selectedLivraison?.id === livraison.id}">
 
+        <!-- Card Header: ID + Status -->
         <div class="tracker-header">
           <span class="tracker-id">#{{ livraison.id }}</span>
-          <div class="status-pill" [ngClass]="livraison.statut.toLowerCase() || 'en_attente'">
+          <div class="status-pill" [ngClass]="getStatusKey(livraison.statut)">
             {{ getStatusLabel(livraison.statut) }}
           </div>
         </div>
 
-        <div class="tracker-info">
-          <div class="info-item">
-            <ion-icon name="calendar-clear-outline"></ion-icon>
-            <span>{{ livraison.chargementDate ? formatDate(livraison.chargementDate) : 'Date à confirmer' }}</span>
+        <!-- Route section -->
+        <div class="route-section">
+          <div class="route-point from">
+            <div class="route-dot from-dot"></div>
+            <div class="route-text">
+              <span class="route-city">{{ livraison.chargementVille || '—' }}</span>
+              <span class="route-date">
+                <ion-icon name="calendar-clear-outline"></ion-icon>
+                {{ livraison.chargementDate ? formatDate(livraison.chargementDate) : 'Date à confirmer' }}
+              </span>
+            </div>
+          </div>
+          <div class="route-connector"></div>
+          <div class="route-point to">
+            <div class="route-dot to-dot"></div>
+            <div class="route-text">
+              <span class="route-city">{{ livraison.livraisonVille || '—' }}</span>
+              <span class="route-date">
+                <ion-icon name="calendar-clear-outline"></ion-icon>
+                {{ livraison.livraisonDate ? formatDate(livraison.livraisonDate) : 'Date à confirmer' }}
+              </span>
+            </div>
           </div>
         </div>
 
+        <!-- Driver & Vehicle info -->
+        <div class="driver-section" *ngIf="livraison.chauffeur || livraison.camion || livraison.matricule">
+          <div class="driver-item" *ngIf="livraison.chauffeur">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <div class="driver-text">
+              <span class="driver-label">Chauffeur</span>
+              <span class="driver-value">{{ livraison.chauffeur }}</span>
+            </div>
+          </div>
+          <div class="driver-item" *ngIf="livraison.camion || livraison.matricule">
+            <ion-icon name="bus-outline"></ion-icon>
+            <div class="driver-text">
+              <span class="driver-label">Véhicule</span>
+              <span class="driver-value">{{ livraison.camion || livraison.matricule }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map actions: Localiser + Retracer le trajet -->
         <div class="tracker-action">
-          <ion-button expand="block" class="premium-button secondary"
+          <ion-button expand="block" class="map-btn"
             (click)="selectLivraison(livraison); viewOnMap(); $event.stopPropagation()">
             <ion-icon name="map-outline" slot="start"></ion-icon>
             Localiser le transporteur
+          </ion-button>
+
+          <ion-button expand="block" fill="clear" class="history-btn mt-2"
+            (click)="selectLivraison(livraison); viewHistory(); $event.stopPropagation()">
+            <ion-icon name="repeat-outline" slot="start"></ion-icon>
+            Retracer le trajet
           </ion-button>
         </div>
       </div>

@@ -1,28 +1,31 @@
 // ─────────────────────────────────────────
-// Lumière Logistique — App-Level Bottom Nav
+// Lumière — App-Level Bottom Nav
 // ─────────────────────────────────────────
-
-$orange: #f5921e;
-$charcoal: #f0f0f3;
-$muted: #71717a;
-$border: rgba(0, 0, 0, 0.08);
-$bg: #ffffff;
 
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.97);
-    border-top: 1px solid $border;
+    background: #ffffff;
+    border-top: 1px solid var(--border-card);
     display: flex;
-    align-items: flex-end;
-    padding: 8px 0 calc(18px + env(safe-area-inset-bottom, 0px));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    align-items: center;
+    padding: 0 0 env(safe-area-inset-bottom, 0px);
+    height: calc(68px + env(safe-area-inset-bottom, 0px));
     z-index: 1000;
-    // Ensure it ONLY captures taps on its own visible areas
     pointer-events: auto;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
+
+    // Tablet cap: center the nav on large screens
+    @media (min-width: 600px) {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 24px 24px 0 0;
+        border-left: 1px solid var(--border-card);
+        border-right: 1px solid var(--border-card);
+    }
 }
 
 .bnav__item {
@@ -30,60 +33,59 @@ $bg: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 3px 0;
+    justify-content: center;
+    height: 100%;
+    gap: 4px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    transition: transform 0.1s ease;
+    transition: all 0.2s;
+    position: relative;
 
     &:active {
-        transform: scale(0.92);
+        transform: scale(0.94);
     }
 
-    svg {
-        width: 22px;
-        height: 22px;
-        stroke: $muted;
-        transition: stroke 0.2s, transform 0.2s;
+    .bnav__icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+        svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-sub);
+            stroke-width: 2;
+            transition: inherit;
+        }
+    }
+
+    .bnav__label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-sub);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: inherit;
     }
 
     &--active {
         .bnav__icon-wrap {
-            &::before {
-                content: '';
-                position: absolute;
-                width: 38px;
-                height: 38px;
-                background: rgba($orange, 0.1);
-                border-radius: 10px;
-                z-index: -1;
-                transform: scale(1);
-                animation: highlightPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--orange-pale);
+
+            svg {
+                stroke: var(--orange);
+                transform: scale(1.05);
             }
         }
 
-        svg {
-            stroke: $orange;
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 4px rgba($orange, 0.3));
-        }
-
         .bnav__label {
-            color: $orange;
+            color: var(--orange);
             font-weight: 800;
-        }
-
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 35%;
-            right: 35%;
-            height: 3px;
-            background: $orange;
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 -2px 10px rgba($orange, 0.5);
         }
     }
 }
@@ -123,32 +125,33 @@ $bg: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -20px;
+    justify-content: center;
+    height: 100%;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    margin-top: -10px;
 }
 
 .bnav__fab-ring {
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    background: $bg;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 50px;
+    height: 50px;
+    border-radius: 18px;
+    background: var(--orange);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
     display: grid;
     place-items: center;
-    border: 3px solid $bg;
-    transition: transform 0.14s, background 0.14s;
+    transition: all 0.2s;
 
     svg {
-        width: 22px;
-        height: 22px;
-        stroke: $orange;
+        width: 24px;
+        height: 24px;
+        stroke: #fff !important;
     }
 
-    .bnav__fab:active & {
-        transform: scale(0.91);
-        background: #fafafa;
+    &:active {
+        transform: scale(0.9);
+        box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
     }
 }
 
@@ -192,16 +195,16 @@ $bg: #ffffff;
     cursor: pointer;
 
     .bnav__menu-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
+        width: 62px;
+        height: 62px;
+        border-radius: 20px;
         background: white;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
         display: grid;
         place-items: center;
-        color: $orange;
+        color: var(--orange);
         font-size: 28px;
-        transition: transform 0.1s;
+        transition: all 0.2s;
 
         &:active {
             transform: scale(0.92);
@@ -234,13 +237,13 @@ $bg: #ffffff;
 }
 
 .premium-chatbot-btn {
-    --background: #f5921e;
-    --background-activated: #f5921e;
+    --background: var(--orange);
+    --background-activated: var(--orange-deep);
     --color: #ffffff;
-    --box-shadow: 0 8px 25px rgba(245, 146, 30, 0.4);
-    --border-radius: 12px;
-    width: 44px;
-    height: 44px;
+    --box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4);
+    --border-radius: 16px;
+    width: 48px;
+    height: 48px;
     transition: transform 0.2s;
 
     ion-icon {
