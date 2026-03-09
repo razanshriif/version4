@@ -5,16 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
-  IonToolbar,
+  IonButton,
   IonIcon,
   IonSpinner,
   IonRefresher,
-  IonRefresherContent,
-  IonButton
+  IonRefresherContent
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline } from 'ionicons/icons';
+import { chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline, notificationsOutline } from 'ionicons/icons';
 import { LivraisonService, LivraisonSimple } from '../../../services/livraison.service';
 import { Subscription } from 'rxjs';
 
@@ -26,12 +25,11 @@ import { Subscription } from 'rxjs';
   imports: [
     IonContent,
     IonHeader,
-    IonToolbar,
+    IonButton,
     IonIcon,
     IonSpinner,
     IonRefresher,
     IonRefresherContent,
-    IonButton,
     CommonModule,
     FormsModule
   ]
@@ -48,7 +46,7 @@ export class TrackingPage implements OnInit, OnDestroy {
     private router: Router,
     public navCtrl: NavController
   ) {
-    addIcons({ chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline });
+    addIcons({ chatbubbleEllipsesOutline, arrowBackOutline, refreshOutline, cubeOutline, calendarClearOutline, mapOutline, personCircleOutline, busOutline, repeatOutline, logOutOutline, notificationsOutline });
   }
 
   ngOnInit() {
@@ -110,16 +108,18 @@ export class TrackingPage implements OnInit, OnDestroy {
     // Pas de WebSocket/SSE disponible — le tracking est statique
   }
 
-  refreshData(event: any) {
+  refreshData(event?: any) {
     if (this.selectedLivraison) {
       this.loadLivraisonById(this.selectedLivraison.id);
     } else {
       this.loadActiveLivraisons();
     }
 
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
+    if (event?.target?.complete) {
+      setTimeout(() => {
+        event.target.complete();
+      }, 1000);
+    }
   }
 
   getStatusClass(statut: string): string {

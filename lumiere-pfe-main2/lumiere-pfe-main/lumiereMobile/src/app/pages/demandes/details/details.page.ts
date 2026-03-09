@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DemandeService } from '../../../services/demande.service';
 import { Demande } from '../../../models/demande.model';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, downloadOutline, printOutline, timeOutline, locationOutline, cubeOutline, personOutline, shareOutline, pricetagOutline, barbellOutline, layersOutline, businessOutline } from 'ionicons/icons';
+import { arrowBackOutline, downloadOutline, printOutline, timeOutline, locationOutline, cubeOutline, personOutline, shareOutline, pricetagOutline, barbellOutline, layersOutline, businessOutline, logOutOutline } from 'ionicons/icons';
 // Removed static imports for performance optimization
 // import jsPDF from 'jspdf';
 // import html2canvas from 'html2canvas';
@@ -30,7 +30,7 @@ export class DetailsPage implements OnInit {
     private toastController: ToastController,
     public navCtrl: NavController
   ) {
-    addIcons({ arrowBackOutline, downloadOutline, printOutline, timeOutline, locationOutline, cubeOutline, personOutline, shareOutline, pricetagOutline, barbellOutline, layersOutline, businessOutline });
+    addIcons({ arrowBackOutline, downloadOutline, printOutline, timeOutline, locationOutline, cubeOutline, personOutline, shareOutline, pricetagOutline, barbellOutline, layersOutline, businessOutline, logOutOutline });
   }
 
   ngOnInit() {
@@ -110,6 +110,10 @@ export class DetailsPage implements OnInit {
       await loading.dismiss();
       this.showToast('Erreur lors de la génération du PDF', 'danger');
     }
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login');
   }
 
   private async showToast(message: string, color: 'success' | 'danger' | 'warning') {

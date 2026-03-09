@@ -9,7 +9,6 @@
 
 .form-body {
   padding: 16px;
-  padding-bottom: 120px;
 }
 
 // ── Step Indicator ──
@@ -195,11 +194,9 @@
   }
 }
 
-// ── Bottom Action ──
-.footer-actions {
-  padding: 24px 16px 40px;
-  background: #fff;
-  border-top: 1px solid var(--border-card);
+.footer-actions-integrated {
+  padding: 16px 0 40px;
+  background: transparent;
 }
 
 .auto-comment-preview {
@@ -432,4 +429,30 @@ ion-modal {
       color: var(--text-main);
     }
   }
+}
+
+.lum-submit-btn {
+  --background: #1a1c1f !important;
+  --background-activated: #2c2f33 !important;
+  --color: #ffffff !important;
+  --border-radius: 18px !important;
+  height: 58px !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  margin: 10px 0 0 !important;
+  --box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2) !important;
+  text-transform: none !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &::part(native) {
+    padding: 0 24px !important;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.spacer {
+  height: 120px;
 }

@@ -222,6 +222,7 @@ export class ListPage implements OnInit {
     this.listMode = mode;
     this.isScrolling = true;
 
+    if (!this.swipeContainer || !this.swipeContainer.nativeElement) return;
     const container = this.swipeContainer.nativeElement;
     const scrollAmount = mode === 'draft' ? 0 : container.offsetWidth;
 

@@ -5,11 +5,18 @@ import { Router } from '@angular/router';
 import {
   ToastController,
   LoadingController,
-  IonHeader, IonButton, IonIcon,
-  IonContent, IonInput, IonDatetime,
-  IonDatetimeButton, IonModal,
-  IonRadioGroup, IonRadio,
-  IonSearchbar, IonTextarea
+  IonIcon,
+  IonContent,
+  IonModal,
+  IonButton,
+  IonHeader,
+  IonSearchbar,
+  IonInput,
+  IonTextarea,
+  IonRadioGroup,
+  IonRadio,
+  IonDatetimeButton,
+  IonDatetime
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -17,7 +24,7 @@ import {
   carOutline, searchOutline, sendOutline, arrowUpCircleOutline, chatbubbleOutline,
   arrowBackOutline, personAddOutline, closeOutline, cloudUploadOutline, personOutline,
   busOutline, snowOutline, layersOutline, waterOutline,
-  notificationsOutline, logOutOutline
+  notificationsOutline, logOutOutline, logInOutline, chevronDownOutline
 } from 'ionicons/icons';
 import { DemandeService } from '../../../services/demande.service';
 import { ClientService } from '../../../services/client.service';
@@ -33,11 +40,9 @@ import { Ordre } from '../../../models/ordre.model';
   styleUrls: ['./create.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, IonHeader, IonContent,
-    IonButton, IonIcon,
-    IonInput, IonDatetime, IonDatetimeButton, IonModal,
-    IonRadioGroup, IonRadio,
-    IonSearchbar, IonTextarea
+    CommonModule, FormsModule, IonIcon, IonContent, IonHeader, IonModal,
+    IonButton, IonSearchbar, IonInput, IonTextarea, IonRadioGroup, IonRadio,
+    IonDatetimeButton, IonDatetime
   ]
 })
 export class CreatePage implements OnInit {
@@ -89,6 +94,7 @@ export class CreatePage implements OnInit {
   };
 
   commentaireFinal = '';
+  orderSent: string | null = null;
   userProfile: any = null;
 
   constructor(
@@ -100,7 +106,7 @@ export class CreatePage implements OnInit {
     private toastController: ToastController,
     private loadingController: LoadingController
   ) {
-    addIcons({ notificationsOutline, logOutOutline, arrowBackOutline, personOutline, cloudUploadOutline, searchOutline, locationOutline, cubeOutline, carOutline, sendOutline, businessOutline, calendarOutline, arrowUpCircleOutline, chatbubbleOutline, personAddOutline, closeOutline, busOutline, snowOutline, layersOutline, waterOutline });
+    addIcons({ notificationsOutline, logOutOutline, logInOutline, chevronDownOutline, arrowBackOutline, personOutline, cloudUploadOutline, searchOutline, locationOutline, cubeOutline, carOutline, sendOutline, businessOutline, calendarOutline, arrowUpCircleOutline, chatbubbleOutline, personAddOutline, closeOutline, busOutline, snowOutline, layersOutline, waterOutline });
   }
 
   async ngOnInit() {
@@ -252,7 +258,7 @@ export class CreatePage implements OnInit {
     this.commentaireFinal = parts.join(', ');
   }
 
-  async onSubmit() {
+  async validerCommande() {
     if (!this.ordre.client) {
       await this.showToast('Veuillez renseigner le code client', 'warning');
       return;
@@ -284,6 +290,7 @@ export class CreatePage implements OnInit {
 
       await this.demandeService.createDemande(finalPayload as any).toPromise();
       await loading.dismiss();
+      this.orderSent = "Commande enregistrée avec succès";
       await this.showToast('Ordre créé avec succès!', 'success');
       this.router.navigate(['/demandes/list']);
     } catch (error) {

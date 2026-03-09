@@ -3,18 +3,88 @@
     height: 100%;
 }
 
-.liv-content {
+.premium-content {
     --background: var(--bg-app);
 }
 
+// ── Segmented Tabs ──
+.segmented-tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 0 16px;
+    z-index: 10;
+    flex-shrink: 0;
+
+    .tab-item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 0;
+        position: relative;
+        color: #888;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.2s;
+
+        span {
+            transition: color 0.2s;
+        }
+
+        .indicator {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 3px 3px 0 0;
+            transition: width 0.3s ease;
+        }
+
+        &.active {
+            color: var(--orange);
+
+            .indicator {
+                width: 80%;
+            }
+        }
+    }
+}
+
+.swipe-container {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    height: 100%;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.swipe-column {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
+    height: 100%;
+    overflow-y: auto;
+}
+
 .list-body {
-    padding: 16px;
-    padding-bottom: 100px;
+    padding: 20px 16px 120px;
+    background: transparent;
 }
 
 // ── Banner ──
 .today-banner {
-    padding: 0 16px 12px;
+    margin-bottom: 20px;
 
     .banner-inner {
         background: #fff;
@@ -44,7 +114,7 @@
 
 // ── Search & Filter ──
 .filter-wrapper {
-    padding: 0 16px 16px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -66,6 +136,27 @@
     }
 }
 
+.unified-search-container {
+    background: #fff;
+    border: 1px solid var(--border-card);
+    border-radius: 14px;
+    padding: 4px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    ion-icon {
+        font-size: 18px;
+        color: var(--text-sub);
+    }
+
+    ion-input {
+        --padding-start: 0;
+        --color: var(--text-main);
+        font-weight: 600;
+    }
+}
+
 // ── Cards ──
 .delivery-list {
     display: flex;
@@ -75,12 +166,13 @@
 
 .delivery-card {
     background: #fff;
-    border: 1px solid var(--border-card);
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-card);
     transition: all 0.2s;
 
     &:active {
@@ -103,46 +195,51 @@
                 color: #fff;
                 font-family: 'DM Mono', monospace;
                 font-size: 11px;
-                font-weight: 500;
+                font-weight: 800;
                 padding: 4px 10px;
-                border-radius: 100px;
+                border-radius: 8px;
             }
 
             .status-pill {
-                background: #EDE9E4;
-                border: 1px solid var(--border-card);
-                color: var(--text-sub);
+                padding: 4px 12px;
+                border-radius: 100px;
                 font-size: 10px;
                 font-weight: 800;
-                padding: 3px 10px;
-                border-radius: 100px;
                 text-transform: uppercase;
+                background: #eee;
+                color: #999;
+
+                &.pending { background: #fff7ed; color: #f97316; }
+                &.ready { background: #eff6ff; color: #2563eb; }
+                &.transit { background: #fdf4ff; color: #a855f7; }
+                &.delivery { background: #ecfdf5; color: #059669; }
+                &.done { background: #f0fdf4; color: #16a34a; }
+                &.failed { background: #fef2f2; color: #dc2626; }
             }
         }
 
         .route-info {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
 
             .town {
                 font-size: 15px;
-                font-weight: 700;
-                color: var(--text-main);
+                font-weight: 800;
             }
 
-            ion-icon {
+            .arrow {
                 color: var(--orange);
+                font-weight: 400;
                 font-size: 16px;
-                margin-left: 4px;
             }
         }
     }
 
     .chevron-icon {
-        font-size: 20px;
-        color: #E6E1DB;
+        font-size: 18px;
+        color: #ccc;
     }
 }
 
@@ -155,10 +252,10 @@
     text-align: center;
 
     .empty-icon {
-        width: 80px;
-        height: 80px;
-        background: #EDE9E4;
-        border-radius: 24px;
+        width: 72px;
+        height: 72px;
+        background: #f8fafc;
+        border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -166,7 +263,20 @@
 
         ion-icon {
             font-size: 32px;
-            color: var(--orange);
+            color: #cbd5e1;
         }
+    }
+
+    h3 {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text-main);
+        margin: 0 0 8px;
+    }
+
+    p {
+        font-size: 14px;
+        color: var(--text-sub);
+        margin: 0;
     }
 }

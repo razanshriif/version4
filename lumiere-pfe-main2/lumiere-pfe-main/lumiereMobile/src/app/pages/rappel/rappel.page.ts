@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-    IonContent, IonHeader, IonToolbar, IonButtons,
+    IonContent, IonHeader, IonButtons,
     IonIcon, IonFab, IonFabButton, IonModal, IonDatetime, IonButton,
-    AlertController, IonTitle
+    AlertController, IonTitle, IonToolbar
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
     addOutline, alarmOutline, trashOutline, checkmarkCircle, createOutline,
     arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline,
-    optionsOutline, timeOutline
+    optionsOutline, timeOutline, logOutOutline
 } from 'ionicons/icons';
 
 export interface Rappel {
@@ -34,8 +34,9 @@ export interface RappelGroup {
     standalone: true,
     imports: [
         CommonModule, FormsModule,
-        IonContent, IonHeader, IonToolbar, IonButtons, IonTitle,
-        IonIcon, IonFab, IonFabButton, IonModal, IonDatetime, IonButton
+        IonContent, IonHeader, IonButtons, IonTitle,
+        IonIcon, IonFab, IonFabButton, IonModal, IonDatetime, IonButton,
+        IonToolbar
     ]
 })
 export class RappelPage implements OnInit {
@@ -56,8 +57,12 @@ export class RappelPage implements OnInit {
         addIcons({
             addOutline, alarmOutline, trashOutline, checkmarkCircle, createOutline,
             arrowBackOutline, calendarOutline, notificationsOutline, informationCircleOutline,
-            optionsOutline, timeOutline
+            optionsOutline, timeOutline, logOutOutline
         });
+    }
+
+    logout() {
+        this.navCtrl.navigateRoot('/login');
     }
 
     ngOnInit() {

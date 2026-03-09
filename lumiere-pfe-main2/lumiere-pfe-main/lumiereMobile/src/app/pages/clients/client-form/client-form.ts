@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonHeader, IonToolbar, IonButton, IonIcon,
+  IonHeader, IonButton, IonIcon,
   IonContent, IonLabel, IonInput, IonTextarea,
   IonSelect, IonSelectOption, IonCheckbox, ToastController
 } from '@ionic/angular/standalone';
@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientService } from '../../../services/client.service';
 import { Client } from '../../../models/client.model';
 import { addIcons } from 'ionicons';
-import { saveOutline, arrowBackOutline } from 'ionicons/icons';
+import { saveOutline, arrowBackOutline, notificationsOutline, logOutOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-client-form',
@@ -21,7 +21,7 @@ import { saveOutline, arrowBackOutline } from 'ionicons/icons';
   imports: [
     CommonModule,
     FormsModule,
-    IonHeader, IonToolbar, IonButton, IonIcon,
+    IonHeader, IonButton, IonIcon,
     IonContent, IonLabel, IonInput, IonTextarea,
     IonSelect, IonSelectOption, IonCheckbox
   ]
@@ -57,7 +57,11 @@ export class ClientForm implements OnInit {
     public navCtrl: NavController,
     private toastController: ToastController
   ) {
-    addIcons({ saveOutline, arrowBackOutline });
+    addIcons({ saveOutline, arrowBackOutline, notificationsOutline, logOutOutline });
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot('/login');
   }
 
   ngOnInit() {

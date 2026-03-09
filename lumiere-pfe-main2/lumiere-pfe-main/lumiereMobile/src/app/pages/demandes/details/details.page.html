@@ -1,20 +1,24 @@
-<ion-header class="ion-no-border inner-page-header">
-  <ion-toolbar class="premium-toolbar">
-    <div class="header-wrapper-global">
-      <div class="header-left-group">
-        <button type="button" class="header-round-btn" (click)="navCtrl.back()">
-          <ion-icon name="arrow-back-outline"></ion-icon>
-        </button>
-        <span class="header-page-title">Suivi Ordre</span>
-      </div>
-      <div class="header-right-group">
-        <button type="button" class="header-round-btn" (click)="generatePDF()" *ngIf="ordre" aria-label="Partager PDF">
-          <ion-icon name="share-outline"></ion-icon>
-        </button>
-        <!-- Logo removed -->
-      </div>
+<ion-header class="ion-no-border">
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
     </div>
-  </ion-toolbar>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="generatePDF()" *ngIf="ordre">
+        <ion-icon name="share-outline"></ion-icon>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="navCtrl.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Suivi Ordre</h1>
+  </div>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-content">

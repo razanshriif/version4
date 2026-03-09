@@ -1,20 +1,27 @@
-<ion-header class="ion-no-border inner-page-header">
-    <ion-toolbar class="premium-toolbar">
-        <div class="header-wrapper-global">
-            <div class="header-left-group">
-                <button type="button" class="header-round-btn" (click)="navCtrl.back()">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
-                </button>
-                <span class="header-page-title">Mes Rappels <small *ngIf="rappels.length > 0">({{ rappels.length
-                        }})</small></span>
-            </div>
-            <div class="header-right-group">
-                <button type="button" class="header-round-btn">
-                    <ion-icon name="options-outline"></ion-icon>
-                </button>
-            </div>
+<ion-header class="ion-no-border">
+    <div class="lum-logo-bar">
+        <div class="lum-logo-wrap">
+            <img src="assets/icon/lum.png" alt="L" />
         </div>
-    </ion-toolbar>
+        <div class="lum-logo-actions">
+            <button class="lum-icon-btn" (click)="navCtrl.navigateForward('/notifications')">
+                <ion-icon name="notifications-outline"></ion-icon>
+            </button>
+            <button class="lum-icon-btn">
+                <ion-icon name="options-outline"></ion-icon>
+            </button>
+            <button class="lum-icon-btn" (click)="logout()">
+                <ion-icon name="log-out-outline"></ion-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="lum-sub-bar">
+        <button class="lum-back-btn" (click)="navCtrl.back()">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <span class="lum-page-title">Mes Rappels <small *ngIf="rappels.length > 0">({{ rappels.length }})</small></span>
+    </div>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="premium-content">

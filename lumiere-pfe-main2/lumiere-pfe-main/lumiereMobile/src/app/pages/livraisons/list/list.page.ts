@@ -41,7 +41,7 @@ const STEPS = [
     IonDatetime, IonInput,
     CommonModule, FormsModule
   ]
-})
+}) 
 export class ListPage implements OnInit {
   livraisons: LivraisonSimple[] = [];
   isLoading = false;
@@ -101,29 +101,31 @@ export class ListPage implements OnInit {
 
   // ── Tab & filter logic ──────────────────────────
 
-  get filteredLivraisons(): LivraisonSimple[] {
-    // Only show orders that are planned or further (exclude Brouillon and En attente)
+  getTabItems(tab: 'today' | 'date' | 'history'): LivraisonSimple[] {
     const trackableStatuses = ['PLANIFIE', 'CHARGE', 'EN_COURS_DE_LIVRAISON', 'EN_LIVRAISON', 'LIVRE', 'FIN', 'NON_LIVRE'];
     let result = this.livraisons.filter(liv => trackableStatuses.includes(liv.statut));
 
-    if (this.activeTab === 'today') {
+    if (tab === 'today') {
       result = result.filter(liv =>
         this.isToday(liv.chargementDate) || this.isToday(liv.livraisonDate)
       );
-    } else if (this.activeTab === 'date' && this.selectedDate) {
+    } else if (tab === 'date') {
+      if (!this.selectedDate) return [];
       const sel = this.selectedDate.split('T')[0];
       result = result.filter(liv =>
         this.isSameDay(liv.chargementDate, sel) || this.isSameDay(liv.livraisonDate, sel)
       );
-    } else if (this.activeTab === 'history' && this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      result = result.filter(liv =>
-        (liv.chargementVille || '').toLowerCase().includes(term) ||
-        (liv.livraisonVille || '').toLowerCase().includes(term) ||
-        ((liv as any).chauffeur || '').toLowerCase().includes(term) ||
-        ((liv as any).camion || '').toLowerCase().includes(term) ||
-        String(liv.id).includes(term)
-      );
+    } else if (tab === 'history') {
+      if (this.searchTerm) {
+        const term = this.searchTerm.toLowerCase();
+        result = result.filter(liv =>
+          (liv.chargementVille || '').toLowerCase().includes(term) ||
+          (liv.livraisonVille || '').toLowerCase().includes(term) ||
+          ((liv as any).chauffeur || '').toLowerCase().includes(term) ||
+          ((liv as any).camion || '').toLowerCase().includes(term) ||
+          String(liv.id).includes(term)
+        );
+      }
     }
 
     return result;
@@ -134,6 +136,7 @@ export class ListPage implements OnInit {
     this.activeTab = tab;
     this.isScrolling = true;
 
+    if (!this.swipeContainer || !this.swipeContainer.nativeElement) return;
     const container = this.swipeContainer.nativeElement;
     let scrollAmount = 0;
     if (tab === 'date') scrollAmount = container.offsetWidth;

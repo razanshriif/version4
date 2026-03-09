@@ -20,46 +20,75 @@
     </button>
     <h1 class="lum-page-title">Mes Livraisons</h1>
   </div>
+
+  <!-- Segmented Tabs Attached to Header -->
+  <div class="segmented-tabs">
+    <div class="tab-item" [class.active]="activeTab === 'today'" (click)="setTab('today')">
+      <span>Aujourd'hui</span>
+      <div class="indicator"></div>
+    </div>
+    <div class="tab-item" [class.active]="activeTab === 'date'" (click)="setTab('date')">
+      <span>Par date</span>
+      <div class="indicator"></div>
+    </div>
+    <div class="tab-item" [class.active]="activeTab === 'history'" (click)="setTab('history')">
+      <span>Historique</span>
+      <div class="indicator"></div>
+    </div>
+  </div>
 </ion-header>
 
-<ion-content class="liv-content">
+<ion-content class="liv-content premium-content">
   <ion-refresher slot="fixed" (ionRefresh)="loadLivraisons($event)">
     <ion-refresher-content refreshingSpinner="dots"></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Tabs -->
-  <div class="ds-tab-pills">
-    <div class="tab-pill" [class.active]="activeTab === 'today'" (click)="setTab('today')">Aujourd'hui</div>
-    <div class="tab-pill" [class.active]="activeTab === 'date'" (click)="setTab('date')">Par date</div>
-    <div class="tab-pill" [class.active]="activeTab === 'history'" (click)="setTab('history')">Historique</div>
+  <div class="swipe-container" #swipeContainer (scroll)="onScroll($event)">
+    <!-- Today Column -->
+    <div class="swipe-column">
+      <div class="list-body">
+        <div class="today-banner fade-up">
+          <div class="banner-inner">
+            <span class="label">Aujourd'hui</span>
+            <span class="date">{{ getTodayLabel() }}</span>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="listView; context: { items: getTabItems('today') }"></ng-container>
+      </div>
+    </div>
+
+    <!-- Date Column -->
+    <div class="swipe-column">
+      <div class="list-body">
+        <div class="filter-wrapper fade-up">
+          <div class="date-picker-card">
+            <div class="card-header">Sélectionnez une date</div>
+            <ion-datetime presentation="date" [(ngModel)]="selectedDate" (ionChange)="onDateChange()"
+              class="inline-datetime" locale="fr-FR" [max]="todayStr"></ion-datetime>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="listView; context: { items: getTabItems('date') }"></ng-container>
+      </div>
+    </div>
+
+    <!-- History Column -->
+    <div class="swipe-column">
+      <div class="list-body">
+        <div class="filter-wrapper fade-up">
+          <div class="unified-search-container">
+            <ion-icon name="search-outline"></ion-icon>
+            <ion-input [(ngModel)]="searchTerm" (ionInput)="onSearch()" placeholder="Rechercher..."></ion-input>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="listView; context: { items: getTabItems('history') }"></ng-container>
+      </div>
+    </div>
   </div>
 
-  <div class="list-body">
-    <!-- Today Banner -->
-    <div class="today-banner fade-up" *ngIf="activeTab === 'today'">
-      <div class="banner-inner">
-        <span class="label">Aujourd'hui</span>
-        <span class="date">{{ getTodayLabel() }}</span>
-      </div>
-    </div>
-
-    <!-- Date Picker / Search for other tabs -->
-    <div class="filter-wrapper fade-up" *ngIf="activeTab !== 'today'">
-      <div class="date-picker-card" *ngIf="activeTab === 'date'">
-        <div class="card-header">Sélectionnez une date</div>
-        <ion-datetime presentation="date" [(ngModel)]="selectedDate" (ionChange)="onDateChange()"
-          class="inline-datetime" locale="fr-FR" [max]="todayStr"></ion-datetime>
-      </div>
-
-      <div class="unified-search-container" *ngIf="activeTab === 'history'">
-        <ion-icon name="search-outline"></ion-icon>
-        <ion-input [(ngModel)]="searchTerm" (ionInput)="onSearch()" placeholder="Rechercher..."></ion-input>
-      </div>
-    </div>
-
-    <!-- Delivery List -->
+  <!-- Reusable List Template -->
+  <ng-template #listView let-items="items">
     <div class="delivery-list" *ngIf="!isLoading">
-      <div class="delivery-card fade-up" *ngFor="let liv of filteredLivraisons" (click)="viewDetails(liv)">
+      <div class="delivery-card fade-up" *ngFor="let liv of items" (click)="viewDetails(liv)">
         <div class="card-main">
           <div class="card-top">
             <span class="id-pill">{{ '#' + liv.id }}</span>
@@ -68,7 +97,7 @@
 
           <div class="route-info">
             <span class="town">{{ liv.chargementVille || '---' }}</span>
-            <ion-icon name="chevron-down-outline"></ion-icon>
+            <span class="arrow">→</span>
             <span class="town">{{ liv.livraisonVille || '---' }}</span>
           </div>
         </div>
@@ -76,7 +105,7 @@
       </div>
 
       <!-- Empty State -->
-      <div class="empty-liv fade-up" *ngIf="filteredLivraisons.length === 0">
+      <div class="empty-liv fade-up" *ngIf="items.length === 0">
         <div class="empty-icon">
           <ion-icon name="car-outline"></ion-icon>
         </div>
@@ -85,9 +114,9 @@
       </div>
     </div>
 
-    <!-- Loading -->
+    <!-- Loading Skeleton -->
     <div class="delivery-list" *ngIf="isLoading">
       <div class="delivery-card skeleton" *ngFor="let s of [1,2,3]"></div>
     </div>
-  </div>
-</ion-content>
+  </ng-template>
+</ion-content>

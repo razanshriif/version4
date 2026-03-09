@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonButtons, IonIcon, IonList, IonItem, IonLabel, IonBadge, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonHeader } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -12,8 +12,8 @@ import { checkmarkCircleOutline, warningOutline, alertCircleOutline, information
   templateUrl: './notifications.page.html',
   styleUrls: ['./notifications.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonHeader, IonToolbar, IonIcon]
-})
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonHeader]
+}) 
 export class NotificationsPage implements OnInit {
 
   notifications: any[] = [

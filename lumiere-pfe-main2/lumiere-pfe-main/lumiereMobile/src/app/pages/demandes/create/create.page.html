@@ -22,15 +22,9 @@
 </ion-header>
 
 <ion-content class="premium-content">
-  <!-- Step Indicator -->
-  <div class="step-progress fade-up">
-    <div class="step-dot active"></div>
-    <div class="step-dot"></div>
-    <div class="step-dot"></div>
-  </div>
 
   <div class="form-body">
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="validerCommande()">
 
       <!-- Section: Client -->
       <section class="form-section fade-up">
@@ -258,8 +252,18 @@
         </div>
       </section>
 
-      <div class="footer-actions">
-        <ion-button expand="block" type="submit" class="lum-submit-btn" [disabled]="!ordre.client">
+      <!-- The following content was moved from ion-footer or similar action area -->
+      <!-- Bottom Action Integrated into content -->
+      <div class="footer-actions-integrated">
+        <div class="auto-comment-preview" *ngIf="orderSent">
+          <div class="preview-header">
+            <ion-icon name="sparkles"></ion-icon>
+            <span>AUTO-COMMANTAIRE GÉNÉRÉ</span>
+          </div>
+          <p class="preview-content">{{ orderSent }}</p>
+        </div>
+
+        <ion-button expand="block" mode="ios" class="lum-submit-btn" (click)="validerCommande()">
           VALIDER LA COMMANDE
         </ion-button>
       </div>
