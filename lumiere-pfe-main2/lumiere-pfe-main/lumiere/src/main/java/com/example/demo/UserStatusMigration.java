@@ -14,9 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Runs once at startup to migrate existing users.
- * Any user without a status (NULL from before the feature was added) is set to
- * ACTIVE
- * so they are not locked out by the new isEnabled() check.
+ * Only users with NULL status (legacy accounts from before the feature was added)
+ * are set to ACTIVE. PENDING users are left untouched — they require admin validation.
  */
 @Component
 public class UserStatusMigration implements CommandLineRunner {
@@ -82,16 +81,25 @@ public class UserStatusMigration implements CommandLineRunner {
             System.out.println("DEBUG: Could not describe table _user: " + e.getMessage());
         }
 
+        // Only fix legacy accounts with NULL status — never auto-activate PENDING accounts
         var usersToActivate = userRepository.findAll().stream()
-                .filter(u -> u.getStatus() == null || u.getStatus() == Status.PENDING)
+                .filter(u -> u.getStatus() == null)
                 .toList();
 
         if (!usersToActivate.isEmpty()) {
             usersToActivate.forEach(u -> u.setStatus(Status.ACTIVE));
             userRepository.saveAll(usersToActivate);
-            log.info("✅ Migrated {} user(s) to ACTIVE status (was NULL or PENDING)", usersToActivate.size());
+            log.info("✅ Migrated {} legacy user(s) to ACTIVE status (had NULL status)", usersToActivate.size());
         } else {
-            log.info("✅ No user status migration needed (all users ACTIVE)");
+            log.info("✅ No legacy user migration needed");
+        }
+
+        // Log how many accounts are currently pending admin review
+        long pendingCount = userRepository.findAll().stream()
+                .filter(u -> u.getStatus() == Status.PENDING)
+                .count();
+        if (pendingCount > 0) {
+            log.info("ℹ️ {} account(s) are PENDING admin validation — left untouched", pendingCount);
         }
 
         // Ensure the main admin user exists and has SUPERADMIN role

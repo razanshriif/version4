@@ -17,5 +17,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     long countByStatus(Status status);
 
     Optional<User> findFirstByEmailOrderByIdAsc(@Param("email") String email);
+    Optional<User> findFirstByEmailOrderByIdDesc(@Param("email") String email);
 
 }

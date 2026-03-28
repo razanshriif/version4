@@ -38,13 +38,18 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        // Check if user already exists
+        if (userRepository.findFirstByEmailOrderByIdAsc(request.email()).isPresent()) {
+            throw new RuntimeException("Un utilisateur avec cet email existe déjà.");
+        }
+
         final var user = new User();
         user.setEmail(request.email());
         user.setFirstname(request.firstname());
         user.setLastname(request.lastname());
         user.setPasswd(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
-        user.setStatus(com.example.demo.Entity.Status.ACTIVE); // Auto-activate for now to fix 403
+        user.setStatus(com.example.demo.Entity.Status.PENDING); // Account requires admin validation before login
 
         userRepository.save(user);
 
