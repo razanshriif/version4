@@ -1,0 +1,25 @@
+<ion-header class="ion-no-border">
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
+    </div>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="goToNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="navCtrl.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Localisation</h1>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+</ion-content>

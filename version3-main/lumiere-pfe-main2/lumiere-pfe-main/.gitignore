@@ -1,0 +1,22 @@
+# Java / Spring Boot
+lumiere/target/
+*.log
+
+# Angular / Frontend
+lumiereFront/node_modules/
+lumiereFront/dist/
+
+# Fichiers sensibles
+.env
+application.properties
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+
+# Système
+.DS_Store
+Thumbs.db

@@ -1,0 +1,53 @@
+<!-- Header Bar -->
+<nav class="header-bar">
+  <div class="header-left">
+    <button class="hdr-btn menu-btn" title="Menu" (click)="menuClicked.emit()">
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="header-brand">
+      <img src="assets/Lumiere-Logistique.png" alt="Lumière" class="header-logo">
+      <div class="header-brand-text">
+        <span class="header-brand-name">LUMIÈRE</span>
+        <span class="header-brand-sub">TRANSPORT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <!-- Notification Bell -->
+    <div class="notification-wrapper">
+      <button class="hdr-btn" (click)="toggleNotifications()" title="Notifications">
+        <i class="fa fa-bell"></i>
+        <span *ngIf="hasNewNotifications" class="notif-pip"></span>
+      </button>
+
+      <!-- Dropdown -->
+      <div *ngIf="showNotifications" class="notif-dropdown">
+        <div class="notif-dropdown__header">
+          <h6>Notifications</h6>
+          <span class="notif-badge">{{ clients?.length || 0 }}</span>
+        </div>
+        <ul class="notif-dropdown__list">
+          <li *ngFor="let notification of clients" class="notif-item" [class.unread]="!notification.isRead">
+            <div class="notif-item__icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="notif-item__content">
+              <span class="notif-item__type">{{ notification.type }}</span>
+              <p class="notif-item__msg">{{ notification.message }}</p>
+              <span class="notif-item__time">{{ notification.timestamp }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    <div class="user-profile">
+      <div class="user-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <span class="user-name">{{ userName || 'Admin' }}</span>
+    </div>
+  </div>
+</nav>

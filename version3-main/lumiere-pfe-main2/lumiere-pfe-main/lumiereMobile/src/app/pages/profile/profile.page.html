@@ -1,0 +1,97 @@
+<ion-header class="ion-no-border">
+  <div class="lum-logo-bar">
+    <div class="lum-logo-wrap">
+      <img src="assets/icon/lum.png" alt="L" />
+    </div>
+    <div class="lum-logo-actions">
+      <button class="lum-icon-btn" (click)="goToNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+      <button class="lum-icon-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="lum-sub-bar">
+    <button class="lum-back-btn" (click)="navCtrl.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h1 class="lum-page-title">Mon Profil</h1>
+  </div>
+</ion-header>
+
+<ion-content class="premium-content">
+  <div class="profile-body" *ngIf="user">
+
+    <!-- Profile Card -->
+    <div class="profile-card fade-up">
+      <div class="avatar-wrapper">
+        <span class="avatar-text">{{ user.firstname.charAt(0) }}{{ user.lastname.charAt(0) }}</span>
+      </div>
+      <h2 class="user-name">{{ user.firstname }} {{ user.lastname }}</h2>
+      <span class="user-role">Chargé de compte</span>
+    </div>
+
+    <!-- Group: Identité -->
+    <section class="menu-section fade-up">
+      <h3 class="section-label">Identité</h3>
+      <div class="menu-card">
+        <div class="menu-item" (click)="editField('email')">
+          <div class="icon-box"><ion-icon name="mail-outline"></ion-icon></div>
+          <div class="item-content">
+            <span class="item-title">E-mail</span>
+            <span class="item-val">{{ user.email }}</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+
+        <div class="menu-item" (click)="editField('telephone')">
+          <div class="icon-box"><ion-icon name="call-outline"></ion-icon></div>
+          <div class="item-content">
+            <span class="item-title">Téléphone</span>
+            <span class="item-val">{{ user.telephone || 'Non renseigné' }}</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group: Préférences -->
+    <section class="menu-section fade-up">
+      <h3 class="section-label">Préférences</h3>
+      <div class="menu-card">
+        <div class="menu-item" (click)="goToPassword()">
+          <div class="icon-box"><ion-icon name="lock-closed-outline"></ion-icon></div>
+          <div class="item-content">
+            <span class="item-title">Sécurité</span>
+            <span class="item-val">Changer le mot de passe</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+
+        <div class="menu-item" (click)="goToNotifications()">
+          <div class="icon-box"><ion-icon name="notifications-outline"></ion-icon></div>
+          <div class="item-content">
+            <span class="item-title">Notifications</span>
+            <span class="item-val">Gérer les alertes push</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logout -->
+    <div class="fade-up">
+      <ion-button expand="block" class="logout-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        DÉCONNEXION
+      </ion-button>
+    </div>
+
+    <div class="version-footer fade-up">
+      <span class="version-text">Version 2.4.0 — Lumière Logistics</span>
+    </div>
+
+  </div>
+</ion-content>
