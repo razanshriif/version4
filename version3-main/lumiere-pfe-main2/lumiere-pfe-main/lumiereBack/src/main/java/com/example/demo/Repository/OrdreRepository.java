@@ -52,4 +52,6 @@ public interface OrdreRepository extends JpaRepository<Ordre, Long>, JpaSpecific
 
 	List<Ordre> findByClientOrderByIdDesc(String client);
 
+	Optional<Ordre> findByOrderNumber(String orderNumber);
+
 }

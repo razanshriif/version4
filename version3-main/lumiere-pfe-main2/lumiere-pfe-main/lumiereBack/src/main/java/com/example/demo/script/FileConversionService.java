@@ -25,9 +25,10 @@ public class FileConversionService {
     @Autowired
     private OrdreRepository ordreRepository;
 
-    private final String scriptPath = "C:\\Users\\benmo\\lumiere-pfe\\lumiere-pfe-main2\\lumiere-pfe-main\\ConvertScript.py";
+    private final String baseDir = "C:\\Users\\LENOVO\\Dropbox\\PC\\Downloads\\lumiere-pfe-main\\lumiere-pfe-main\\version3-main\\version3-main\\lumiere-pfe-main2\\lumiere-pfe-main\\";
+    private final String scriptPath = baseDir + "ConvertScript.py";
     private final String inputPath = "\\\\172.18.3.56\\requetes_edge_5555\\mesvoyes.json";
-    private final String outputPath = "C:\\Users\\benmo\\lumiere-pfe\\lumiere-pfe-main2\\lumiere-pfe-main\\mesvoyes_converted.json";
+    private final String outputPath = baseDir + "mesvoyes_converted.json";
 
     public List<?> convertFileAndLoadResults() {
         // Execute the Python script
@@ -46,7 +47,7 @@ public class FileConversionService {
         }
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("python",
-                    "C:\\Users\\benmo\\lumiere-pfe\\lumiere-pfe-main2\\lumiere-pfe-main\\event.py",
+                    baseDir + "event.py",
                     param);
             Process process = processBuilder.start();
 

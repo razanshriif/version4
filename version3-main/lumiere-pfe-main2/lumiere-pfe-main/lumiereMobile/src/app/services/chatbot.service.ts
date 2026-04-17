@@ -149,9 +149,9 @@ export class ChatbotService {
    * Ajouter un message à la conversation
    */
   private addMessage(message: ChatMessage) {
-    const messages = this.messagesSubject.value;
-    messages.push(message);
-    this.messagesSubject.next(messages);
+    // Utilisation d'un nouvel array pour déclencher les abonnés RxJS
+    const currentMessages = this.messagesSubject.value;
+    this.messagesSubject.next([...currentMessages, message]);
     this.saveChatHistory();
   }
 

@@ -43,17 +43,31 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        // Match the origins from LumiereApplication
+        configuration.setAllowedOrigins(List.of(
+            "http://172.18.101.132:4200", 
+            "http://172.18.101.132:8100",
+            "http://172.18.3.125:4200", 
+            "http://18.209.167.231", 
+            "http://localhost:8100", 
+            "http://localhost:4200",
+            "http://192.168.1.70:8100",
+            "http://192.168.1.70:4200",
+            "http://192.168.1.98:8100",
+            "http://192.168.1.98:4200"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of(
-                "Authorization",
-                "Content-Type",
-                "Accept",
-                "Origin",
-                "X-Requested-With",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "Origin",
+            "X-Requested-With",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers",
+            "Jwt-Token"
+        ));
+        configuration.setExposedHeaders(List.of("Authorization", "Jwt-Token", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

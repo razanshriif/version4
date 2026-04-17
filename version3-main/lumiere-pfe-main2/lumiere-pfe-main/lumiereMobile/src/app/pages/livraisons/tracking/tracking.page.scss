@@ -117,8 +117,8 @@ $border: rgba(0, 0, 0, 0.06);
         letter-spacing: 0.5px;
 
         &.pending {
-            background: rgba($muted, 0.12);
-            color: $sub;
+            background: rgba($red, 0.1);
+            color: $red;
         }
 
         &.ready {
@@ -132,17 +132,17 @@ $border: rgba(0, 0, 0, 0.06);
         }
 
         &.delivery {
-            background: rgba($green, 0.12);
+            background: rgba($green, 0.1);
             color: $green;
         }
 
         &.done {
             background: rgba($green, 0.15);
-            color: color.adjust($green, $lightness: -8%);
+            color: $green;
         }
 
         &.failed {
-            background: rgba($red, 0.1);
+            background: rgba($red, 0.15);
             color: $red;
         }
     }
@@ -168,22 +168,10 @@ $border: rgba(0, 0, 0, 0.06);
         margin-bottom: 0;
     }
 
-    .route-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
+    .route-emoji {
+        font-size: 18px;
         flex-shrink: 0;
-        margin-top: 3px;
-
-        &.from-dot {
-            background: $orange;
-            box-shadow: 0 0 0 3px rgba($orange, 0.15);
-        }
-
-        &.to-dot {
-            background: $green;
-            box-shadow: 0 0 0 3px rgba($green, 0.15);
-        }
+        margin-top: 1px;
     }
 
     .route-text {

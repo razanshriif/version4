@@ -1,39 +1,44 @@
 <div class="chatbot-container">
-    <!-- Bouton flottant du chatbot -->
-    <div class="chatbot-button" (click)="toggleChat()" [class.active]="isChatOpen">
-        <i class="fas" [ngClass]="isChatOpen ? 'fa-times' : 'fa-comments'"></i>
-        <span class="notification-badge" *ngIf="!isChatOpen && hasNewMessages">{{unreadCount}}</span>
+    <!-- Decorative Glowing Blobs (Visible only when chat is open) -->
+    <div class="glass-blobs" *ngIf="isChatOpen">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
 
-    <!-- Fenêtre de chat -->
+    <!-- Floating Action Button -->
+    <div class="chatbot-button" (click)="toggleChat()" [class.active]="isChatOpen">
+        <i class="fas" [ngClass]="isChatOpen ? 'fa-times' : 'fa-comments-alt'"></i>
+        <span class="notification-badge" *ngIf="!isChatOpen && unreadCount > 0">{{unreadCount}}</span>
+    </div>
+
+    <!-- Premium Chat Window -->
     <div class="chat-window" [class.open]="isChatOpen">
-        <!-- En-tête du chat -->
+        <!-- Modern Header -->
         <div class="chat-header">
             <div class="header-content">
                 <div class="bot-avatar">
-                    <i class="fas fa-robot"></i>
+                    <i class="fad fa-robot-astromech"></i>
                 </div>
                 <div class="header-info">
                     <h3>Assistant Lumière</h3>
                     <p class="status">
                         <span class="status-dot"></span>
-                        En ligne
+                        AI Powered Agent
                     </p>
                 </div>
             </div>
             <button class="close-btn" (click)="toggleChat()">
-                <i class="fas fa-times"></i>
+                <i class="fal fa-chevron-down"></i>
             </button>
         </div>
 
-        <!-- Zone de messages -->
+        <!-- Messages Flow -->
         <div class="chat-messages" #messagesContainer>
-            <div class="message-wrapper" *ngFor="let message of messages" [class.user-message]="message.isUser"
-                [class.bot-message]="!message.isUser">
+            <div class="message-wrapper" *ngFor="let message of messages; let i = index" 
+                 [class.user-message]="message.isUser"
+                 [class.bot-message]="!message.isUser"
+                 [style.animation-delay]="(i * 0.1) + 's'">
                 <div class="message">
-                    <div class="message-avatar" *ngIf="!message.isUser">
-                        <i class="fas fa-robot"></i>
-                    </div>
                     <div class="message-content">
                         <p>{{message.text}}</p>
                         <span class="message-time">{{message.time}}</span>
@@ -41,25 +46,25 @@
                 </div>
             </div>
 
-            <!-- Indicateur de frappe -->
+            <!-- Modern Typing Indicator -->
             <div class="typing-indicator" *ngIf="isTyping">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+                <div class="typing-dot" style="animation-delay: 0s"></div>
+                <div class="typing-dot" style="animation-delay: 0.1s"></div>
+                <div class="typing-dot" style="animation-delay: 0.2s"></div>
             </div>
         </div>
 
-        <!-- Suggestions rapides -->
+        <!-- Smart Suggestions -->
         <div class="quick-replies" *ngIf="showQuickReplies">
             <button class="quick-reply-btn" *ngFor="let reply of quickReplies" (click)="sendQuickReply(reply)">
                 {{reply}}
             </button>
         </div>
 
-        <!-- Zone de saisie -->
+        <!-- Ultra-Clean Input -->
         <div class="chat-input">
             <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"
-                placeholder="Tapez votre message..." [disabled]="isTyping">
+                placeholder="Ask me anything..." [disabled]="isTyping">
             <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isTyping">
                 <i class="fas fa-paper-plane"></i>
             </button>

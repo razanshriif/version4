@@ -96,17 +96,24 @@ export class LoginPage implements OnInit {
           if (error.status === 0) {
             errorMessage = 'Erreur de connexion au serveur. Vérifiez que le backend est lancé et accessible.';
           } else if (error.status === 403) {
-            const msg: string = error?.error || '';
-            if (msg.includes('ACCOUNT_PENDING')) {
-              // Account pending — send to pending page
+            let msg = '';
+            if (typeof error.error === 'string') {
+              msg = error.error;
+            } else if (error.error && typeof error.error === 'object' && error.error.message) {
+              msg = error.error.message;
+            } else if (error.message) {
+              msg = error.message;
+            }
+
+            if (msg && typeof msg === 'string' && msg.includes('ACCOUNT_PENDING')) {
               const email = this.loginForm.get('email')?.value;
               sessionStorage.setItem('pending_email', email);
               this.router.navigate(['/pending']);
               return;
-            } else if (msg.includes('ACCOUNT_REJECTED')) {
+            } else if (msg && typeof msg === 'string' && msg.includes('ACCOUNT_REJECTED')) {
               errorMessage = '❌ Votre compte a été rejeté. Contactez l’administrateur.';
             } else {
-              errorMessage = 'Accès refusé.';
+              errorMessage = 'Accès refusé. Vérifiez vos identifiants.';
             }
           } else if (error.status >= 500) {
             errorMessage = 'Erreur interne du serveur. Veuillez réessayer plus tard.';

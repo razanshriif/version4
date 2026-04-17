@@ -13,6 +13,7 @@ import {
 import { addIcons } from 'ionicons';
 import { notificationsOutline, logOutOutline, arrowBackOutline, trashOutline } from 'ionicons/icons';
 import { NavController } from '@ionic/angular';
+import { ChatbotService } from '../../services/chatbot.service';
 
 interface Message {
   text: string;
@@ -45,30 +46,23 @@ export class ChatbotPage implements OnInit {
   isTyping = false;
 
   // Predefined responses
-  private responses: { [key: string]: string } = {
-    'bonjour': 'Bonjour ! Comment puis-je vous aider aujourd\'hui ?',
-    'hello': 'Bonjour ! Comment puis-je vous aider aujourd\'hui ?',
-    'salut': 'Salut ! Que puis-je faire pour vous ?',
-    'aide': 'Je peux vous aider avec :\n• Suivi de vos commandes\n• Création d\'une nouvelle demande\n• Informations sur les livraisons\n• Questions générales',
-    'help': 'Je peux vous aider avec :\n• Suivi de vos commandes\n• Création d\'une nouvelle demande\n• Informations sur les livraisons\n• Questions générales',
-    'commande': 'Pour suivre vos commandes, rendez-vous dans la section "Mes Demandes" depuis le menu principal.',
-    'livraison': 'Vous pouvez suivre vos livraisons en temps réel dans la section "Suivi" de l\'application.',
-    'nouvelle demande': 'Pour créer une nouvelle demande, cliquez sur le bouton "Nouvelle Demande" sur la page d\'accueil.',
-    'contact': 'Vous pouvez nous contacter par email à support@lumiere.com ou par téléphone au +33 1 23 45 67 89',
-    'horaires': 'Nos horaires d\'ouverture sont du lundi au vendredi de 9h à 18h.',
-    'prix': 'Pour obtenir un devis personnalisé, veuillez créer une nouvelle demande avec les détails de votre envoi.',
-    'merci': 'Je vous en prie ! N\'hésitez pas si vous avez d\'autres questions.',
-    'au revoir': 'Au revoir ! Bonne journée !',
-    'bye': 'Au revoir ! Bonne journée !'
-  };
-
-  constructor(public navCtrl: NavController) {
+  constructor(
+    public navCtrl: NavController,
+    private chatbotService: ChatbotService
+  ) {
     addIcons({ notificationsOutline, logOutOutline, arrowBackOutline, trashOutline });
   }
 
   ngOnInit() {
-    // Welcome message
-    this.addBotMessage('Bonjour ! Je suis l\'assistant virtuel Lumiere. Comment puis-je vous aider aujourd\'hui ?');
+    this.chatbotService.messages$.subscribe(msgs => {
+      this.messages = msgs.map(m => ({
+        text: m.content,
+        isUser: m.sender === 'user',
+        timestamp: m.timestamp
+      }));
+      // S'assurer que le scroll descend après le rendu
+      this.scrollToBottom(500);
+    });
   }
 
   goToNotifications() {
@@ -81,42 +75,28 @@ export class ChatbotPage implements OnInit {
 
   sendMessage() {
     const message = this.userInput.trim();
-
     if (!message) return;
 
-    // Add user message
-    this.messages.push({
-      text: message,
-      isUser: true,
-      timestamp: new Date()
-    });
-
     this.userInput = '';
-    this.scrollToBottom();
+    // Scroll immédiat pour le message de l'utilisateur
+    this.scrollToBottom(100);
 
-    // Simulate typing
+    // Call real API
     this.isTyping = true;
-
-    setTimeout(() => {
-      this.isTyping = false;
-      const response = this.getBotResponse(message);
-      this.addBotMessage(response);
-    }, 1000);
-  }
-
-  private getBotResponse(userMessage: string): string {
-    const lowerMessage = userMessage.toLowerCase();
-
-    // Check for exact matches
-    for (const [key, response] of Object.entries(this.responses)) {
-      if (lowerMessage.includes(key)) {
-        return response;
+    this.chatbotService.sendMessage(message).subscribe({
+      next: (botMsg) => {
+        this.isTyping = false;
+        // The service adds the message to its own subject but we can handle it here or sync
+        // Actually the service already calls this.addMessage(botMessage) which updates messages$
+      },
+      error: (err) => {
+        this.isTyping = false;
+        this.addBotMessage("Une erreur est survenue lors de la communication avec l'assistant.");
+        console.error('Chatbot error:', err);
       }
-    }
-
-    // Default response
-    return 'Je ne suis pas sûr de comprendre. Pouvez-vous reformuler votre question ? Tapez "aide" pour voir ce que je peux faire.';
+    });
   }
+
 
   private addBotMessage(text: string) {
     this.messages.push({
@@ -127,10 +107,12 @@ export class ChatbotPage implements OnInit {
     this.scrollToBottom();
   }
 
-  private scrollToBottom() {
-    setTimeout(() => {
-      this.content.scrollToBottom(300);
-    }, 100);
+  private scrollToBottom(duration: number = 300) {
+    if (this.content) {
+      setTimeout(() => {
+        this.content.scrollToBottom(duration);
+      }, 150);
+    }
   }
 
   getMessageTime(timestamp: Date): string {
