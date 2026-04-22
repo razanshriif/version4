@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/client/dashboard")
+@RequestMapping("/api/v1/client/dashboard")
 public class ClientDashboardController {
 
     private final OrdreRepository ordreRepository;

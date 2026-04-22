@@ -29,4 +29,12 @@ export class PermissionService {
     updatePermissions(permissions: any[]): Observable<void> {
         return this.http.post<void>(this.apiUrl, permissions, { headers: this.getHeaders() });
     }
+
+    getPermissionsByUser(userId: number): Observable<{ [key: string]: boolean }> {
+        return this.http.get<{ [key: string]: boolean }>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() });
+    }
+
+    updateUserPermissions(userId: number, permissions: any[]): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}/user/${userId}`, permissions, { headers: this.getHeaders() });
+    }
 }

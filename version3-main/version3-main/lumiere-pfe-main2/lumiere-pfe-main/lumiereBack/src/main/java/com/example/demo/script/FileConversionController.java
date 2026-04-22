@@ -18,7 +18,7 @@ import com.example.demo.Entity.Ordre;
 import com.example.demo.Repository.EventsRepository;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/conversion")
 public class FileConversionController {
 	
 	 @Autowired

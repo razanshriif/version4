@@ -17,8 +17,16 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/authenticate`, { email, password });
   }
 
-  register(firstname: string, lastname: string, email: string, password: string, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { firstname, lastname, email, password, role });
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
+  }
+
+  approveClient(id: number, codeClient: string, idEdi: string): Observable<any> {
+    const params = { codeClient, idEdi };
+    return this.http.post(`${environment.adminUrl}/users/${id}/approve-client`, null, { 
+      params,
+      headers: this.getAuthHeaders() 
+    });
   }
 
 

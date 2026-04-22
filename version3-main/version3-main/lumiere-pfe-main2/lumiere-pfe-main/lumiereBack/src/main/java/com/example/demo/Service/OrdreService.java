@@ -22,6 +22,7 @@ import com.example.demo.Repository.TranckRepository;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
+import com.example.demo.Entity.Client;
 
 @Service
 public class OrdreService {
@@ -40,6 +41,10 @@ public class OrdreService {
 	private MatriculeService matriculeService;
 	@Autowired
 	private TranckRepository tranckRepository;
+	@Autowired
+	private EmailService emailService;
+	@Autowired
+	private NotificationService notificationService;
 
 	public List<Ordre> findAll() {
 		return ordreRepository.findTop1000ByOrderByIdDesc();
@@ -74,6 +79,20 @@ public class OrdreService {
 		// 4. Lier l'ordre au tracking (back-reference)
 		tranck.setOrdre(savedOrdre);
 		tranckRepository.save(tranck);
+
+		// 5. Envoyer l'email de notification
+		try {
+			emailService.sendOrderCreatedEmail(savedOrdre);
+			
+			// In-app notification for admins
+			com.example.demo.Entity.Notification notification = new com.example.demo.Entity.Notification();
+			notification.setType("ORDRE");
+			notification.setMessage("Nouvel ordre créé : " + savedOrdre.getOrderNumber() + " pour " + savedOrdre.getNomclient());
+			notification.setRead(false);
+			notificationService.createNotification(notification);
+		} catch (Exception e) {
+			System.err.println("Failed to send order creation notifications: " + e.getMessage());
+		}
 
 		return savedOrdre;
 	}
@@ -116,8 +135,34 @@ public class OrdreService {
 		ordre.setStatut(Statut.NON_PLANIFIE);
 
 		final Ordre updatedOrdre = ordreRepository.save(ordre);
+
+		// Envoyer l'email de confirmation au client
+		sendOrderConfirmationEmail(updatedOrdre);
+
+		// In-app notification for the user/client
+		try {
+			com.example.demo.Entity.Notification notification = new com.example.demo.Entity.Notification();
+			notification.setType("CONFIRMATION");
+			notification.setMessage("Votre ordre " + updatedOrdre.getOrderNumber() + " a été confirmé !");
+			notification.setRead(false);
+			// Ideally we'd set targetUserId here if the entity supports it
+			notificationService.createNotification(notification);
+		} catch (Exception e) {
+			System.err.println("Failed to create confirmation notification: " + e.getMessage());
+		}
+
 		return updatedOrdre;
 
+	}
+
+	private void sendOrderConfirmationEmail(Ordre ordre) {
+		if (ordre.getClient() != null) {
+			clientRepository.findByCodeclient(ordre.getClient()).ifPresent(client -> {
+				if (client.getEmail() != null && !client.getEmail().isEmpty()) {
+					emailService.sendOrderConfirmedEmail(ordre, client.getEmail());
+				}
+			});
+		}
 	}
 
 	@Transactional
@@ -128,7 +173,9 @@ public class OrdreService {
 			if (opt.isPresent()) {
 				Ordre o = opt.get();
 				o.setStatut(Statut.NON_PLANIFIE);
-				confirmed.add(ordreRepository.save(o));
+				Ordre saved = ordreRepository.save(o);
+				confirmed.add(saved);
+				sendOrderConfirmationEmail(saved);
 			}
 		}
 		return confirmed;
@@ -227,6 +274,18 @@ public class OrdreService {
 
 			return cb.and(predicates.toArray(new Predicate[0]));
 		});
+	}
+
+	@Transactional
+	public Ordre updateGpsPosition(Long id, Double lat, Double lon) {
+		Optional<Ordre> optionalOrdre = ordreRepository.findById(id);
+		if (optionalOrdre.isPresent()) {
+			Ordre ordre = optionalOrdre.get();
+			ordre.setCurrentLat(lat);
+			ordre.setCurrentLon(lon);
+			return ordreRepository.save(ordre);
+		}
+		throw new RuntimeException("Ordre introuvable avec l'ID: " + id);
 	}
 
 }

@@ -4,7 +4,6 @@ import com.example.demo.securityjwt.controller.dto.AuthenticationRequest;
 import com.example.demo.securityjwt.controller.dto.AuthenticationResponse;
 import com.example.demo.securityjwt.service.AuthenticationService;
 import com.example.demo.securityjwt.controller.dto.RegisterRequest;
-import com.example.demo.Service.UserService;
 import com.example.demo.Entity.User;
 import com.example.demo.Repository.UserRepository;
 
@@ -20,9 +19,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin("*")
 public record AuthController(AuthenticationService authenticationService, UserRepository userRepository) {
 
     @PostMapping("/register")

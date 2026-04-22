@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import com.example.demo.Entity.User;
 import com.example.demo.Service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
@@ -64,5 +65,30 @@ public class UserController {
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userService.findByEmail(email);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // UPDATE PROFILE INFO & IMAGE
+    @PutMapping("/{id}/profile")
+    public ResponseEntity<User> updateProfile(@PathVariable Integer id, @RequestBody Map<String, String> body) {
+        try {
+            User updatedUser = userService.updateProfileInfo(id, body.get("firstname"), body.get("lastname"), body.get("profileImageBase64"));
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // UPDATE PASSWORD
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Map<String, String>> updatePassword(@PathVariable Integer id, @RequestBody Map<String, String> body) {
+        String currentPassword = body.get("currentPassword");
+        String newPassword = body.get("newPassword");
+        boolean success = userService.updatePassword(id, currentPassword, newPassword);
+        
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Mot de passe mis à jour avec succès"));
+        } else {
+            return ResponseEntity.status(400).body(Map.of("error", "Ancien mot de passe incorrect"));
+        }
     }
 }

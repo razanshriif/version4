@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PermissionService } from '../permission.service';
+import { UsersService } from '../users.service';
 
 interface Action {
     key: string;
@@ -24,9 +25,24 @@ interface Module {
 })
 export class PermissionManagementComponent implements OnInit {
     roles = ['ADMIN', 'COMMERCIAL', 'CLIENT', 'USER_LUMIERE'];
+    users: any[] = [];
+    configMode: 'ROLE' | 'USER' = 'ROLE';
     selectedRole: string = 'ADMIN';
+    selectedUserId: number | null = null;
+    searchTerm: string = '';
     permissions: any[] = [];
     isLoading = false;
+
+    get filteredUsers() {
+        if (!this.searchTerm) {
+            return this.users;
+        }
+        const term = this.searchTerm.toLowerCase();
+        return this.users.filter(user =>
+            (user.firstname + ' ' + user.lastname).toLowerCase().includes(term) ||
+            user.role.toLowerCase().includes(term)
+        );
+    }
 
     modules: Module[] = [
         {
@@ -81,13 +97,46 @@ export class PermissionManagementComponent implements OnInit {
 
     expandedModule: string | null = 'ORDRES';
 
-    constructor(private permissionService: PermissionService) { }
+    constructor(
+        private permissionService: PermissionService,
+        private userService: UsersService
+    ) { }
 
     ngOnInit(): void {
-        this.loadPermissions();
+        this.loadInitialData();
     }
 
-    loadPermissions(): void {
+    loadInitialData(): void {
+        this.isLoading = true;
+        this.permissionService.getAllPermissions().subscribe({
+            next: (data) => {
+                this.permissions = data;
+                this.isLoading = false;
+            },
+            error: (err) => {
+                console.error('Failed to load permissions', err);
+                this.isLoading = false;
+            }
+        });
+
+        this.userService.getClients().subscribe({
+            next: (data) => {
+                this.users = data;
+            },
+            error: (err) => console.error('Failed to load users', err)
+        });
+    }
+
+    onModeChange(): void {
+        this.permissions = [];
+        if (this.configMode === 'ROLE') {
+            this.loadPermissionsByRole();
+        } else if (this.selectedUserId) {
+            this.loadPermissionsByUser();
+        }
+    }
+
+    loadPermissionsByRole(): void {
         this.isLoading = true;
         this.permissionService.getAllPermissions().subscribe({
             next: (data) => {
@@ -101,17 +150,54 @@ export class PermissionManagementComponent implements OnInit {
         });
     }
 
+    loadPermissionsByUser(): void {
+        if (!this.selectedUserId) return;
+        this.isLoading = true;
+        this.permissionService.getPermissionsByUser(this.selectedUserId).subscribe({
+            next: (data) => {
+                const featureKeys = this.getAllFeatureKeys();
+                this.permissions = featureKeys.map(key => ({
+                    userId: this.selectedUserId,
+                    featureKey: key,
+                    enabled: data[key] || false
+                }));
+                this.isLoading = false;
+            },
+            error: (err) => {
+                console.error('Failed to load user permissions', err);
+                this.isLoading = false;
+            }
+        });
+    }
+
+    private getAllFeatureKeys(): string[] {
+        const keys: string[] = [];
+        this.modules.forEach(m => {
+            keys.push(m.key);
+            m.actions.forEach(a => keys.push(a.key));
+        });
+        return keys;
+    }
+
     toggleModule(key: string) {
         this.expandedModule = this.expandedModule === key ? null : key;
     }
 
     getPermission(key: string): any {
-        return this.permissions.find(p => p.role === this.selectedRole && p.featureKey === key);
+        if (this.configMode === 'ROLE') {
+            return this.permissions.find(p => p.role === this.selectedRole && p.featureKey === key);
+        } else {
+            return this.permissions.find(p => p.featureKey === key);
+        }
     }
 
     savePermissions(): void {
         this.isLoading = true;
-        this.permissionService.updatePermissions(this.permissions).subscribe({
+        const saveObs = this.configMode === 'ROLE'
+            ? this.permissionService.updatePermissions(this.permissions)
+            : this.permissionService.updateUserPermissions(this.selectedUserId!, this.permissions);
+
+        saveObs.subscribe({
             next: () => {
                 alert('Configuration sauvegardée avec succès !');
                 this.isLoading = false;

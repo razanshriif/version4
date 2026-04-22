@@ -63,6 +63,8 @@ export class ClientComponent implements OnInit {
   searchCode: string = '';
   clients: any[] = [];
   Detail = true;
+  activeTab: 'all' | 'pending' = 'all'; // Default to all clients
+  isEditMode: boolean = false;
 
   constructor(
     private modalService: NgbModal,
@@ -137,6 +139,7 @@ export class ClientComponent implements OnInit {
       email: ""
     };
     this.Detail = true;
+    this.isEditMode = false;
   }
 
   detail(c: any) {
@@ -147,17 +150,37 @@ export class ClientComponent implements OnInit {
   editer(c: any) {
     this.client = c;
     this.Detail = true;
+    this.isEditMode = true;
   }
 
   filterClients(): void {
-    this.filteredClients = this.clients.filter(client =>
-      (this.searchName ? client.nom.toLowerCase().includes(this.searchName.toLowerCase()) : true) &&
-      (this.searchCode ? client.code.toString().includes(this.searchCode) : true)
-    );
+    this.filteredClients = this.clients.filter(client => {
+      const matchesSearch = (this.searchName ? client.nom.toLowerCase().includes(this.searchName.toLowerCase()) : true) &&
+        (this.searchCode ? (client.codeclient || '').toLowerCase().includes(this.searchCode.toLowerCase()) : true);
+
+      if (this.activeTab === 'pending') {
+        return matchesSearch && !client.profileCompleted;
+      }
+      // "All" tab now only shows COMPLETED clients, per user request to separate pending ones
+      return matchesSearch && client.profileCompleted;
+    });
+  }
+
+  setTab(tab: 'all' | 'pending'): void {
+    this.activeTab = tab;
+    this.filterClients();
+  }
+
+  getPendingCount(): number {
+    return this.clients.filter(c => !c.profileCompleted).length;
   }
 
   saveClient() {
-    if (this.client.code) {
+    if (this.isEditMode) {
+      if (!this.client.code) {
+        console.error("No client code to update!");
+        return;
+      }
       this.service.modifier(this.client.code, this.client).subscribe(
         res => {
           this.ser.notification.type = "Client";

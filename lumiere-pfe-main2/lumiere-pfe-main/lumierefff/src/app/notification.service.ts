@@ -23,7 +23,7 @@ export class NotificationService {
 
   read: boolean = true;
   afficher(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/api`, { headers: this.getAuthHeaders() });
+    return this.http.get<any[]>(`${this.apiUrl}/api/v1/notifications`, { headers: this.getAuthHeaders() });
   }
   ajouter(notification: any): Observable<any[]> {
 

@@ -12,11 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@CrossOrigin("*")
 public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -131,5 +133,53 @@ public class AdminController {
                 .map(user -> ResponseEntity.ok().body(
                         java.util.Map.of("status", user.getStatus(), "email", user.getEmail())))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/users/{id}/approve-client")
+    public ResponseEntity<User> approveClient(
+            @PathVariable Integer id,
+            @RequestParam String codeClient,
+            @RequestParam String idEdi) {
+        logger.info("Approving client user ID: {} with code: {} and edi: {}", id, codeClient, idEdi);
+        
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Find associated client
+        List<Client> clients = userRepository.findClientsByUserId(id);
+        if (clients == null || clients.isEmpty()) {
+            throw new RuntimeException("No client record found for this user");
+        }
+        
+        Client client = clients.get(0);
+        client.setCodeclient(codeClient);
+        client.setIdEdi(idEdi);
+        client.setRegistrationApproved(true);
+        client.setProfileCompleted(true);
+        clientRepository.save(client);
+        
+        // Activate user
+        user.setStatus(Status.ACTIVE);
+        userRepository.save(user);
+        
+        String fullName = user.getFirstname() + " " + user.getLastname();
+        try {
+            emailService.sendRegistrationAcceptedEmail(user.getEmail(), fullName);
+        } catch (Exception e) {
+            logger.error("Failed to send approval email: {}", e.getMessage());
+        }
+        
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        logger.info("deleteUser called for ID: {}", id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            logger.info("User deleted successfully");
+            return ResponseEntity.noContent().build();
+        }
+        logger.warn("User with ID: {} not found for deletion", id);
+        return ResponseEntity.notFound().build();
     }
 }

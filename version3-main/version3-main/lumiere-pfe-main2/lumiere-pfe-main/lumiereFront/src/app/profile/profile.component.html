@@ -1,35 +1,154 @@
-<div class="profile-container">
-    <div class="profile-card">
-      <div class="profile-header">
-        <img
-          src="data:image/png;base64,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"
-          alt="{{ user.firstname }} {{ user.lastname }}"
-          class="profile-image"
-        />
-        <h2>{{ user.firstname }} {{ user.lastname }}</h2>
-        <p class="profile-role">{{ user.role }}</p>
-      </div>
-      <br>
-      <br>
-      <br>
-      <div class="profile-details">
-        <div class="profile-row">
-          <span class="label">Prenom:</span>
-          <span class="value">{{ user.firstname }}</span>
-        </div>
-        <div class="profile-row">
-            <span class="label">Nom:</span>
-            <span class="value">{{ user.lastname }}</span>
+<div class="profile-page">
+
+  <!-- Loading Spinner -->
+  <div class="profile-loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Chargement du profil…</p>
+  </div>
+
+  <div class="profile-layout" *ngIf="!isLoading">
+
+    <!-- LEFT: Profile Card -->
+    <div class="profile-sidebar">
+      <div class="profile-avatar-section">
+        <!-- Avatar -->
+        <div class="avatar-wrapper" (click)="fileInput.click()">
+          <img *ngIf="imagePreview" [src]="imagePreview" alt="Photo profil" class="avatar-img">
+          <div *ngIf="!imagePreview" class="avatar-initials">{{ getUserInitials() }}</div>
+          <div class="avatar-overlay">
+            <i class="fas fa-camera"></i>
+            <span>Modifier</span>
           </div>
-        <div class="profile-row">
-          <span class="label">Email:</span>
-          <span class="value">{{ user.email }}</span>
         </div>
-        <div class="profile-row">
-          <span class="label">Mot de passe:</span>
-          <span class="value">{{ user.passwd }}</span>
+        <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)">
+        <p class="avatar-hint"><i class="fas fa-info-circle"></i> Cliquez sur l'avatar pour changer la photo</p>
+      </div>
+
+      <div class="profile-identity">
+        <h2 class="profile-fullname">{{ user.firstname }} {{ user.lastname }}</h2>
+        <div class="profile-role-badge">
+          <i [class]="getRoleIcon(user.role)"></i>
+          <span>{{ getRoleLabel(user.role) }}</span>
         </div>
+        <p class="profile-email"><i class="fas fa-envelope"></i> {{ user.email }}</p>
       </div>
     </div>
+
+    <!-- RIGHT: Edit Forms -->
+    <div class="profile-content">
+
+      <!-- Toast Messages -->
+      <div class="toast toast--success" *ngIf="successMessage">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+      <div class="toast toast--error" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+
+      <!-- Tabs -->
+      <div class="profile-tabs">
+        <button class="tab-btn" [class.tab-btn--active]="activeTab === 'info'" (click)="activeTab = 'info'">
+          <i class="fas fa-user-edit"></i> Informations
+        </button>
+        <button class="tab-btn" [class.tab-btn--active]="activeTab === 'password'" (click)="activeTab = 'password'">
+          <i class="fas fa-lock"></i> Mot de passe
+        </button>
+      </div>
+
+      <!-- TAB: Info -->
+      <div class="profile-form-card" *ngIf="activeTab === 'info'">
+        <h3 class="form-title"><i class="fas fa-user-edit"></i> Modifier mes informations</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user"></i>
+              <input type="text" [(ngModel)]="user.firstname" placeholder="Prénom">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Nom</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user"></i>
+              <input type="text" [(ngModel)]="user.lastname" placeholder="Nom">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrapper input-disabled">
+            <i class="fas fa-envelope"></i>
+            <input type="email" [value]="user.email" disabled>
+          </div>
+          <small class="form-hint"><i class="fas fa-info-circle"></i> L'email ne peut pas être modifié</small>
+        </div>
+
+        <!-- Photo Upload Zone -->
+        <div class="photo-upload-zone" (click)="fileInput.click()" (dragover)="$event.preventDefault()">
+          <i class="fas fa-cloud-upload-alt upload-icon"></i>
+          <p>Glissez une image ici ou <strong>cliquez pour parcourir</strong></p>
+          <small>JPG, PNG · Max 5 MB · Redimensionné automatiquement</small>
+        </div>
+
+        <button class="btn-save" (click)="saveProfileInfo()" [disabled]="isSavingInfo">
+          <i class="fas fa-save" *ngIf="!isSavingInfo"></i>
+          <span class="btn-spinner" *ngIf="isSavingInfo"></span>
+          {{ isSavingInfo ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+        </button>
+      </div>
+
+      <!-- TAB: Password -->
+      <div class="profile-form-card" *ngIf="activeTab === 'password'">
+        <h3 class="form-title"><i class="fas fa-lock"></i> Changer le mot de passe</h3>
+        <p class="form-subtitle">Pour votre sécurité, entrez votre mot de passe actuel avant d'en définir un nouveau.</p>
+
+        <div class="form-group">
+          <label>Mot de passe actuel</label>
+          <div class="input-wrapper">
+            <i class="fas fa-key"></i>
+            <input type="password" [(ngModel)]="passwordForm.currentPassword" placeholder="••••••••">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nouveau mot de passe</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" [(ngModel)]="passwordForm.newPassword" placeholder="Minimum 6 caractères">
+          </div>
+          <!-- Password strength -->
+          <div class="password-strength" *ngIf="passwordForm.newPassword.length > 0">
+            <div class="strength-bar" [class.weak]="passwordForm.newPassword.length < 6"
+                                      [class.medium]="passwordForm.newPassword.length >= 6 && passwordForm.newPassword.length < 10"
+                                      [class.strong]="passwordForm.newPassword.length >= 10"></div>
+            <small [class.text-weak]="passwordForm.newPassword.length < 6"
+                   [class.text-medium]="passwordForm.newPassword.length >= 6 && passwordForm.newPassword.length < 10"
+                   [class.text-strong]="passwordForm.newPassword.length >= 10">
+              {{ passwordForm.newPassword.length < 6 ? 'Trop court' : passwordForm.newPassword.length < 10 ? 'Moyen' : 'Fort ✓' }}
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirmer le nouveau mot de passe</label>
+          <div class="input-wrapper" [class.input-error]="passwordForm.confirmPassword && passwordForm.newPassword !== passwordForm.confirmPassword">
+            <i class="fas fa-lock"></i>
+            <input type="password" [(ngModel)]="passwordForm.confirmPassword" placeholder="Répétez le mot de passe">
+          </div>
+          <small class="form-error-hint" *ngIf="passwordForm.confirmPassword && passwordForm.newPassword !== passwordForm.confirmPassword">
+            <i class="fas fa-times-circle"></i> Les mots de passe ne correspondent pas
+          </small>
+        </div>
+
+        <button class="btn-save btn-save--danger" (click)="savePassword()" [disabled]="isSavingPassword">
+          <i class="fas fa-shield-alt" *ngIf="!isSavingPassword"></i>
+          <span class="btn-spinner" *ngIf="isSavingPassword"></span>
+          {{ isSavingPassword ? 'Modification…' : 'Modifier le mot de passe' }}
+        </button>
+      </div>
+
+    </div>
   </div>
-  
+</div>

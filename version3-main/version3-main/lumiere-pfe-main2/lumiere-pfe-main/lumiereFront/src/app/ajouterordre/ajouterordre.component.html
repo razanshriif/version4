@@ -69,7 +69,7 @@
             </td>
             <td>
               <div class="itinerary-mini">
-                <span class="client-label">{{ ordre.client }}</span>
+                <span class="client-label"><i class="fa fa-user-circle"></i> {{ ordre.nomclient || ordre.client }}</span>
                 <div class="route-line">
                   <span title="Chargement: {{ ordre.chargementVille }}"><i class="fa fa-circle text-success"></i> {{
                     ordre.chargementVille }}</span>
@@ -275,8 +275,8 @@
         <i class="fa fa-copy"></i>
         <h5>Dupliquer l'ordre</h5>
       </div>
-      <button class="btn-bulk-text" style="color: white; padding: 0; min-width: auto;" (click)="closeDuplicateModal()">
-        <i class="fa fa-times"></i>
+      <button class="btn-bulk-text" (click)="closeDuplicateModal()">
+        <i class="fa fa-times" style="color: white;"></i>
       </button>
     </div>
     <div class="modal-body-premium">
@@ -284,17 +284,17 @@
         Vous êtes sur le point de copier l'ordre <span class="tag">#{{ordreToDuplicate.orderNumber}}</span>
       </div>
       <div class="form-group-modern">
-        <label>Nombre de copies à générer</label>
+        <label>NOMBRE DE COPIES À GÉNÉRER</label>
         <div class="counter-input">
-          <i class="fa fa-layer-group" style="color: #94a3b8;"></i>
+          <i class="fa fa-layer-group"></i>
           <input type="number" [(ngModel)]="duplicateCount" name="duplicateCount" min="1" max="50" />
           <span class="unit">copies</span>
         </div>
       </div>
-      <div class="modal-footer-premium no-border">
+      <div class="modal-footer-premium">
         <button type="button" class="btn-cancel" (click)="closeDuplicateModal()">Annuler</button>
         <button type="button" class="btn-save info" (click)="submitDuplicate()">
-          <i class="fa fa-check"></i> Confirmer la copie
+          <i class="fa fa-check-circle"></i> Confirmer la copie
         </button>
       </div>
     </div>

@@ -2,7 +2,7 @@
     <div class="auth-card register-wide">
         <div class="auth-header">
             <div class="auth-logo">
-                <img src="assets/Lumiere-Logistique.png" alt="Lumière Logistique">
+                <img src="assets/lum.jpg" alt="Lumière Logistique">
             </div>
             <h2>Créer un Compte</h2>
             <p class="auth-subtitle">Rejoignez Lumière aujourd'hui</p>
@@ -39,6 +39,81 @@
                         <i class="fas fa-user"></i>
                         <input type="text" [(ngModel)]="user.lastname" name="lastname" placeholder="Ex: Dupont"
                             required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Civilité</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-venus-mars"></i>
+                        <select [(ngModel)]="user.civilite" name="civilite" required>
+                            <option value="">Sélectionner</option>
+                            <option value="Mr">Monsieur</option>
+                            <option value="Mme">Madame</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" [(ngModel)]="user.telephone" name="telephone" placeholder="01 23 45 67 89" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nom de la Société / Facturation</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-building"></i>
+                    <input type="text" [(ngModel)]="user.societeFacturation" name="societeFacturation" placeholder="Nom de votre entreprise" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse complète</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" [(ngModel)]="user.adresse" name="adresse" placeholder="123 Rue de la Logistique" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ville</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-city"></i>
+                        <input type="text" [(ngModel)]="user.ville" name="ville" placeholder="Paris" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Code Postal</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-mail-bulk"></i>
+                        <input type="number" [(ngModel)]="user.codepostal" name="codepostal" placeholder="75000" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pays</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-globe"></i>
+                        <input type="text" [(ngModel)]="user.pays" name="pays" placeholder="France" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Type d'activité</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-tags"></i>
+                        <select [(ngModel)]="user.type" name="type" required>
+                            <option value="Standard">Standard</option>
+                            <option value="Premium">Premium</option>
+                            <option value="Partenaire">Partenaire</option>
+                        </select>
                     </div>
                 </div>
             </div>

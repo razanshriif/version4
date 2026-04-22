@@ -134,8 +134,8 @@ export class OrdrenonconformComponent implements OnInit {
     typeVoyage: '',
     typeCamion: '',
     typeSemi: '',
+    typeCargo: '',
     commentaireLibre: ''
-
   };
 
   ngOnInit() {
@@ -276,6 +276,55 @@ export class OrdrenonconformComponent implements OnInit {
     }
   }
 
+  getArticleIcon(codeArticle: string): { icon: string, color: string } {
+    const defaultIcon = { icon: 'fa-box', color: '#6c757d' };
+    if (!codeArticle) return defaultIcon;
+    
+    const article = this.articleOptions.find(a => a.codeArticle === codeArticle);
+    if (!article) return defaultIcon;
+    
+    const label = (article.label || '').toUpperCase();
+    
+    // ❄️ Froid / Température
+    if (label.includes('-22°C') || label.includes('SURGELE')) return { icon: 'fa-icicles', color: '#0056b3' };
+    if (label.includes('4°C') || label.includes('FRAIS')) return { icon: 'fa-snowflake', color: '#00a8ff' };
+    if (label.includes('12°C') || label.includes('CONTRÔLÉ')) return { icon: 'fa-thermometer-half', color: '#007bff' };
+    if (label.includes('FRIGORIFIQUE')) return { icon: 'fa-snowflake', color: '#00a8ff' };
+    
+    // ☀️ Logistique & Stockage
+    if (label.includes('AMBIANT')) return { icon: 'fa-sun', color: '#e1b12c' };
+    if (label.includes('STATIONNEMENT')) return { icon: 'fa-parking', color: '#e84118' };
+    if (label.includes('ENTREPOT') || label.includes('DEPOT') || label.includes('INTER-SITE') || label.includes('INTER DEPOT')) return { icon: 'fa-warehouse', color: '#8c7ae6' };
+    if (label.includes('MAGASIN')) return { icon: 'fa-store', color: '#8c7ae6' };
+    
+    // 🔄 Mouvements spéciaux
+    if (label.includes('RETOUR')) return { icon: 'fa-undo', color: '#e84118' };
+    if (label.includes('SPOT') || label.includes('SPECIAL')) return { icon: 'fa-bolt', color: '#fbc531' };
+    if (label.includes('PERSONNEL')) return { icon: 'fa-users', color: '#0097e6' };
+    if (label.includes('DECHARGEMENT')) return { icon: 'fa-dolly', color: '#e1b12c' };
+    if (label.includes('DISPATCHING') || label.includes('TRANSIT')) return { icon: 'fa-route', color: '#44bd32' };
+    
+    // 💳 Achats & Facturation
+    if (label.includes('ACHAT')) return { icon: 'fa-shopping-cart', color: '#4cd137' };
+    if (label.includes('FACTURE')) return { icon: 'fa-file-invoice-dollar', color: '#44bd32' };
+    if (label.includes('NON FACTU')) return { icon: 'fa-file-alt', color: '#7f8fa6' };
+    
+    // 🔧 Technique & Maintenance
+    if (label.includes('REPARATION') || label.includes('MECA') || label.includes('PNEUM')) return { icon: 'fa-wrench', color: '#718093' };
+    if (label.includes('LAVAGE') || label.includes('VIDANGE')) return { icon: 'fa-oil-can', color: '#2f3640' };
+    if (label.includes('VISITE TECHNIQUE') || label.includes('TECHNIQUE') || label.includes('SAV')) return { icon: 'fa-tools', color: '#e1b12c' };
+    if (label.includes('TRACTAGE') || label.includes('PARC')) return { icon: 'fa-truck-moving', color: '#353b48' };
+    
+    // 📦 Spécifiques
+    if (label.includes('FRUIT')) return { icon: 'fa-apple-alt', color: '#e84118' };
+    if (label.includes('LILAS')) return { icon: 'fa-leaf', color: '#9c88ff' };
+    if (label.includes('CATALOGUE')) return { icon: 'fa-book', color: '#8c7ae6' };
+    if (label.includes('EMBALLAGE')) return { icon: 'fa-box-open', color: '#e1b12c' };
+    
+    // 🚛 Défaut
+    return { icon: 'fa-truck', color: '#7f8fa6' };
+  }
+
   chargement(clientCode: string): void {
     if (clientCode) {
       this.clientService.getClientDetails(clientCode).subscribe(
@@ -364,6 +413,12 @@ export class OrdrenonconformComponent implements OnInit {
         this.optionsCommentaire.typeSemi
       ) {
         parts.push(`(${this.optionsCommentaire.typeSemi})`);
+      }
+      if (
+        this.optionsCommentaire.typeCamion === 'Cargo' &&
+        this.optionsCommentaire.typeCargo
+      ) {
+        parts.push(`(${this.optionsCommentaire.typeCargo})`);
       }
     }
 

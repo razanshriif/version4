@@ -43,60 +43,74 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        // Create the User record (even for PENDING clients)
         final var user = new User();
         user.setEmail(request.email());
         user.setFirstname(request.firstname());
         user.setLastname(request.lastname());
         user.setPasswd(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
-        user.setStatus(com.example.demo.Entity.Status.PENDING);
 
+        // All registrations are set to PENDING by default
+        user.setStatus(com.example.demo.Entity.Status.PENDING);
         userRepository.save(user);
 
-        // If the role is CLIENT, create a corresponding Client entity
-        if (user.getRole() == Role.CLIENT) {
-            Client client = new Client();
-            client.setNom(user.getLastname());
-            client.setEmail(user.getEmail());
-            client.setOwner(user);
-            client.setRegistrationApproved(false);
-            client.setProfileCompleted(false);
-            clientRepository.save(client);
-            logger.info("Automatic client creation for user: {}", user.getEmail());
-        }
+        // Create a Client record for ALL users to track their approval/profile
+        Client client = new Client();
+        client.setNom(request.lastname());
+        client.setEmail(request.email());
+        client.setOwner(user);
+        client.setRegistrationApproved(false);
+        client.setProfileCompleted(false);
+        
+        // Map registration fields
+        client.setTelephone(request.telephone());
+        client.setAdresse(request.adresse());
+        client.setVille(request.ville());
+        client.setPays(request.pays());
+        client.setCodepostal(request.codepostal());
+        client.setCivilite(request.civilite());
+        client.setType(request.type());
+        client.setSocieteFacturation(request.societeFacturation());
+        
+        clientRepository.save(client);
 
-        // Send registration email (non-blocking - failure won't prevent registration)
+        logger.info("Pending registration created for: {}", request.email());
+
+        // Notifications...
+        sendNotifications(request);
+
+        return new AuthenticationResponse(null); // No token for pending users
+    }
+
+    private void sendNotifications(RegisterRequest request) {
+        // Send registration email
         try {
-            emailService.sendRegistrationEmail(user.getEmail(), user.getFirstname() + " " + user.getLastname());
-            logger.info("Registration email sent successfully to {}", user.getEmail());
+            emailService.sendRegistrationEmail(request.email(), request.firstname() + " " + request.lastname());
         } catch (Exception e) {
-            logger.error("Failed to send registration email to {}: {}", user.getEmail(), e.getMessage());
+            logger.error("Failed to send email: {}", e.getMessage());
         }
 
-        // Notify admins about new registration
+        // Notify admins
         try {
             emailService.sendNewRegistrationNotificationToAdmins(
-                    user.getFirstname() + " " + user.getLastname(),
-                    user.getEmail());
-            logger.info("Admin notification sent for new registration: {}", user.getEmail());
+                    request.firstname() + " " + request.lastname(),
+                    request.email());
         } catch (Exception e) {
-            logger.error("Failed to send admin notification: {}", e.getMessage());
+            logger.error("Failed to notify admins: {}", e.getMessage());
         }
 
-        // Create in-app notification
+        // In-app notification
         try {
             com.example.demo.Entity.Notification notification = new com.example.demo.Entity.Notification();
             notification.setType("Inscription");
-            notification.setMessage("Nouvelle inscription : " + user.getFirstname() + " " + user.getLastname());
+            notification.setMessage("Nouvelle inscription : " + request.firstname() + " " + request.lastname());
             notification.setRead(false);
+            notification.setTargetRole(com.example.demo.Entity.Role.ADMIN); // Changed to ADMIN to match user role
             notificationService.createNotification(notification);
-            logger.info("In-app notification created for: {}", user.getEmail());
         } catch (Exception e) {
-            logger.error("Failed to create in-app notification: {}", e.getMessage());
+            logger.error("Failed to create UI notification: {}", e.getMessage());
         }
-
-        final var token = JwtService.generateToken(user);
-        return new AuthenticationResponse(token);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

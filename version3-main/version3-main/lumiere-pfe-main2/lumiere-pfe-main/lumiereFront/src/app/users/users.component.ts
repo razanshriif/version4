@@ -31,8 +31,15 @@ export class UsersComponent {
     lastname: "",
     email: "",
     password: "",
-    role: ""
+    role: "CLIENT"
   }
+
+  // Approval Modal properties
+  selectedUser: any = null;
+  approvalData = {
+    codeClient: '',
+    idEdi: ''
+  };
 
   constructor(
     private authService: AuthService,
@@ -76,6 +83,38 @@ export class UsersComponent {
         this.loadUsers();
       },
       err => console.error('Error approving user', err)
+    );
+  }
+
+  openApprovalModal(user: any) {
+    this.selectedUser = user;
+    this.approvalData = { codeClient: '', idEdi: '' };
+    const modal = document.getElementById('approveClientModal');
+    if (modal) modal.style.display = 'block';
+  }
+
+  closeApprovalModal() {
+    const modal = document.getElementById('approveClientModal');
+    if (modal) modal.style.display = 'none';
+    this.selectedUser = null;
+  }
+
+  onConfirmApproval() {
+    if (!this.selectedUser || !this.approvalData.codeClient || !this.approvalData.idEdi) return;
+
+    this.authService.approveClient(
+      this.selectedUser.id, 
+      this.approvalData.codeClient, 
+      this.approvalData.idEdi
+    ).subscribe(
+      res => {
+        this.closeApprovalModal();
+        this.loadUsers();
+      },
+      err => {
+        console.error('Approval failed', err);
+        alert('Erreur lors de l\'approbation. Vérifiez que le client est bien lié.');
+      }
     );
   }
 
@@ -128,7 +167,7 @@ export class UsersComponent {
   }
 
   onSubmit(): void {
-    this.authService.register(this.user.firstname, this.user.lastname, this.user.email, this.user.password, this.user.role)
+    this.authService.register(this.user)
       .subscribe(response => {
         this.user = {
           id: 0,

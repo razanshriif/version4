@@ -7,11 +7,17 @@
 
     <!-- Fenêtre de chat -->
     <div class="chat-window" [class.open]="isChatOpen">
+        <!-- Background Premium -->
+        <div class="glass-background">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+
         <!-- En-tête du chat -->
         <div class="chat-header">
             <div class="header-content">
                 <div class="bot-avatar">
-                    <i class="fas fa-robot"></i>
+                    <img src="assets/lum-removebg-preview.png" alt="L" />
                 </div>
                 <div class="header-info">
                     <h3>Assistant Lumière</h3>
@@ -21,9 +27,14 @@
                     </p>
                 </div>
             </div>
-            <button class="close-btn" (click)="toggleChat()">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="header-actions">
+                <button class="action-btn" (click)="clearChat()" title="Effacer la discussion">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="close-btn" (click)="toggleChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Zone de messages -->
@@ -31,11 +42,8 @@
             <div class="message-wrapper" *ngFor="let message of messages" [class.user-message]="message.isUser"
                 [class.bot-message]="!message.isUser">
                 <div class="message">
-                    <div class="message-avatar" *ngIf="!message.isUser">
-                        <i class="fas fa-robot"></i>
-                    </div>
                     <div class="message-content">
-                        <p>{{message.text}}</p>
+                        <div class="message-text" [innerHTML]="formatMessage(message.text)"></div>
                         <span class="message-time">{{message.time}}</span>
                     </div>
                 </div>
@@ -43,26 +51,30 @@
 
             <!-- Indicateur de frappe -->
             <div class="typing-indicator" *ngIf="isTyping">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
 
         <!-- Suggestions rapides -->
-        <div class="quick-replies" *ngIf="showQuickReplies">
+        <div class="quick-replies" *ngIf="showQuickReplies && messages.length <= 1">
             <button class="quick-reply-btn" *ngFor="let reply of quickReplies" (click)="sendQuickReply(reply)">
                 {{reply}}
             </button>
         </div>
 
         <!-- Zone de saisie -->
-        <div class="chat-input">
-            <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"
-                placeholder="Tapez votre message..." [disabled]="isTyping">
-            <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isTyping">
-                <i class="fas fa-paper-plane"></i>
-            </button>
+        <div class="chat-input-wrapper">
+            <div class="chat-input">
+                <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"
+                    placeholder="Écrivez votre message..." [disabled]="isTyping">
+                <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isTyping">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

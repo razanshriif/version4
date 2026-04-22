@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -26,20 +26,21 @@ import { PermissionService } from '../permission.service';
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.css']
 })
-export class MaterialComponent implements OnInit {
+export class MaterialComponent implements OnInit, OnDestroy {
   title = 'material-responsive-sidenav';
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
   isMobile = false;
   showOrdersSubMenu = false;
   isCollapsed = false;
-  userImage: string = "data:image/png;base64,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";
 
   user: any = {};
   showNotifications = false;
   clients: any[] = [];
   hasNewNotifications = false;
   permissions: { [key: string]: boolean } = {};
+
+  private pollingInterval: any;
 
   constructor(
     private observer: BreakpointObserver,
@@ -63,6 +64,13 @@ export class MaterialComponent implements OnInit {
 
     this.profile();
     this.afficher();
+
+    // Poll every 30s for new notifications
+    this.pollingInterval = setInterval(() => this.afficher(), 30000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
   }
 
   toggleMenu() {
@@ -82,17 +90,85 @@ export class MaterialComponent implements OnInit {
 
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) {
-      this.hasNewNotifications = false;
-      this.clients.forEach(client => client.isRead = true);
-    }
+    console.log('Toggle notifications:', this.showNotifications);
+    console.log('Notifications count:', this.clients?.length);
   }
 
   afficher() {
-    this.service.afficher().subscribe(clients => {
-      this.clients = clients.reverse();
-      this.hasNewNotifications = this.clients.some(client => !client.isRead);
+    this.service.afficher().subscribe({
+      next: (notifs) => {
+        console.log('Notifications received:', notifs?.length);
+        this.clients = (notifs || []).sort((a: any, b: any) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+        this.hasNewNotifications = this.clients.some(n => !n.isRead);
+      },
+      error: (err) => console.error('Error fetching notifications:', err)
     });
+  }
+
+  get unreadCount(): number {
+    return this.clients.filter(n => !n.isRead).length;
+  }
+
+  markAllRead(): void {
+    this.service.markAllAsRead().subscribe(() => {
+      this.clients.forEach(n => n.isRead = true);
+      this.hasNewNotifications = false;
+    });
+  }
+
+  markOneRead(notif: any): void {
+    if (!notif.isRead) {
+      notif.isRead = true;
+      this.hasNewNotifications = this.clients.some(n => !n.isRead);
+      this.service.markAsRead(notif.id).subscribe();
+    }
+  }
+
+  deleteNotif(notif: any, event: MouseEvent): void {
+    event.stopPropagation();
+    this.service.deleteNotification(notif.id).subscribe(() => {
+      this.clients = this.clients.filter(n => n.id !== notif.id);
+      this.hasNewNotifications = this.clients.some(n => !n.isRead);
+    });
+  }
+
+  getNotifIcon(type: string): string {
+    const t = (type || '').toLowerCase();
+    if (t.includes('inscription') || t.includes('user')) return 'fas fa-user-plus';
+    if (t.includes('ordre') || t.includes('commande'))   return 'fas fa-file-alt';
+    if (t.includes('alerte') || t.includes('alert'))     return 'fas fa-exclamation-triangle';
+    if (t.includes('gps') || t.includes('position'))     return 'fas fa-map-marker-alt';
+    if (t.includes('livraison'))                          return 'fas fa-truck';
+    if (t.includes('client'))                             return 'fas fa-handshake';
+    if (t.includes('paiement') || t.includes('facture')) return 'fas fa-credit-card';
+    return 'fas fa-bell';
+  }
+
+  getNotifColor(type: string): string {
+    const t = (type || '').toLowerCase();
+    if (t.includes('inscription')) return 'icon--blue';
+    if (t.includes('alerte'))      return 'icon--red';
+    if (t.includes('livraison'))   return 'icon--green';
+    if (t.includes('gps'))         return 'icon--purple';
+    if (t.includes('paiement'))    return 'icon--teal';
+    return 'icon--orange';
+  }
+
+  timeAgo(timestamp: string): string {
+    if (!timestamp) return '';
+    const diff = (Date.now() - new Date(timestamp).getTime()) / 1000;
+    if (diff < 60)    return 'À l\'instant';
+    if (diff < 3600)  return `il y a ${Math.floor(diff / 60)} min`;
+    if (diff < 86400) return `il y a ${Math.floor(diff / 3600)} h`;
+    return `il y a ${Math.floor(diff / 86400)} j`;
+  }
+
+  getUserInitials(): string {
+    const f = this.user?.firstname?.charAt(0) || '';
+    const l = this.user?.lastname?.charAt(0) || '';
+    return (f + l).toUpperCase() || 'U';
   }
 
   logout(): void {
@@ -101,24 +177,20 @@ export class MaterialComponent implements OnInit {
   }
 
   profile() {
-    this.authService.profile().subscribe(
-      (data: any) => {
+    this.authService.profile().subscribe({
+      next: (data: any) => {
         this.user = data;
         this.loadPermissions();
       },
-      (error: any) => console.error('Erreur lors du chargement du profil', error)
-    );
+      error: (e: any) => console.error('Erreur profil', e)
+    });
   }
 
   loadPermissions() {
     if (!this.user || !this.user.role) return;
     this.permissionService.getPermissionsByRole(this.user.role).subscribe({
-      next: (perms: any) => {
-        this.permissions = perms;
-      },
-      error: (err: any) => {
-        console.error('Failed to load permissions', err);
-      }
+      next: (perms: any) => { this.permissions = perms; },
+      error: (err: any) => console.error('Failed to load permissions', err)
     });
   }
 

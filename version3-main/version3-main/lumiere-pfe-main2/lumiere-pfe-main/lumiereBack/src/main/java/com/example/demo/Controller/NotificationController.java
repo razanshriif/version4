@@ -21,18 +21,21 @@ import com.example.demo.Entity.Notification;
 import com.example.demo.Service.NotificationService;
 
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
 
-    // ✅ GET toutes les notifications (paginée ou non)
+    // ✅ GET toutes les notifications (filtrées par userId et role)
     @GetMapping
     public List<Notification> getAllNotifications(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String role,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
-        return notificationService.getAllNotifications();
+        com.example.demo.Entity.Role roleEnum = parseRole(role);
+        return notificationService.getAllNotifications(userId, roleEnum);
     }
 
     // ✅ GET une notification par ID
@@ -44,14 +47,27 @@ public class NotificationController {
 
     // ✅ GET notifications non lues
     @GetMapping("/unread")
-    public List<Notification> getUnreadNotifications() {
-        return notificationService.getUnreadNotifications();
+    public List<Notification> getUnreadNotifications(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String role) {
+        com.example.demo.Entity.Role roleEnum = parseRole(role);
+        return notificationService.getUnreadNotifications(userId, roleEnum);
     }
 
     // ✅ GET nombre de notifications non lues
     @GetMapping("/unread/count")
-    public ResponseEntity<Long> getUnreadCount() {
-        return ResponseEntity.ok(notificationService.getUnreadCount());
+    public ResponseEntity<Long> getUnreadCount(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String role) {
+        com.example.demo.Entity.Role roleEnum = parseRole(role);
+        return ResponseEntity.ok(notificationService.getUnreadCount(userId, roleEnum));
+    }
+
+    /** Safely convert a role string to Role enum, returns null if invalid */
+    private com.example.demo.Entity.Role parseRole(String role) {
+        if (role == null || role.isBlank()) return null;
+        try { return com.example.demo.Entity.Role.valueOf(role.toUpperCase()); }
+        catch (IllegalArgumentException e) { return null; }
     }
 
     // ✅ POST créer une notification

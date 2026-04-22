@@ -98,6 +98,12 @@ public class Ordre {
 
 	private Set<String> events;
 
+	@Column(name = "current_lat")
+	private Double currentLat;
+
+	@Column(name = "current_lon")
+	private Double currentLon;
+
 	@OneToOne
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
@@ -394,6 +400,22 @@ public class Ordre {
 
 	public void setTrancking(Tranck trancking) {
 		this.trancking = trancking;
+	}
+
+	public Double getCurrentLat() {
+		return currentLat;
+	}
+
+	public void setCurrentLat(Double currentLat) {
+		this.currentLat = currentLat;
+	}
+
+	public Double getCurrentLon() {
+		return currentLon;
+	}
+
+	public void setCurrentLon(Double currentLon) {
+		this.currentLon = currentLon;
 	}
 
 }

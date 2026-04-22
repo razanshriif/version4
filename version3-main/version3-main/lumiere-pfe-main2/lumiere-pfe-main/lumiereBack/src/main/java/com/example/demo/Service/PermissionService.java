@@ -2,7 +2,10 @@ package com.example.demo.Service;
 
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.RolePermission;
+import com.example.demo.Entity.User;
+import com.example.demo.Entity.UserPermission;
 import com.example.demo.Repository.RolePermissionRepository;
+import com.example.demo.Repository.UserPermissionRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -11,15 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PermissionService {
 
     private final RolePermissionRepository repository;
+    private final UserPermissionRepository userPermissionRepository;
 
-    public PermissionService(RolePermissionRepository repository) {
+    public PermissionService(RolePermissionRepository repository, UserPermissionRepository userPermissionRepository) {
         this.repository = repository;
+        this.userPermissionRepository = userPermissionRepository;
     }
 
     public List<RolePermission> getAllPermissions() {
@@ -35,6 +41,30 @@ public class PermissionService {
                 .collect(Collectors.toMap(RolePermission::getFeatureKey, RolePermission::isEnabled));
     }
 
+    public List<UserPermission> getPermissionsByUser(User user) {
+        return userPermissionRepository.findByUser(user);
+    }
+
+    public Map<String, Boolean> getPermissionMapByUser(User user) {
+        return userPermissionRepository.findByUser(user).stream()
+                .collect(Collectors.toMap(UserPermission::getFeatureKey, UserPermission::isEnabled));
+    }
+
+    public boolean hasPermission(User user, String featureKey) {
+        if (user == null) return false;
+
+        // 1. Check for specific user permission
+        Optional<UserPermission> up = userPermissionRepository.findByUserAndFeatureKey(user, featureKey);
+        if (up.isPresent()) {
+            return up.get().isEnabled();
+        }
+
+        // 2. Fallback to role-based permission
+        return repository.findByRoleAndFeatureKey(user.getRole(), featureKey)
+                .map(RolePermission::isEnabled)
+                .orElse(false);
+    }
+
     @Transactional
     public void updatePermissions(List<RolePermission> permissions) {
         for (RolePermission p : permissions) {
@@ -45,6 +75,22 @@ public class PermissionService {
                                 repository.save(existing);
                             },
                             () -> repository.save(p));
+        }
+    }
+
+    @Transactional
+    public void updateUserPermissions(User user, List<UserPermission> permissions) {
+        for (UserPermission p : permissions) {
+            userPermissionRepository.findByUserAndFeatureKey(user, p.getFeatureKey())
+                    .ifPresentOrElse(
+                            existing -> {
+                                existing.setEnabled(p.isEnabled());
+                                userPermissionRepository.save(existing);
+                            },
+                            () -> {
+                                p.setUser(user);
+                                userPermissionRepository.save(p);
+                            });
         }
     }
 

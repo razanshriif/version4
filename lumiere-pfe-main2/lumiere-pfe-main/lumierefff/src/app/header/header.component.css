@@ -1,47 +1,194 @@
-/* Styles pour la barre de navigation */
-
-
-/* Style pour le logo */
-.navbar-brand img {
-    width: 200px;
-    height: 100px;
-    /* Ajustez les marges ou le positionnement si nécessaire */
+.navbar {
+    padding: 10px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Style pour le titre dans la barre de navigation */
-.navbar .text-center h1 {
-    color: white; /* Couleur du texte */
-    margin: 0; /* Élimine la marge par défaut du titre */
-    font-size: 1.5rem; /* Taille de la police */
-    line-height: 1.2; /* Hauteur de ligne pour l'espacement du texte */
+.notification-wrapper {
+    position: relative;
+    margin-right: 20px;
 }
 
-/* Styles pour le bouton du menu */
-.navbar-toggler {
-    border: none; /* Enlève la bordure par défaut du bouton */
+.bell-container {
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
 }
 
-/* Assurez-vous que la barre de navigation est bien positionnée sur les petits écrans */
-@media (max-width: 992px) {
-    .navbar-brand {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .navbar-collapse {
-        text-align: center;
-    }
+.bell-container:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-
-.notification-list ul li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.3s, color 0.3s, font-size 0.3s;
-  }
-  
-  .notification-list ul li:hover {
-    background-color: rgb(217, 255, 0);
+.bell-icon {
+    font-size: 20px;
     color: white;
-    font-size: larger;
-  }
+}
+
+.bell-icon.has-new {
+    animation: ring 2s infinite;
+}
+
+@keyframes ring {
+    0% { transform: rotate(0); }
+    10% { transform: rotate(15deg); }
+    20% { transform: rotate(-15deg); }
+    30% { transform: rotate(10deg); }
+    40% { transform: rotate(-10deg); }
+    50% { transform: rotate(0); }
+    100% { transform: rotate(0); }
+}
+
+.badge-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #ff3b30;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 2px solid rgb(255, 123, 0);
+}
+
+.premium-notification-dropdown {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 380px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 1000;
+    overflow: hidden;
+    animation: dropdownFade 0.3s ease-out;
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.mark-all {
+    font-size: 12px;
+    color: rgb(255, 123, 0);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.notification-list-premium {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notif-item {
+    display: flex;
+    padding: 15px 20px;
+    gap: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.notif-item:hover {
+    background-color: #f8fafc;
+}
+
+.notif-item.unread {
+    background-color: rgba(255, 140, 66, 0.05);
+}
+
+.notif-icon {
+    width: 40px;
+    height: 40px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+.notif-body {
+    flex: 1;
+}
+
+.notif-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.notif-type {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.notif-date {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.notif-message {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.4;
+}
+
+.empty-notif {
+    padding: 40px 20px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.empty-notif i {
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.3;
+}
+
+.dropdown-footer {
+    padding: 12px;
+    text-align: center;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.dropdown-footer a {
+    font-size: 13px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.dropdown-footer a:hover {
+    color: rgb(255, 123, 0);
+}
+
+.text-primary { color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
+.text-success { color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
+.text-info { color: #06b6d4; background-color: rgba(6, 182, 212, 0.1); }
+.text-warning { color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
+.text-secondary { color: #64748b; background-color: rgba(100, 116, 139, 0.1); }

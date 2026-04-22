@@ -11,37 +11,43 @@
       <img src="assets\lum-removebg-preview.png" style="width: 14%; margin-left: 130%;" alt="">
         </div>
 
-     <div style="margin-right: 20%;">
-    
-      <i
-      class="fa fa-bell"
-      [ngStyle]="{ color: hasNewNotifications ? 'white' : 'black' }"
-      style="font-size: larger; cursor: pointer;"
-      (click)="toggleNotifications()"
-    ></i>
-    <div
-      *ngIf="showNotifications"
-      class="notification-list"
-      style="
-        position: absolute;
-        right: 14%;
-        top: 60px;
-        background-color: white;
-        border: 1px solid #ccc;
-        width: 400px;
-        max-height: 300px;
-        overflow-y: auto;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-      "
-    >
-      <ul style="list-style: none; padding: 0; margin: 0;">
-        <li *ngFor="let notification of clients" style="padding: 10px; border-bottom: 1px solid #eee;"   [ngStyle]="{ color: notification.isRead ? 'red' : 'black' }">
-          {{ notification.type}} |  {{ notification.message}} | {{ notification.timestamp}}
-        </li>
-      </ul>
-    </div>
-     </div>
+      <div class="notification-wrapper">
+        <div class="bell-container" (click)="toggleNotifications()">
+          <i class="fa fa-bell bell-icon" [class.has-new]="hasNewNotifications"></i>
+          <span class="badge-count" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        </div>
+
+        <div *ngIf="showNotifications" class="premium-notification-dropdown">
+          <div class="dropdown-header">
+            <h3>Notifications</h3>
+            <span class="mark-all">Tout marquer comme lu</span>
+          </div>
+          
+          <div class="notification-list-premium">
+            <div *ngIf="notifications.length === 0" class="empty-notif">
+              <i class="fas fa-bell-slash"></i>
+              <p>Aucune notification</p>
+            </div>
+            
+            <div *ngFor="let notif of notifications" class="notif-item" [class.unread]="!notif.isRead">
+              <div class="notif-icon" [ngClass]="getColorClass(notif.type)">
+                <i class="fas" [ngClass]="getIcon(notif.type)"></i>
+              </div>
+              <div class="notif-body">
+                <div class="notif-title-row">
+                  <span class="notif-type">{{ notif.type || 'ALERTE' }}</span>
+                  <span class="notif-date">{{ formatDate(notif.timestamp) }}</span>
+                </div>
+                <p class="notif-message">{{ notif.message }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="dropdown-footer">
+            <a href="#">Voir toutes les notifications</a>
+          </div>
+        </div>
+      </div>
 
     </div>
 </nav>

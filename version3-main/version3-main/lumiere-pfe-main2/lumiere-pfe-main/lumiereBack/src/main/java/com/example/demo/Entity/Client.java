@@ -61,6 +61,7 @@ public class Client {
 
 	private boolean registrationApproved = false;
 	private boolean profileCompleted = false;
+	private String tempPassword; // Stores encoded password until approval
 
 	@jakarta.persistence.Transient
 	@com.fasterxml.jackson.annotation.JsonProperty("ownerId")
@@ -282,6 +283,14 @@ public class Client {
 
 	public void setProfileCompleted(boolean profileCompleted) {
 		this.profileCompleted = profileCompleted;
+	}
+
+	public String getTempPassword() {
+		return tempPassword;
+	}
+
+	public void setTempPassword(String tempPassword) {
+		this.tempPassword = tempPassword;
 	}
 
 }

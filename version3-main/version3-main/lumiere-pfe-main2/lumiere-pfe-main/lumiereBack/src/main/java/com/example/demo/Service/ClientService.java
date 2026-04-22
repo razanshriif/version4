@@ -79,34 +79,59 @@ public class ClientService {
             if (isProfileComplete(client)) {
                 System.out.println("DEBUG: Profile complete for client ID: " + client.getCode());
                 client.setProfileCompleted(true);
+                client.setRegistrationApproved(true);
 
-                // Link to user by email if owner is missing
-                if (client.getOwner() == null && client.getEmail() != null) {
-                    System.out.println("DEBUG: Owner missing, searching for user with email: " + client.getEmail());
-                    userRepository.findByEmail(client.getEmail()).ifPresent(u -> {
-                        System.out.println("DEBUG: Found user ID " + u.getId() + ", linking as owner.");
-                        client.setOwner(u);
-                    });
-                }
-
-                // Activate the user
-                if (client.getOwner() != null) {
+                // Handle User promotion (The "New Principle")
+                if (client.getOwner() == null) {
+                    if (client.getTempPassword() != null) {
+                        System.out.println("DEBUG: Creating NEW user from pending registration for: " + client.getEmail());
+                        User newUser = new User();
+                        newUser.setEmail(client.getEmail());
+                        newUser.setFirstname(client.getNom()); // Using nom as first/last if separate not available
+                        newUser.setLastname(client.getNom());
+                        newUser.setPasswd(client.getTempPassword());
+                        newUser.setRole(com.example.demo.Entity.Role.CLIENT);
+                        newUser.setStatus(com.example.demo.Entity.Status.ACTIVE);
+                        
+                        userRepository.save(newUser);
+                        client.setOwner(newUser);
+                        client.setTempPassword(null); // Clear secret!
+                        System.out.println("DEBUG: User created successfully!");
+                    } else {
+                        // Edge case: Link to user by email if owner is missing and no temp password
+                        System.out.println("DEBUG: Owner/TempPassword missing, searching for user with email: " + client.getEmail());
+                        userRepository.findFirstByEmailOrderByIdAsc(client.getEmail()).ifPresent(u -> {
+                            System.out.println("DEBUG: Found existing user, linking as owner.");
+                            client.setOwner(u);
+                            u.setStatus(com.example.demo.Entity.Status.ACTIVE);
+                            userRepository.save(u);
+                        });
+                    }
+                } else {
+                    // Activate existing owner
                     User user = client.getOwner();
-                    System.out
-                            .println("DEBUG: Activating user ID: " + user.getId() + " for client: " + client.getNom());
+                    System.out.println("DEBUG: Activating existing user ID: " + user.getId());
                     user.setStatus(com.example.demo.Entity.Status.ACTIVE);
                     userRepository.save(user);
-                } else {
-                    System.out.println("DEBUG: WARNING - Client has NO owner, cannot activate user!");
                 }
             } else {
-                System.out.println("DEBUG: Profile NOT complete for client ID: " + client.getCode());
-                client.setProfileCompleted(false); // Ensure it's false if incomplete
+                System.out.println("DEBUG: Profile NOT complete yet.");
+                client.setProfileCompleted(false);
             }
 
             return clientRepository.save(client);
         } else {
-            throw new RuntimeException("Client not found with id " + id);
+            // Fallback: Try searching by codeclient (if the provided id was actually a codeclient)
+            return clientRepository.findByCodeclient(String.valueOf(id))
+                    .map(client -> {
+                        updateClientFields(client, clientDetails);
+                        if (isProfileComplete(client)) {
+                            client.setProfileCompleted(true);
+                            client.setRegistrationApproved(true);
+                        }
+                        return clientRepository.save(client);
+                    })
+                    .orElseThrow(() -> new RuntimeException("Client not found with id or code " + id));
         }
     }
 
@@ -128,7 +153,19 @@ public class ClientService {
 
             return clientRepository.save(client);
         } else {
-            throw new RuntimeException("Client not found with id " + id);
+            // Fallback: Try searching by codeclient
+            return clientRepository.findByCodeclient(String.valueOf(id))
+                    .map(client -> {
+                        if (client.getOwner() != null && !client.getOwner().equals(owner)) {
+                            throw new RuntimeException("Unauthorized: Client does not belong to this user");
+                        }
+                        updateClientFields(client, clientDetails);
+                        if (isProfileComplete(client) && client.getOwner() != null) {
+                            client.setProfileCompleted(true);
+                        }
+                        return clientRepository.save(client);
+                    })
+                    .orElseThrow(() -> new RuntimeException("Client not found with id or code " + id));
         }
     }
 
@@ -157,11 +194,18 @@ public class ClientService {
     }
 
     private boolean isProfileComplete(Client client) {
-        // Logic to determine if a profile is "enough" to activate the user
-        // For now, let's say if codeclient and basic info exist
+        // All attributes must be filled for registration approval per user request
+        // Admin must have filled CodeClient and IdEdi
         return client.getCodeclient() != null && !client.getCodeclient().isEmpty() &&
+                client.getIdEdi() != null && !client.getIdEdi().isEmpty() &&
                 client.getNom() != null && !client.getNom().isEmpty() &&
-                client.getAdresse() != null && !client.getAdresse().isEmpty();
+                client.getAdresse() != null && !client.getAdresse().isEmpty() &&
+                client.getVille() != null && !client.getVille().isEmpty() &&
+                client.getPays() != null && !client.getPays().isEmpty() &&
+                client.getCodepostal() != null &&
+                client.getEmail() != null && !client.getEmail().isEmpty() &&
+                client.getTelephone() != null && !client.getTelephone().isEmpty() &&
+                client.getCivilite() != null && !client.getCivilite().isEmpty();
     }
 
     public long countAllclients() {

@@ -47,8 +47,13 @@ export class ChatbotComponent implements AfterViewChecked {
   };
 
   constructor() {
-    // Message de bienvenue
+    this.clearChat();
+  }
+
+  clearChat() {
+    this.messages = [];
     this.addBotMessage('Bonjour ! 👋 Je suis votre assistant virtuel. Comment puis-je vous aider aujourd\'hui ?');
+    this.showQuickReplies = true;
   }
 
   ngAfterViewChecked() {

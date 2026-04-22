@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgbModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrdreService } from '../ordre.service';
 import { Observable } from 'rxjs';
+import * as L from 'leaflet';
 
 
 @Component({
@@ -21,6 +22,9 @@ import { Observable } from 'rxjs';
 })
 export class OrdreComponent implements OnInit {
   isModalOpen = false;
+  isMapModalOpen = false;
+  selectedOrdreForMap: any = null;
+  map: any = null;
 
 
   dateDebut: string = this.getTodayDate();
@@ -30,6 +34,7 @@ export class OrdreComponent implements OnInit {
   filtreStatut: string = "";
   filtreChauffeur: string = "";
   filtreDestination: string = "";
+  filtreSource: string = "";
   statutOptions: string[] = ["PLANIFIE", "NON_PLANIFIE", "EN_COURS_DE_CHARGEMENT", "CHARGE", "EN_COURS_DE_LIVRAISON", "LIVRE"];
   siteOptions: string[] = [
     'BAR', 'SAL', 'BKS', 'SFX', 'TUN',
@@ -143,6 +148,132 @@ export class OrdreComponent implements OnInit {
     });
   }
 
+  voirMap(ordre: any) {
+    this.selectedOrdreForMap = ordre;
+    this.isMapModalOpen = true;
+    console.log('Ouverture de la carte pour l\'ordre:', ordre.orderNumber);
+    this.initMap();
+  }
+
+  closeMapModal() {
+    this.isMapModalOpen = false;
+    this.selectedOrdreForMap = null;
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
+  }
+
+  initMap() {
+    setTimeout(() => {
+      if (this.map) {
+         this.map.remove();
+      }
+
+      // Initialize map on the osm-map div
+      this.map = L.map('osm-map').setView([33.8869, 9.5375], 6); // Center of Tunisia
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(this.map);
+
+      if (this.selectedOrdreForMap) {
+         this.geocodeAndPlot(this.selectedOrdreForMap.chargementVille, this.selectedOrdreForMap.livraisonVille);
+      }
+    }, 300); // Wait for modal animation
+  }
+
+  geocodeAndPlot(sourceCity: string, destCity: string) {
+    if (!sourceCity || !destCity) return;
+    const urlBase = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=';
+    
+    // Geocode Source
+    this.http.get<any[]>(urlBase + encodeURIComponent(sourceCity + ', Tunisia')).subscribe(res1 => {
+        let lat1 = 36.8065, lon1 = 10.1815; // default Tunis
+        if(res1 && res1.length > 0) {
+            lat1 = parseFloat(res1[0].lat);
+            lon1 = parseFloat(res1[0].lon);
+        }
+
+        L.marker([lat1, lon1], {
+            icon: L.divIcon({
+              className: 'custom-div-icon',
+              html: "<div style='background-color:#10b981; color:white; border-radius:50%; width:30px; height:30px; display:flex; justify-content:center; align-items:center; box-shadow:0 0 10px rgba(0,0,0,0.5);'><i class='fa fa-arrow-up'></i></div>",
+              iconSize: [30, 30],
+              iconAnchor: [15, 15]
+            })
+        }).bindPopup('Départ: ' + sourceCity).addTo(this.map);
+
+        // Geocode Destination
+        this.http.get<any[]>(urlBase + encodeURIComponent(destCity + ', Tunisia')).subscribe(res2 => {
+            let lat2 = 34.7398, lon2 = 10.7600; // default Sfax
+            if(res2 && res2.length > 0) {
+                lat2 = parseFloat(res2[0].lat);
+                lon2 = parseFloat(res2[0].lon);
+            }
+
+            L.marker([lat2, lon2], {
+                icon: L.divIcon({
+                  className: 'custom-div-icon',
+                  html: "<div style='background-color:#ef4444; color:white; border-radius:50%; width:30px; height:30px; display:flex; justify-content:center; align-items:center; box-shadow:0 0 10px rgba(0,0,0,0.5);'><i class='fa fa-arrow-down'></i></div>",
+                  iconSize: [30, 30],
+                  iconAnchor: [15, 15]
+                })
+            }).bindPopup('Destination: ' + destCity).addTo(this.map);
+
+            // Draw connecting dashed line
+            const latlngs: L.LatLngTuple[] = [ [lat1, lon1], [lat2, lon2] ];
+            const polyline = L.polyline(latlngs, {color: '#3b82f6', weight: 4, dashArray: '5, 10'}).addTo(this.map);
+            
+            // Adjust bounds to fit both points
+            this.map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+
+            // Place dynamic truck marker
+            this.plotTruck(lat1, lon1, lat2, lon2);
+        });
+    });
+  }
+
+  plotTruck(lat1: number, lon1: number, lat2: number, lon2: number) {
+      if (!this.selectedOrdreForMap) return;
+      const statut = this.selectedOrdreForMap.statut;
+      
+      let truckLat = 0;
+      let truckLon = 0;
+      let gpsActif = false;
+
+      // 1. Priorité absolue : Les VRAIES coordonnées envoyées par le boîtier GPS matériel
+      if (this.selectedOrdreForMap.currentLat && this.selectedOrdreForMap.currentLon) {
+          truckLat = this.selectedOrdreForMap.currentLat;
+          truckLon = this.selectedOrdreForMap.currentLon;
+          gpsActif = true;
+      } else {
+          // 2. Mode Dégradé (Simulation Visuelle) si pas de GPS installé
+          let ratio = 0.5; // default center
+          
+          if (['NON_PLANIFIE', 'PLANIFIE'].includes(statut)) ratio = 0.0;
+          else if (['EN_COURS_DE_CHARGEMENT', 'CHARGE'].includes(statut)) ratio = 0.1;
+          else if (['LIVRE', 'Fin'].includes(statut)) ratio = 1.0;
+          
+          truckLat = lat1 + (lat2 - lat1) * ratio;
+          truckLon = lon1 + (lon2 - lon1) * ratio;
+      }
+
+      // Couleur Verte si GPS Réel, Orange si Simulation (pour différencier à l'écran)
+      const color = gpsActif ? '#10b981' : '#f5921e';
+      const gpsLabel = gpsActif ? "<br><span style='color:green; font-weight:bold;'>Connexion GPS Actuelle ✓</span>" : "<br><span style='color:orange;'>Position Estimée (Pas de Signal)</span>";
+
+      L.marker([truckLat, truckLon], {
+          icon: L.divIcon({
+             className: 'custom-div-icon',
+             html: `<div style='background-color:${color}; color:white; border-radius:5px; padding:5px; font-size:16px; border:2px solid white; box-shadow:0 0 10px rgba(0,0,0,0.5);'><i class='fa fa-truck'></i></div>`,
+             iconSize: [36, 36],
+             iconAnchor: [18, 18]
+          })
+      }).bindPopup('<b>Camion en cours</b><br>Conducteur: ' + (this.selectedOrdreForMap.chauffeur || 'Non assigné') + gpsLabel).addTo(this.map);
+  }
+
   detail(ordre: any) {
     this.service.detail = ordre;
     console.log(this.service.detail);
@@ -158,25 +289,29 @@ export class OrdreComponent implements OnInit {
 
 
   getTimelineClass(index: number, events: any[], statut: string): string {
-    this.eventCount = 0;
-    if (events != null) {
-      this.eventCount = events.filter(event => event !== null && event !== undefined).length;
-    }
+    const eventCount = events ? events.filter(event => event !== null && event !== undefined).length : 0;
+
+    if (statut === 'NON_PLANIFIE') return 'inactive';
 
     if (statut === 'PLANIFIE') {
       return index === 0 ? 'pending' : 'inactive';
     }
-    else if (this.eventCount === 6) {
-      // Tous les steps sont completed
+    
+    // index is 0..5
+    if (index < eventCount) {
+      // If it's the last recorded event, it might be the "current" one (pending)
+      // or if all 6 are done, it's completed.
+      if (index === eventCount - 1 && eventCount < 6) return 'pending';
       return 'completed';
     }
-    else if (this.eventCount >= 2 && this.eventCount <= 6) {
-      if (index < this.eventCount - 1) return 'completed';
-      if (index === this.eventCount - 1) return 'pending';
-      return 'inactive';
-    }
 
-    return '';
+    return 'inactive';
+  }
+
+  getTimelineClassLine(index: number, events: any[], statut: string): string {
+    const eventCount = events ? events.filter(event => event !== null && event !== undefined).length : 0;
+    if (index < eventCount) return 'active';
+    return 'inactive';
   }
 
 
@@ -203,9 +338,11 @@ export class OrdreComponent implements OnInit {
     };
 
     this.service.search(params).subscribe(ordres => {
-      // On garde l'exclusion des NON_CONFIRME côté front si besoin, 
-      // ou on laisse le backend tout renvoyer.
-      this.ordresFiltres = ordres.filter(o => o.statut !== 'NON_CONFIRME');
+      this.ordresFiltres = ordres.filter(o => {
+        const matchesSource = !this.filtreSource || 
+          (o.chargementVille && o.chargementVille.toLowerCase().includes(this.filtreSource.toLowerCase()));
+        return o.statut !== 'NON_CONFIRME' && matchesSource;
+      });
     });
   }
 
@@ -219,6 +356,7 @@ export class OrdreComponent implements OnInit {
     this.filtreStatut = "";
     this.filtreChauffeur = "";
     this.filtreDestination = "";
+    this.filtreSource = "";
 
     this.filtrerParDate();
   }

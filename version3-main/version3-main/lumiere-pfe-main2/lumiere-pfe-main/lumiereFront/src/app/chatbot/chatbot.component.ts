@@ -1,6 +1,7 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChatbotService } from '../services/chatbot.service';
 
 interface Message {
   text: string;
@@ -18,7 +19,7 @@ interface Message {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css']
 })
-export class ChatbotComponent implements AfterViewChecked {
+export class ChatbotComponent implements AfterViewChecked, OnInit {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   isChatOpen = false;
@@ -36,26 +37,30 @@ export class ChatbotComponent implements AfterViewChecked {
     '❓ Aide'
   ];
 
-  // Base de connaissances pour les réponses automatiques
-  private knowledgeBase: { [key: string]: string } = {
-    'bonjour': 'Bonjour ! 👋 Je suis l\'assistant virtuel de Lumière Transport. Comment puis-je vous aider aujourd\'hui ?',
-    'salut': 'Salut ! 😊 Comment puis-je vous assister ?',
-    'aide': 'Je peux vous aider avec :\n• Suivi des commandes\n• Création d\'ordres\n• Gestion des clients\n• Informations sur les articles\n• Navigation dans l\'application',
-    'commande': 'Pour suivre une commande, rendez-vous dans "Gestion des Ordres" > "Liste des Ordres". Vous pouvez filtrer par numéro de commande ou client.',
-    'ordre': 'Pour créer un nouvel ordre, allez dans "Gestion des Ordres" > "Ajouter un Ordre". Remplissez tous les champs requis.',
-    'client': 'La gestion des clients se trouve dans le menu "Gestion des Clients". Vous pouvez ajouter, modifier ou rechercher des clients.',
-    'article': 'Pour gérer les articles, accédez à "Gestion des Articles" dans le menu principal.',
-    'merci': 'Je vous en prie ! 😊 N\'hésitez pas si vous avez d\'autres questions.',
-    'au revoir': 'Au revoir ! À bientôt ! 👋',
-    'prix': 'Pour les informations tarifaires, veuillez contacter votre responsable commercial.',
-    'livraison': 'Les délais de livraison dépendent de la destination. Consultez les détails de votre commande pour plus d\'informations.',
-    'statut': 'Vous pouvez vérifier le statut de vos ordres dans "Liste des Ordres". Les statuts possibles sont : Non confirmé, Confirmé, En cours, Livré.',
-    'contact': 'Pour nous contacter :\n📧 Email: contact@lumiere-transport.tn\n📞 Téléphone: +216 72200600'
-  };
+  constructor(private chatbotService: ChatbotService) {
+    this.clearChat();
+  }
 
-  constructor() {
-    // Message de bienvenue
-    this.addBotMessage('Bonjour ! 👋 Je suis votre assistant virtuel. Comment puis-je vous aider aujourd\'hui ?');
+  clearChat() {
+    this.chatbotService.clearHistory().then(() => {
+      this.messages = [];
+      this.showQuickReplies = true;
+    });
+  }
+
+  ngOnInit() {
+    // Initialiser avec les messages du service
+    this.chatbotService.messages$.subscribe(msgs => {
+      this.messages = msgs.map(m => ({
+        text: m.content,
+        isUser: m.sender === 'user',
+        time: this.formatTime(m.timestamp)
+      }));
+    });
+
+    this.chatbotService.isTyping$.subscribe(typing => {
+      this.isTyping = typing;
+    });
   }
 
   ngAfterViewChecked() {
@@ -74,17 +79,32 @@ export class ChatbotComponent implements AfterViewChecked {
     if (!this.userInput.trim()) return;
 
     const userMessage = this.userInput.trim();
-    this.addUserMessage(userMessage);
     this.userInput = '';
     this.showQuickReplies = false;
 
-    // Simuler un délai de réponse
-    this.isTyping = true;
-    setTimeout(() => {
-      this.isTyping = false;
-      const response = this.getBotResponse(userMessage);
-      this.addBotMessage(response);
-    }, 1000 + Math.random() * 1000); // Délai aléatoire entre 1-2 secondes
+    this.chatbotService.sendMessage(userMessage).subscribe({
+      next: (response) => {
+        this.chatbotService.setTyping(false);
+        this.chatbotService.addMessage({
+          content: response.response,
+          sender: 'bot',
+          timestamp: new Date()
+        });
+        
+        if (!this.isChatOpen) {
+          this.hasNewMessages = true;
+          this.unreadCount++;
+        }
+      },
+      error: (err) => {
+        this.chatbotService.setTyping(false);
+        this.chatbotService.addMessage({
+          content: "Désolé, une erreur est survenue lors de la communication avec l'assistant.",
+          sender: 'bot',
+          timestamp: new Date()
+        });
+      }
+    });
   }
 
   sendQuickReply(reply: string) {
@@ -92,53 +112,23 @@ export class ChatbotComponent implements AfterViewChecked {
     this.sendMessage();
   }
 
-  private addUserMessage(text: string) {
-    this.messages.push({
-      text,
-      isUser: true,
-      time: this.getCurrentTime()
-    });
+  public formatMessage(text: string): string {
+    if (!text) return '';
+    // Escape HTML
+    let formatted = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    // Convert lines starting with '- ' into styled bullet items
+    formatted = formatted.replace(/^- (.+)$/gm, '<span class="bullet-item">&bull; $1</span>');
+    // Convert remaining newlines to <br>
+    formatted = formatted.replace(/\n/g, '<br>');
+    return formatted;
   }
 
-  private addBotMessage(text: string) {
-    this.messages.push({
-      text,
-      isUser: false,
-      time: this.getCurrentTime()
-    });
-
-    if (!this.isChatOpen) {
-      this.hasNewMessages = true;
-      this.unreadCount++;
-    }
-  }
-
-  private getBotResponse(userMessage: string): string {
-    const lowerMessage = userMessage.toLowerCase();
-
-    // Recherche de mots-clés dans le message
-    for (const [keyword, response] of Object.entries(this.knowledgeBase)) {
-      if (lowerMessage.includes(keyword)) {
-        return response;
-      }
-    }
-
-    // Réponses contextuelles
-    if (lowerMessage.includes('comment') || lowerMessage.includes('où')) {
-      return 'Pour naviguer dans l\'application, utilisez le menu latéral à gauche. Vous y trouverez toutes les fonctionnalités principales.';
-    }
-
-    if (lowerMessage.includes('problème') || lowerMessage.includes('erreur')) {
-      return 'Je suis désolé d\'apprendre que vous rencontrez un problème. Pouvez-vous me donner plus de détails ? Ou contactez le support technique.';
-    }
-
-    // Réponse par défaut
-    return 'Je ne suis pas sûr de comprendre votre question. Voici ce que je peux faire pour vous :\n• Suivre vos commandes\n• Créer des ordres\n• Gérer les clients\n• Fournir des informations générales\n\nPouvez-vous reformuler votre question ?';
-  }
-
-  private getCurrentTime(): string {
-    const now = new Date();
-    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  private formatTime(date: Date): string {
+    const d = new Date(date);
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
   }
 
   private scrollToBottom(): void {
@@ -148,7 +138,8 @@ export class ChatbotComponent implements AfterViewChecked {
           this.messagesContainer.nativeElement.scrollHeight;
       }
     } catch (err) {
-      console.error('Scroll error:', err);
+      // Ignore scroll errors during transitions
     }
   }
 }
+

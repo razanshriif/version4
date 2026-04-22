@@ -302,7 +302,14 @@
             <mat-label>Code Article</mat-label>
             <mat-select [(ngModel)]="ordre.codeArticle" name="codeArticle" #codeArticleModel="ngModel" required
               (selectionChange)="onArticleCodeChange($any($event).value)">
+              
+              <mat-select-trigger>
+                <i class="fa {{ getArticleIcon(ordre.codeArticle).icon }} temp-icon" [style.color]="getArticleIcon(ordre.codeArticle).color" style="margin-right: 8px;"></i>
+                {{ ordre.codeArticle }}
+              </mat-select-trigger>
+
               <mat-option *ngFor="let art of articleOptions" [value]="art.codeArticle">
+                <i class="fa {{ getArticleIcon(art.codeArticle).icon }} temp-icon" [style.color]="getArticleIcon(art.codeArticle).color" style="margin-right: 8px;"></i>
                 {{ art.codeArticle }}
               </mat-option>
             </mat-select>
@@ -401,6 +408,19 @@
             <mat-radio-button value="Bache">Bâche</mat-radio-button>
           </mat-radio-group>
           <mat-error *ngIf="typeSemiModel.invalid && (typeSemiModel.touched || ordreForm.submitted)">Le type de semi est
+            requis.</mat-error>
+        </div>
+
+        <!-- Type de Cargo -->
+        <div *ngIf="optionsCommentaire.typeCamion === 'Cargo'" class="option-group semi-options">
+          <h4>Type de Cargo</h4>
+          <mat-radio-group [(ngModel)]="optionsCommentaire.typeCargo" (change)="updateCommentaire()" name="typeCargo"
+            #typeCargoModel="ngModel" required>
+            <mat-radio-button value="plateau">Plateau</mat-radio-button>
+            <mat-radio-button value="Frigo">Frigo</mat-radio-button>
+            <mat-radio-button value="Bache">Bâche</mat-radio-button>
+          </mat-radio-group>
+          <mat-error *ngIf="typeCargoModel.invalid && (typeCargoModel.touched || ordreForm.submitted)">Le type de cargo est
             requis.</mat-error>
         </div>
       </div>

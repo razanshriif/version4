@@ -1,17 +1,22 @@
 <div class="chatbot-container">
     <!-- Bouton flottant du chatbot -->
     <div class="chatbot-button" (click)="toggleChat()" [class.active]="isChatOpen">
-        <i class="fas" [ngClass]="isChatOpen ? 'fa-times' : 'fa-comments'"></i>
-        <span class="notification-badge" *ngIf="!isChatOpen && hasNewMessages">{{unreadCount}}</span>
+        <i class="fas" [ngClass]="isChatOpen ? 'fa-times' : 'fa-comments-alt'"></i>
+        <span class="notification-badge" *ngIf="!isChatOpen && unreadCount > 0">{{unreadCount}}</span>
     </div>
 
     <!-- Fenêtre de chat -->
     <div class="chat-window" [class.open]="isChatOpen">
+        <div class="glass-background">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+
         <!-- En-tête du chat -->
         <div class="chat-header">
             <div class="header-content">
-                <div class="bot-avatar">
-                    <i class="fas fa-robot"></i>
+                <div class="bot-avatar-premium">
+                    <img src="assets/lum-removebg-preview.png" alt="L" />
                 </div>
                 <div class="header-info">
                     <h3>Assistant Lumière</h3>
@@ -21,48 +26,54 @@
                     </p>
                 </div>
             </div>
-            <button class="close-btn" (click)="toggleChat()">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="header-actions">
+                <button class="action-btn" (click)="clearChat()" title="Effacer la discussion">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="close-btn" (click)="toggleChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Zone de messages -->
         <div class="chat-messages" #messagesContainer>
-            <div class="message-wrapper" *ngFor="let message of messages" [class.user-message]="message.isUser"
-                [class.bot-message]="!message.isUser">
-                <div class="message">
-                    <div class="message-avatar" *ngIf="!message.isUser">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message-content">
-                        <p>{{message.text}}</p>
-                        <span class="message-time">{{message.time}}</span>
-                    </div>
+            <div class="message-row" *ngFor="let message of messages" 
+                 [class.user-message]="message.isUser"
+                 [class.bot-message]="!message.isUser">
+                
+                <div class="message-bubble">
+                    <div class="message-text" [innerHTML]="message.text"></div>
+                    <span class="message-time">{{message.time}}</span>
                 </div>
             </div>
 
             <!-- Indicateur de frappe -->
-            <div class="typing-indicator" *ngIf="isTyping">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+            <div class="typing-indicator-premium" *ngIf="isTyping">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
 
         <!-- Suggestions rapides -->
-        <div class="quick-replies" *ngIf="showQuickReplies">
-            <button class="quick-reply-btn" *ngFor="let reply of quickReplies" (click)="sendQuickReply(reply)">
+        <div class="quick-replies-premium" *ngIf="showQuickReplies">
+            <button class="quick-reply-pill" *ngFor="let reply of quickReplies" (click)="sendQuickReply(reply)">
                 {{reply}}
             </button>
         </div>
 
         <!-- Zone de saisie -->
-        <div class="chat-input">
-            <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"
-                placeholder="Tapez votre message..." [disabled]="isTyping">
-            <button class="send-btn" (click)="sendMessage()" [disabled]="!userInput.trim() || isTyping">
-                <i class="fas fa-paper-plane"></i>
-            </button>
+        <div class="chat-input-premium">
+            <div class="input-wrapper">
+                <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()"
+                    placeholder="Posez votre question..." [disabled]="isTyping">
+                <button class="send-btn-premium" (click)="sendMessage()" [disabled]="!userInput.trim() || isTyping">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

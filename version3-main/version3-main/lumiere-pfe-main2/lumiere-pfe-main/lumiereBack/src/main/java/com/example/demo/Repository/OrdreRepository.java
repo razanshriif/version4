@@ -13,6 +13,7 @@ import com.example.demo.Entity.Ordre;
 import com.example.demo.Entity.Statut;
 
 public interface OrdreRepository extends JpaRepository<Ordre, Long>, JpaSpecificationExecutor<Ordre> {
+	long countByStatut(Statut statut);
 	List<Ordre> findByVoycle(String voycle);
 
 	@Query("SELECT COUNT(o) FROM Ordre o WHERE o.statut = 'NON_PLANIFIE'")
@@ -51,5 +52,7 @@ public interface OrdreRepository extends JpaRepository<Ordre, Long>, JpaSpecific
 			org.springframework.data.domain.Pageable pageable);
 
 	List<Ordre> findByClientOrderByIdDesc(String client);
-
+	
+	Optional<Ordre> findByOrderNumber(String orderNumber);
 }
+

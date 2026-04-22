@@ -15,7 +15,10 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public List<Notification> getAllNotifications() {
+    public List<Notification> getAllNotifications(Integer userId, com.example.demo.Entity.Role role) {
+        if (userId != null && role != null) {
+            return notificationRepository.findForUser(userId, role);
+        }
         return notificationRepository.findAll();
     }
 
@@ -39,12 +42,16 @@ public class NotificationService {
         return null;
     }
 
-    public List<Notification> getUnreadNotifications() {
+    public List<Notification> getUnreadNotifications(Integer userId, com.example.demo.Entity.Role role) {
+        if (userId != null && role != null) {
+            List<Notification> targeted = notificationRepository.findForUser(userId, role);
+            return targeted.stream().filter(n -> !n.isRead()).toList();
+        }
         return notificationRepository.findByIsReadFalse();
     }
 
-    public long getUnreadCount() {
-        return (long) notificationRepository.findByIsReadFalse().size();
+    public long getUnreadCount(Integer userId, com.example.demo.Entity.Role role) {
+        return getUnreadNotifications(userId, role).size();
     }
 
     public boolean markAsRead(Long id) {

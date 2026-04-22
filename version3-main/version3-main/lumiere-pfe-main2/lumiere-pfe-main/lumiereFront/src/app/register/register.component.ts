@@ -22,7 +22,15 @@ export class RegisterComponent {
         lastname: '',
         email: '',
         password: '',
-        role: 'CLIENT' // Default role for external users
+        role: 'CLIENT',
+        civilite: '',
+        telephone: '',
+        adresse: '',
+        ville: '',
+        pays: '',
+        codepostal: null as any,
+        type: 'Standard',
+        societeFacturation: ''
     };
     error: string = '';
     success: boolean = false;
@@ -30,7 +38,7 @@ export class RegisterComponent {
     constructor(private authService: AuthService, private router: Router) { }
 
     onSubmit(): void {
-        this.authService.register(this.user.firstname, this.user.lastname, this.user.email, this.user.password, this.user.role)
+        this.authService.register(this.user)
             .subscribe(
                 response => {
                     this.success = true;

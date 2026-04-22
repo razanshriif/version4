@@ -18,7 +18,7 @@ import com.example.demo.Entity.Tranck;
 import com.example.demo.Service.TranckService;
 
 @RestController
-@RequestMapping("/trancks")
+@RequestMapping("/api/v1/trancks")
 public class TranckController {
 
     @Autowired

@@ -71,11 +71,13 @@ public class PlaFileService {
                 .append("||||||||||||||||||||||||||||||||");
         sb.append(System.lineSeparator());
 
-        return sb.toString();
+        return sb.toString();       
+        //Files.write(Paths.get("\\\\172.18.3.70\\tmsv14\\EDI\\AZIZA\\EDIDIVERS_"+new Date().getTime() +".txt"), sb.toString().getBytes());
+
     }
 
     private void saveFile(String content) throws IOException {
-        String filename = "D:\\test\\EDIDIVERS_" + new Date().getTime() + ".txt";
+        String filename = "\\\\172.18.3.70\\tmsv14\\EDI\\AZIZA\\EDIDIVERS_" + new Date().getTime() + ".txt";
         Files.write(Paths.get(filename), content.getBytes());
     }
 
