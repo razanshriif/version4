@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
+﻿import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../notification.service';
@@ -130,3 +130,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return `il y a ${Math.floor(diff / 86400)} j`;
   }
 }
+
+
+

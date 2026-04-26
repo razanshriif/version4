@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
+﻿import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatbotService } from '../services/chatbot.service';
@@ -142,4 +142,7 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
     }
   }
 }
+
+
+
 

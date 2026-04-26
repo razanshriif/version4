@@ -16,7 +16,7 @@ export interface ChatMessage {
   providedIn: 'root'
 })
 export class ChatbotService {
-  private readonly API_URL = `${environment.apiUrl}/chatbot`;
+  private readonly API_URL = `${environment.v1ApiUrl}/chatbot`;
   
   private messagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   public messages$ = this.messagesSubject.asObservable();
@@ -52,7 +52,7 @@ export class ChatbotService {
 
   private addWelcomeMessage() {
     const welcomeMessage: ChatMessage = {
-      content: 'Bonjour ! Je suis votre assistant virtuel Lumière Transport. Comment puis-je vous aider aujourd\'hui ?',
+      content: 'Bonjour ! Je suis votre assistant virtuel OTFLOW Transport. Comment puis-je vous aider aujourd\'hui ?',
       sender: 'bot',
       timestamp: new Date(),
       type: 'text'
@@ -75,4 +75,7 @@ export class ChatbotService {
     return new HttpHeaders(token ? { 'Authorization': `Bearer ${token}` } : {});
   }
 }
+
+
+
 

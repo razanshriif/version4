@@ -1,4 +1,4 @@
-/* Styles généraux */
+﻿/* Styles généraux */
 .container {
   padding: 20px;
   margin-left: 5%;
@@ -339,3 +339,5 @@ select.form-control {
     width: 100%;
   }
 }
+
+

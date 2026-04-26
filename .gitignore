@@ -1,0 +1,39 @@
+# Node / Angular
+**/node_modules/
+**/.angular/
+**/dist/
+**/.sass-cache/
+**/*.js.map
+
+# Java / Spring Boot
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+**/.mvn/
+**/*.iml
+**/.idea/
+
+# Mobile / Capacitor
+**/android/
+**/ios/
+**/www/
+**/capacitor.config.ts.js
+
+# Backup and redundant folders
+*backup/
+*_backup/
+**/backup/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+**/.vscode/
+**/.idea/
+
+# Files
+*.log
+*.tmp
+Antigravity.exe
+~$*

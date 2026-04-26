@@ -1,4 +1,4 @@
-/* Old sidenav component — styles moved to layout.component.css */
+﻿/* Old sidenav component — styles moved to layout.component.css */
 /* Keeping minimal styles to prevent black background override */
 .sidenav {
   background-color: #ffffff;
@@ -36,3 +36,5 @@
 .sidenav .logout:hover {
   color: #f87171;
 }
+
+

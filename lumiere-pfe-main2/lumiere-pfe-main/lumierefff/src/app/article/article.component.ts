@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Article } from '../models/article.model';
 import { Subscription } from 'rxjs';
@@ -138,3 +138,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.mode = 'list';
   }
 }
+
+
+

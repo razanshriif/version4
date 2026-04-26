@@ -1,4 +1,4 @@
-
+﻿
 .nav-link {
     color: orange; /* Couleur du texte des liens */
     text-decoration: none; /* Supprime le soulignement des liens */
@@ -35,3 +35,5 @@
     padding: 20px; /* Espacement interne */
     overflow-y: auto; /* Ajoute une barre de défilement si nécessaire */
   }
+
+

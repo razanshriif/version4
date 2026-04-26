@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+﻿import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -113,3 +113,6 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
@@ -196,3 +196,6 @@ export class ProfileComponent implements OnInit {
     this.errorMessage = '';
   }
 }
+
+
+

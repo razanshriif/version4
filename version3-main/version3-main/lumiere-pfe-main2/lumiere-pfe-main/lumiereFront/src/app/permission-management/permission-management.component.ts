@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PermissionService } from '../permission.service';
@@ -24,7 +24,7 @@ interface Module {
     styleUrls: ['./permission-management.component.css']
 })
 export class PermissionManagementComponent implements OnInit {
-    roles = ['ADMIN', 'COMMERCIAL', 'CLIENT', 'USER_LUMIERE'];
+    roles = ['ADMIN', 'COMMERCIAL', 'CLIENT', 'USER_Otflow'];
     users: any[] = [];
     configMode: 'ROLE' | 'USER' = 'ROLE';
     selectedRole: string = 'ADMIN';
@@ -210,3 +210,6 @@ export class PermissionManagementComponent implements OnInit {
         });
     }
 }
+
+
+

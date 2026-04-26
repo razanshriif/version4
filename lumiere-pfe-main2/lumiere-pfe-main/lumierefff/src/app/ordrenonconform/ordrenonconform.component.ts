@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { OrdreService } from '../ordre.service';
 import { ClientService } from '../client.service';
 import { ArticleService } from '../services/article.service';
@@ -372,3 +372,6 @@ export class OrdrenonconformComponent implements OnInit {
     }, 0);
   }
 }
+
+
+

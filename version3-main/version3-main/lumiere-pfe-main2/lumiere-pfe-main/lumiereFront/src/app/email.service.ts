@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,3 +15,6 @@ envoyeremail(email:any):Observable<any>{
 
 
 }
+
+
+

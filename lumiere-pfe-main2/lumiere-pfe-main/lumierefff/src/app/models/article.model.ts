@@ -1,4 +1,4 @@
-export class Article {
+﻿export class Article {
     constructor(
         public id?: number,
         public codeArticle?: string,
@@ -13,3 +13,6 @@ export class Article {
         public achat?: number
     ) {}
 }
+
+
+

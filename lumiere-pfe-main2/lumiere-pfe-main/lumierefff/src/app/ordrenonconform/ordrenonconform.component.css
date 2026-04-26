@@ -1,4 +1,4 @@
-/* Styles généraux */
+﻿/* Styles généraux */
 .container {
   padding: 20px;
   max-width: 1200px;
@@ -322,3 +322,6 @@ mat-form-field {
 .error-snackbar {
   background-color: #f44336 !important; /* Rouge pour erreur */
 }
+
+
+

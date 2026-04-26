@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -199,3 +199,6 @@ export class MaterialComponent implements OnInit, OnDestroy {
     return this.permissions[featureKey] === true;
   }
 }
+
+
+

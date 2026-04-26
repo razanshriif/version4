@@ -1,4 +1,4 @@
-/* Profile Container Styles */
+﻿/* Profile Container Styles */
 .profile-container {
   display: flex;
   justify-content: center;
@@ -160,3 +160,5 @@
     font-size: 0.9rem;
   }
 }
+
+

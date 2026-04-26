@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+﻿import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -81,3 +81,6 @@ export class NotificationService {
     return this.http.delete(`${environment.v1ApiUrl}/notifications/${id}`, { headers: this.getAuthHeaders() });
   }
 }
+
+
+

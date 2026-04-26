@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AjouterordreComponent } from './ajouterordre.component';
 
@@ -21,3 +21,6 @@ describe('AjouterordreComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+
+

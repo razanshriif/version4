@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -106,3 +106,6 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+

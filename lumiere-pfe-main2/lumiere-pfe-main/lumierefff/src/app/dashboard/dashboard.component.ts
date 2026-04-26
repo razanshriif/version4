@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { ChartComponent } from 'ng-apexcharts';
 import { ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexAxisChartSeries, ApexDataLabels, ApexXAxis, ApexPlotOptions, ApexLegend } from 'ng-apexcharts';
 import { DashboardService } from '../dashboard.service';
@@ -245,3 +245,6 @@ export class DashboardComponent implements OnInit {
     ];
   }
 }
+
+
+

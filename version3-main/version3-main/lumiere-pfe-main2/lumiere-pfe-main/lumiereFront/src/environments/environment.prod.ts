@@ -6,8 +6,11 @@ export const environment = {
 
     baseUrl: BASE_URL,
 
-    apiUrl: `${BASE_URL}/api`,
+    apiUrl: `${BASE_URL}/api/v1`,
     authUrl: `${BASE_URL}/api/v1/auth`,
     adminUrl: `${BASE_URL}/api/v1/admin`,
     demoUrl: `${BASE_URL}/api/v1/demo`
 };
+
+
+

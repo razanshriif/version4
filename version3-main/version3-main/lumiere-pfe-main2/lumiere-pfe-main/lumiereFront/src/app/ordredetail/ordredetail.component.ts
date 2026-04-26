@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrdreService } from '../ordre.service';
 import html2canvas from 'html2canvas';
@@ -32,3 +32,6 @@ export class OrdredetailComponent {
     });
   }
 }
+
+
+

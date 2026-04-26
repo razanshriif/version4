@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { OrdreService } from '../ordre.service';
 import html2canvas from 'html2canvas';
 // @ts-ignore
@@ -27,3 +27,6 @@ export class OrdredetailComponent {
     });
   }
 }
+
+
+

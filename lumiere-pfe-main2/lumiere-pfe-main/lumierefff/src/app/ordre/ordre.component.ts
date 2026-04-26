@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrdreService } from '../ordre.service';
 import { HttpClient } from '@angular/common/http';
@@ -274,3 +274,6 @@ exporterExcel() {
 
 
 }
+
+
+

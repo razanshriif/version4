@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+﻿import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 
 interface Message {
   text: string;
@@ -31,7 +31,7 @@ export class ChatbotComponent implements AfterViewChecked {
 
   // Base de connaissances pour les réponses automatiques
   private knowledgeBase: { [key: string]: string } = {
-    'bonjour': 'Bonjour ! 👋 Je suis l\'assistant virtuel de Lumière Transport. Comment puis-je vous aider aujourd\'hui ?',
+    'bonjour': 'Bonjour ! 👋 Je suis l\'assistant virtuel de OTFLOW Transport. Comment puis-je vous aider aujourd\'hui ?',
     'salut': 'Salut ! 😊 Comment puis-je vous assister ?',
     'aide': 'Je peux vous aider avec :\n• Suivi des commandes\n• Création d\'ordres\n• Gestion des clients\n• Informations sur les articles\n• Navigation dans l\'application',
     'commande': 'Pour suivre une commande, rendez-vous dans "Gestion des Ordres" > "Liste des Ordres". Vous pouvez filtrer par numéro de commande ou client.',
@@ -43,7 +43,7 @@ export class ChatbotComponent implements AfterViewChecked {
     'prix': 'Pour les informations tarifaires, veuillez contacter votre responsable commercial.',
     'livraison': 'Les délais de livraison dépendent de la destination. Consultez les détails de votre commande pour plus d\'informations.',
     'statut': 'Vous pouvez vérifier le statut de vos ordres dans "Liste des Ordres". Les statuts possibles sont : Non confirmé, Confirmé, En cours, Livré.',
-    'contact': 'Pour nous contacter :\n📧 Email: contact@lumiere-transport.tn\n📞 Téléphone: +216 72200600'
+    'contact': 'Pour nous contacter :\n📧 Email: contact@Otflow-transport.tn\n📞 Téléphone: +216 72200600'
   };
 
   constructor() {
@@ -150,3 +150,6 @@ export class ChatbotComponent implements AfterViewChecked {
     }
   }
 }
+
+
+

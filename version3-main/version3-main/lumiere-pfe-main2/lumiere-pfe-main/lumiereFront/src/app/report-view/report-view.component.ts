@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
@@ -24,14 +24,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
         <!-- Enterprise Header (Styled like Excel) -->
         <header class="report-header">
           <div class="orange-banner">
-            <img src="assets/Lumiere-Logistique.png" alt="Lumière" class="report-logo">
+            <img src="assets/otflow-horizontal.png" alt="OTFLOW" class="report-logo">
           </div>
           <div class="header-divider"></div>
           <div class="header-info">
             <h1>{{ title }}</h1>
             <div class="meta-row">
               <span class="meta-item"><strong>Date :</strong> {{ today | date:'dd/MM/yyyy' }}</span>
-              <span class="meta-item"><strong>Généré par :</strong> LUMIÈRE TRANSPORT</span>
+              <span class="meta-item"><strong>Généré par :</strong> OTFLOW TRANSPORT</span>
             </div>
           </div>
         </header>
@@ -56,7 +56,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 
         <!-- Footer -->
         <footer class="report-footer">
-          <p>© {{ today | date:'yyyy' }} LUMIÈRE TRANSPORT - Document Professionnel</p>
+          <p>© {{ today | date:'yyyy' }} OTFLOW TRANSPORT - Document Professionnel</p>
           <p class="page-number">Page 1 / 1</p>
         </footer>
       </div>
@@ -134,3 +134,6 @@ export class ReportViewComponent implements OnInit {
         window.history.back();
     }
 }
+
+
+

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+﻿import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,4 +29,7 @@ export class SidenavComponent {
     this.router.navigate(['/login']);
   }
 }
+
+
+
 

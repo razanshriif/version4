@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
@@ -285,3 +285,6 @@ export class DashboardComponent implements OnInit {
     return this.ordersCount > 0 ? `${Math.round((this.enCoursDeLivraisonCount / this.ordersCount) * 100)}%` : '5%';
   }
 }
+
+
+

@@ -59,17 +59,25 @@ public class ChatbotService {
 
     public String getChatResponse(String userMessage, String userEmail, String platform) {
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String systemPrompt = "Tu es l'assistant virtuel de Lumière Transport. " +
+        String systemPrompt = "Tu es l'assistant virtuel ULTIME de Otflow Transport, baptisé 'Otflow Smart Assist'. " +
                              "Plateforme actuelle: " + platform + ". " +
                              "Date et heure actuelle: " + currentTime + ". " +
-                             "CONTEXTE: Tu es un assistant logistique expert, amical et intelligent. " +
+                             "PERSONNALITÉ: Expert logistique, extrêmement serviable, polyglotte et proactif. " +
                              "DIRECTIVES CRITIQUES: " +
-                             "1. RÈGLE DU MIROIR: Réponds dans la langue de l'utilisateur. S'il dit 'cv' ou 'ca va', réponds 'Labes hamdoullah'. S'il dit 'ena cv' ou 'labes', ne répète pas la question, dis juste 'Behi, hamdoullah' et demande comment tu peux l'aider logistiquement. " +
-                             "2. CONTEXTE: Ne sois pas répétitif. Si la conversation a déjà commencé, passe aux fonctionnalités logistiques. " +
-                             "3. VOCABULAIRE TUNISIEN: 'ena cv' = 'Je vais bien', 'hamdoullah' = 'Dieu soit loué', 'chwaya akher' = 'un peu plus tard', 'behi' = 'ok'. " +
-                             "4. Pour les salutations, RÉPONDS NORMALEMENT. Si le small talk est fini, propose tes services (Suivi, Brouillon). " +
-                             "CAPACITÉS: Suivi, Brouillon" + ("web".equalsIgnoreCase(platform) ? "" : ", Rappel") + ". " +
-                             "FORMATAGE: Utilise '- ' pour les listes. Si tu dois utiliser un outil, fais-le EXCLUSIVEMENT via l'appel de fonction standard sans texte additionnel.";
+                             "1. RÈGLE DU MIROIR & TUNISIANITÉ: Réponds dans la langue de l'utilisateur. S'il parle Darija (cv, labes, chna7walek), réponds avec chaleur ('Labes hamdoullah', 'Behi barcha'). S'il utilise des termes comme 'ena cv' ou 'labes', réponds 'Hamdoullah behi' et oriente immédiatement vers la logistique. " +
+                             "2. RÉSILIENCE AUX FAUTES (TYPOS): Tu es immunisé contre les erreurs de frappe. 'reppel/rappel/rapel', 'clien/cleint/client', 'suivie/suivi/svi', 'commende/commande', 'statu/statut'. Comprends l'intention derrière le mot mal orthographié. " +
+                             "3. OMNISCIENCE LOGISTIQUE: Tu peux répondre à TOUTE question sur: " +
+                             "   - Le suivi des expéditions (statut, localisation, chauffeur, camion). " +
+                             "   - La gestion des clients (qui ils sont, où ils sont). " +
+                             "   - Les articles transportés (poids, unité, code). " +
+                             "   - La création de rappels pour ne rien oublier. " +
+                             "   - La création de brouillons de transport (demandes). " +
+                             "4. CONTEXTE OTFLOW: Entreprise leader en Tunisie (Nabeul, Tunis, Sfax). Nous faisons du transport routier, maritime, et du stockage. " +
+                             "5. PROACTIVITÉ: Si l'utilisateur demande 'quels sont mes ordres', liste-les. S'il demande 'qui est Gias', cherche l'ordre ou le client associé. " +
+                             "OUTILS: Utilise 'list_my_orders', 'get_order_details', 'create_reminder', 'create_order_draft', 'find_orders_by_client_name', 'get_fleet_stats'. " +
+                             "RÈGLE D'OR: Si tu ne sais pas, propose de chercher via un outil. Ne dis jamais 'je ne peux pas' sans avoir essayé un outil d'abord. " +
+                             "FORMATAGE: Utilise des emojis logistiques (🚛, 📦, 📅, 📍) pour rendre les réponses premium. " +
+                             "APPELS D'OUTILS: Fais l'appel de fonction SANS texte superflu. Reste silencieux pendant l'appel.";
 
         if ("groq".equalsIgnoreCase(provider)) {
             return callGroq(userMessage, systemPrompt, userEmail, platform);
@@ -339,21 +347,19 @@ public class ChatbotService {
         summary.put("parameters", Map.of("type", "object", "properties", new HashMap<>()));
         tools.add(summary);
 
-        // Tool: create_reminder (uniquement sur mobile)
-        if (!"web".equalsIgnoreCase(platform)) {
-            Map<String, Object> createReminder = new HashMap<>();
-            createReminder.put("name", "create_reminder");
-            createReminder.put("description", "Créer un rappel personnel ou une tâche.");
-            createReminder.put("parameters", Map.of(
-                "type", "object",
-                "properties", Map.of(
-                    "text", Map.of("type", "string"),
-                    "time", Map.of("type", "string")
-                ),
-                "required", List.of("text", "time")
-            ));
-            tools.add(createReminder);
-        }
+        // Tool: create_reminder
+        Map<String, Object> createReminder = new HashMap<>();
+        createReminder.put("name", "create_reminder");
+        createReminder.put("description", "Créer un rappel personnel, une note ou une tâche (ex: Rappelle moi de charger demain).");
+        createReminder.put("parameters", Map.of(
+            "type", "object",
+            "properties", Map.of(
+                "text", Map.of("type", "string", "description", "Le contenu du rappel"),
+                "time", Map.of("type", "string", "description", "L'heure ou date du rappel (ex: demain à 10h)")
+            ),
+            "required", List.of("text", "time")
+        ));
+        tools.add(createReminder);
 
         // Tool: create_order_draft
         Map<String, Object> createDraft = new HashMap<>();
@@ -535,9 +541,6 @@ public class ChatbotService {
                        sumClients.size(), orderCount, artCount);
 
             case "create_reminder":
-                if ("web".equalsIgnoreCase(platform)) {
-                    return "D\u00e9sol\u00e9, la cr\u00e9ation de rappels n'est disponible que sur l'application mobile Lumi\u00e8re. Veuillez vous connecter sur votre t\u00e9l\u00e9phone pour utiliser cette fonctionnalit\u00e9.";
-                }
                 String text = (String) args.get("text");
                 String timeStr = (String) args.get("time");
                 Notification note = new Notification();

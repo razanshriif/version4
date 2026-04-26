@@ -1,4 +1,4 @@
-.permission-wrapper {
+﻿.permission-wrapper {
     padding: 50px;
     max-width: 1400px;
     margin: 0 auto;
@@ -537,3 +537,5 @@ input:checked+.toggle-slider:before {
         transform: translateY(0px);
     }
 }
+
+

@@ -1,4 +1,4 @@
-.sidenav {
+﻿.sidenav {
   background-color: black;
   color: orange;
   width: 240px;
@@ -34,3 +34,5 @@
   color: #ff6666;
   /* Lighter red for hover state */
 }
+
+

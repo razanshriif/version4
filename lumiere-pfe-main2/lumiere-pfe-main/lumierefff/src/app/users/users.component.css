@@ -1,4 +1,4 @@
-/* Styles généraux */
+﻿/* Styles généraux */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
@@ -266,3 +266,5 @@ select.form-control {
     font-size: 0.9rem;
   }
 }
+
+

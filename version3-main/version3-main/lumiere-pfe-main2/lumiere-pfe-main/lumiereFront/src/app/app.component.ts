@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { filter } from 'rxjs/operators';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'lumiere';
+  title = 'Otflow';
   showChatbot = true;
 
   constructor(private router: Router) {
@@ -21,3 +21,6 @@ export class AppComponent {
     });
   }
 }
+
+
+

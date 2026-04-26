@@ -1,4 +1,4 @@
-<!-- Button to Open the Modal -->
+﻿<!-- Button to Open the Modal -->
 
 <div class="user-view-container">
   <!-- View Header -->
@@ -87,7 +87,7 @@
             <td>
               <!-- Full power column for admins and commercials -->
               <div class="action-orbit"
-                *ngIf="currentUserRole === 'ADMIN' || currentUserRole === 'COMMERCIAL' || currentUserRole === 'USER_LUMIERE'">
+                *ngIf="currentUserRole === 'ADMIN' || currentUserRole === 'COMMERCIAL' || currentUserRole === 'USER_Otflow'">
 
                 <!-- Approve -->
                 <button class="orbit-btn success" *ngIf="client.status === 'PENDING'" 
@@ -176,7 +176,7 @@
                   <option value="CLIENT">CLIENT</option>
                   <option value="COMMERCIAL">COMMERCIAL</option>
                   <option value="ADMIN">ADMIN</option>
-                  <option value="USER_LUMIERE">LUMIERE EMPLOYEE</option>
+                  <option value="USER_Otflow">Otflow EMPLOYEE</option>
                 </select>
               </div>
             </div>
@@ -237,3 +237,5 @@
     </div>
   </div>
 </div>
+
+

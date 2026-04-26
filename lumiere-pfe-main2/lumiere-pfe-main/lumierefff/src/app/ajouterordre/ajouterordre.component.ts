@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { OrdreService } from '../ordre.service';
 
 @Component({
@@ -141,3 +141,6 @@ dupliquerOrdre(ordre: any): void {
 }
 
 }
+
+
+

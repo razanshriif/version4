@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -192,3 +192,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.exportService.exportExcel(data, 'Liste des Articles', 'Articles_Export', columns);
   }
 }
+
+
+

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
@@ -22,8 +22,8 @@ export class ExportService {
 
     async exportExcel(data: any[], title: string, fileName: string, columns: any[]) {
         const workbook = new ExcelJS.Workbook();
-        workbook.creator = 'Lumière Transport';
-        workbook.company = 'Lumière Logistique';
+        workbook.creator = 'OTFLOW Transport';
+        workbook.company = 'OTFLOW Logistique';
         workbook.created = new Date();
 
         const worksheet = workbook.addWorksheet(title, {
@@ -47,14 +47,14 @@ export class ExportService {
             for (let c = 1; c <= totalCols; c++) {  // ALL columns — full width
                 worksheet.getRow(r).getCell(c).fill = {
                     type: 'pattern', pattern: 'solid',
-                    fgColor: { argb: 'FFF5921E' }  // Lumière orange
+                    fgColor: { argb: 'FFF5921E' }  // OTFLOW orange
                 };
             }
         }
 
         // ── Logo image (centered horizontally in the banner) ─────────────────
         try {
-            const res = await fetch('assets/Lumiere-Logistique.png');
+            const res = await fetch('assets/otflow-horizontal.png');
             const ab = await (await res.blob()).arrayBuffer();
             const logoId = workbook.addImage({ buffer: ab, extension: 'png' });
             // Center: place logo at the mid-point of all columns
@@ -88,7 +88,7 @@ export class ExportService {
         worksheet.mergeCells(`A7:${lastCol}7`);
         const infoCell = worksheet.getCell('A7');
         const dateStr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-        infoCell.value = `Lumière Logistique  —  Exporté le ${dateStr}`;
+        infoCell.value = `OTFLOW Logistique  —  Exporté le ${dateStr}`;
         infoCell.font = { name: 'Calibri', size: 10, italic: true, color: { argb: 'FF64748B' } };
         infoCell.alignment = { horizontal: 'center', vertical: 'middle' };
         infoCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
@@ -154,7 +154,7 @@ export class ExportService {
         const footRow = worksheet.addRow([]);
         worksheet.mergeCells(`A${footRow.number}:${lastCol}${footRow.number}`);
         footRow.height = 16;
-        footRow.getCell(1).value = 'Lumière Logistique — Document confidentiel — Généré automatiquement';
+        footRow.getCell(1).value = 'OTFLOW Logistique — Document confidentiel — Généré automatiquement';
         footRow.getCell(1).font = { name: 'Calibri', size: 9, italic: true, color: { argb: 'FF94A3B8' } };
         footRow.getCell(1).alignment = { horizontal: 'center' };
 
@@ -163,3 +163,6 @@ export class ExportService {
         saveAs(new Blob([buffer]), `${fileName}.xlsx`);
     }
 }
+
+
+

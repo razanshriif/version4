@@ -1,4 +1,4 @@
-.view-container {
+﻿.view-container {
   padding: 24px;
   background-color: #f8fafc;
   min-height: 100vh;
@@ -758,3 +758,5 @@
   .filter-actions-right { grid-column: span 1; justify-content: center; }
   .premium-modern-table { display: block; overflow-x: auto; }
 }
+
+

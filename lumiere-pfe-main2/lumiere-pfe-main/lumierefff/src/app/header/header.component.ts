@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+﻿import { Component, EventEmitter, Output } from '@angular/core';
 import { NotificationService } from '../notification.service';
 
 @Component({
@@ -58,5 +58,8 @@ export class HeaderComponent {
   // Exemple pour ajouter une nouvelle notification
 
 }
+
+
+
 
 
